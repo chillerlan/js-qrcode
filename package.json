@@ -1,0 +1,73 @@
+{
+	"name": "@chillerlan/qrcode",
+	"version": "1.0.0",
+	"description": "A QR Code generator - ported from php-qrcode (https://github.com/chillerlan/php-qrcode)",
+	"license": "MIT",
+	"homepage": "https://github.com/chillerlan/js-qrcode",
+	"keywords": [
+		"qr code", "qrcode", "qr", "qrcode-generator", "jsqrcode", "svg"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/chillerlan/js-qrcode.git"
+	},
+	"authors": [
+		{
+			"name": "Kazuhiko Arase",
+			"homepage": "https://github.com/kazuhikoarase/qrcode-generator"
+		},
+		{
+			"name":"ZXing Authors",
+			"homepage": "https://github.com/zxing/zxing"
+		},
+		{
+			"name": "Smiley",
+			"email": "smiley@chillerlan.net",
+			"homepage": "https://github.com/codemasher"
+		}
+	],
+	"contributors": [
+		{
+			"name": "Contributors",
+			"homepage":"https://github.com/chillerlan/js-qrcode/graphs/contributors"
+		}
+
+	],
+	"bugs": {
+		"url": "https://github.com/chillerlan/js-qrcode/issues"
+	},
+	"funding": [
+		{
+			"type" : "ko-fi",
+			"url" : "https://ko-fi.com/codemasher"
+		},
+		{
+			"type" : "paypal",
+			"url" : "https://www.paypal.com/donate?hosted_button_id=WLYUNAT9ZTJZ4"
+		}
+	],
+	"main": "lib/index.js",
+	"dependencies": {
+	},
+	"devDependencies": {
+		"@babel/core": "~7.18.6",
+		"@babel/plugin-proposal-class-properties": "~7.18.6",
+		"@babel/plugin-proposal-object-rest-spread": "~7.18.6",
+		"@babel/preset-env": "~7.18.6",
+		"@babel/register": "~7.18.6",
+		"@babel/eslint-parser": "~7.18.2",
+		"core-js": "~3.23.4",
+		"eslint": "~8.19.0",
+		"node": "~18.5.0",
+		"npm": "~8.13.2",
+		"rollup": "~2.76.0",
+		"@rollup/plugin-babel": "~5.3.1",
+		"rollup-plugin-terser": "~7.0.2"
+	},
+	"scripts": {
+		"lint": "eslint src",
+		"build": "rollup -c rollup.config.dist.js",
+		"build-src": "rollup -c rollup.config.src.js",
+		"test": "node ./examples/test.mjs"
+	}
+}

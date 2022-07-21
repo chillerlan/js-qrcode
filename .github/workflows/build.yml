@@ -1,0 +1,29 @@
+# https://help.github.com/en/categories/automating-your-workflow-with-github-actions
+
+name: "build"
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: "build"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "checkout sources"
+        uses: actions/checkout@v3
+
+      - name: "install dependencies"
+        run: npm install
+
+      - name: "run eslint"
+        run: npm run lint
+
+      - name: "build"
+        run: npm run build
+
+      - name: "build-src"
+        run: npm run build-src
