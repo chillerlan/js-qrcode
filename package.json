@@ -65,7 +65,7 @@
 		"rollup-plugin-terser": "~7.0.2"
 	},
 	"scripts": {
-		"lint": "eslint src",
+		"lint": "eslint ./lib",
 		"build": "rollup -c rollup.config.dist.js",
 		"build-src": "rollup -c rollup.config.src.js",
 		"test": "node ./examples/test.mjs"
