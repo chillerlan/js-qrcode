@@ -46,6 +46,7 @@
 			"url" : "https://www.paypal.com/donate?hosted_button_id=WLYUNAT9ZTJZ4"
 		}
 	],
+	"type": "module",
 	"main": "lib/index.js",
 	"dependencies": {
 	},

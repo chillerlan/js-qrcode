@@ -36,10 +36,10 @@
 	},
 	"env": {
 		"browser": true,
-		"es6": true,
 		"commonjs": true,
-		"phantomjs": true,
-		"jasmine": true,
+		"es6": true,
+		"es2022": true,
+		"mocha": true,
 		"node": true
 	}
 }

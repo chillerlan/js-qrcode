@@ -7,7 +7,7 @@ export default {
 			sourcemap: true,
 		},
 		{
-			file: 'dist/js-qrcode-node-src.mjs',
+			file: 'dist/js-qrcode-node-src.cjs',
 			format: 'cjs',
 			sourcemap: true,
 		},
