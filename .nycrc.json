@@ -1,0 +1,7 @@
+{
+	"all": true,
+	"include": ["lib/**"],
+	"reporter": ["clover", "text"],
+	"report-dir": "./.build/coverage",
+	"temp-dir": "./.build/nyc"
+}

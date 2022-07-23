@@ -22,11 +22,16 @@ jobs:
       - name: "run eslint"
         run: npm run lint
 
-      - name: "run mocha tests"
-        run: npm run test
+      - name: "run mocha tests (with coverage)"
+        run: npm run test-with-coverage
 
       - name: "build"
         run: npm run build
 
       - name: "build-src"
         run: npm run build-src
+
+      - name: "send code coverage report to codecov.io"
+        uses: codecov/codecov-action@v3
+        with:
+          directory: ./.build/coverage/
