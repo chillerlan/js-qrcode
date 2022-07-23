@@ -8,7 +8,7 @@ A javascript port of [chillerlan/php-qrcode](https://github.com/chillerlan/php-q
 
 [license-badge]: https://img.shields.io/github/license/chillerlan/js-qrcode.svg
 [license]: https://github.com/chillerlan/js-qrcode/blob/main/LICENSE
-[coverage-badge]: https://img.shields.io/codecov/c/github/chillerlan/js-qrcode.svg?logo=codecov
+[coverage-badge]: https://codecov.io/gh/chillerlan/js-qrcode/branch/main/graph/badge.svg?token=03VT14Q8UW
 [coverage]: https://codecov.io/github/chillerlan/js-qrcode
 [gh-action-badge]: https://github.com/chillerlan/js-qrcode/workflows/build/badge.svg
 [gh-action]: https://github.com/chillerlan/js-qrcode/actions/workflows/build.yml?query=branch%3Amain
