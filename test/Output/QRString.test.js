@@ -45,7 +45,7 @@ suite('QRStringOutputTest', function(){
 				/**
 				 * Validate the instance of the QROutputInterface
 				 */
-				test(`testInstance`, function(){
+				test('testInstance', function(){
 					_outputInterface = new $fqn(_options, _matrix);
 
 					assert.instanceOf(_outputInterface, QROutputAbstract);
