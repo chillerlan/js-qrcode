@@ -1,0 +1,5 @@
+{
+	"extension": ["test.js"],
+	"recursive": true,
+	"ui": "tdd"
+}
