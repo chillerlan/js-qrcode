@@ -5,7 +5,7 @@
  * @license      MIT
  */
 
-import {QRCode, QROptions} from '../lib/index.js';
+import {QRCode, QROptions} from '../src/index.js';
 
 import {suite, test} from 'mocha';
 import {assert} from 'chai';

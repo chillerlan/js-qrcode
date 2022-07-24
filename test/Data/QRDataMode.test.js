@@ -10,7 +10,7 @@ import {
 	PATTERN_101, PATTERN_110, PATTERN_111, QRData,
 	QRDataModeInterface,
 	QRMatrix, QROptions, VERSION_AUTO,
-} from '../../lib/index.js';
+} from '../../src/index.js';
 
 import {beforeEach, suite, test} from 'mocha';
 import {assert} from 'chai';

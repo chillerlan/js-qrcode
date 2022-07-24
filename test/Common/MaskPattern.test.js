@@ -8,7 +8,7 @@
 import {
 	IS_DARK, M_DATA, MaskPattern, PATTERN_000, PATTERN_001, PATTERN_010, PATTERN_011,
 	PATTERN_100, PATTERN_101, PATTERN_110, PATTERN_111, QRMatrix, Version,
-} from '../../lib/index.js';
+} from '../../src/index.js';
 
 import {suite, test} from 'mocha';
 import {assert} from 'chai';

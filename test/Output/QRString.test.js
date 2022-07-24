@@ -8,7 +8,7 @@
 import {
 	Byte, MaskPattern, QRData, QROptions, QROutputAbstract, QROutputInterface, QRString,
 	OUTPUT_STRING_JSON, OUTPUT_STRING_TEXT, PATTERN_010, M_DATA, IS_DARK,
-} from '../../lib/index.js';
+} from '../../src/index.js';
 
 import {beforeEach, suite, test} from 'mocha';
 import {assert} from 'chai';

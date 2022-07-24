@@ -5,8 +5,8 @@
 		"recurse": true
 	},
 	"source": {
-		"include": ["lib/"],
-		"exclude": ["lib/index.js"]
+		"include": ["src/"],
+		"exclude": ["src/index.js"]
 	},
 	"sourceType": "module"
 }

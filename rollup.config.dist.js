@@ -1,7 +1,7 @@
 import {terser} from 'rollup-plugin-terser';
 
 export default {
-	input: 'lib/index.js',
+	input: 'src/index.js',
 	output: [
 		{
 			file: 'dist/js-qrcode-es6.js',

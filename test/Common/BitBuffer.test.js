@@ -5,7 +5,7 @@
  * @license      MIT
  */
 
-import {BitBuffer, MODE_ALPHANUM, MODE_BYTE, MODE_KANJI, MODE_NUMBER} from '../../lib/index.js';
+import {BitBuffer, MODE_ALPHANUM, MODE_BYTE, MODE_KANJI, MODE_NUMBER} from '../../src/index.js';
 
 import {suite, test} from 'mocha';
 import {assert} from 'chai';

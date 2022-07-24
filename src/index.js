@@ -32,7 +32,7 @@ import Version from './Common/Version.js';
 // Data
 import AlphaNum from './Data/AlphaNum.js';
 import Byte from './Data/Byte.js';
-//import Kanji from './Data/Kanji.js';
+import Kanji from './Data/Kanji.js';
 import Numeric from './Data/Numeric.js';
 import QRCodeDataException from './Data/QRCodeDataException.js';
 import QRData from './Data/QRData.js';
@@ -61,7 +61,7 @@ export {
 	Version, VERSION_AUTO,
 	AlphaNum,
 	Byte,
-	/* Kanji, */
+	Kanji,
 	Numeric,
 	QRCodeDataException,
 	QRData,

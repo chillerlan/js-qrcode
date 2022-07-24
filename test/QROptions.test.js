@@ -5,7 +5,7 @@
  * @license      MIT
  */
 
-import {MASK_PATTERN_AUTO, VERSION_AUTO, QROptions} from '../lib/index.js';
+import {MASK_PATTERN_AUTO, VERSION_AUTO, QROptions} from '../src/index.js';
 
 import {suite, test} from 'mocha';
 import {assert} from 'chai';

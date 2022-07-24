@@ -9,7 +9,7 @@ import {
 	EccLevel, MaskPattern, QRCode, QRMatrix, QROptions, Version,
 	ECC_H, ECC_L, IS_DARK, M_ALIGNMENT, M_DARKMODULE, M_FINDER, M_FINDER_DOT, M_FORMAT,
 	M_LOGO, M_QUIETZONE, M_SEPARATOR, M_TEST, M_TIMING, M_VERSION, PATTERN_000,
-} from '../../lib/index.js';
+} from '../../src/index.js';
 
 import {beforeEach, suite, test} from 'mocha';
 import {assert} from 'chai';
