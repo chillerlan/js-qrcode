@@ -6,7 +6,7 @@
  */
 
 import {
-	Byte, MaskPattern, QRData, QROptions, QROutputAbstract, /*QROutputInterface,*/ QRString,
+	Byte, MaskPattern, QRData, QROptions, QROutputAbstract, QROutputInterface, QRString,
 	OUTPUT_STRING_JSON, OUTPUT_STRING_TEXT, PATTERN_010, M_DATA, IS_DARK,
 } from '../../lib/index.js';
 
@@ -49,7 +49,7 @@ suite('QRStringOutputTest', function(){
 					_outputInterface = new $fqn(_options, _matrix);
 
 					assert.instanceOf(_outputInterface, QROutputAbstract);
-//					assert.instanceOf(_outputInterface, QROutputInterface);
+					assert.instanceOf(_outputInterface, QROutputInterface);
 				});
 
 				/**
