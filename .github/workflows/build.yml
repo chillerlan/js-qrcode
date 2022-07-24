@@ -36,12 +36,18 @@ jobs:
         with:
           directory: ./.build/coverage/
 
-      - name: "Build Docs"
+      - name: "build docs"
         run: npm run jsdoc
 
-      - name: "Publish Docs to gh-pages"
+      - name: "publish docs to gh-pages"
         uses: JamesIves/github-pages-deploy-action@v4.3.4
         with:
           branch: gh-pages
           folder: doc
           clean: true
+
+      - name: "upload artifacts"
+        uses: actions/upload-artifact@v3
+        with:
+          name: js-qrcode-${{GITHUB_SHA}}
+          path: ./dist
