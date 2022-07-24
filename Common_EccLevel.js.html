@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Common/EccLevel.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Common/EccLevel.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @created      11.07.2022
+ * @author       smiley &lt;smiley@chillerlan.net>
+ * @copyright    2022 smiley
+ * @license      MIT
+ */
+
+import QRCodeException from '../QRCodeException.js';
+import PHPJS from './PHPJS.js';
+
+// ISO/IEC 18004:2000 Tables 12, 25
+
+const ECC_L = 0b01; // 7%.
+const ECC_M = 0b00; // 15%.
+const ECC_Q = 0b11; // 25%.
+const ECC_H = 0b10; // 30%.
+
+const ECC_LEVELS = [ECC_L, ECC_M, ECC_Q, ECC_H];
+
+/**
+ * ISO/IEC 18004:2000 Tables 7-11 - Number of symbol characters and input data capacity for versions 1 to 40
+ *
+ * @type {int[][]}
+ *
+ * @private
+ */
+const MAX_BITS = [
+	//  version  => [L, M, Q, H]  // modules
+	[ null,  null,  null,  null], // empty element, count starts at 1
+	[  152,   128,   104,    72], //  21
+	[  272,   224,   176,   128], //  25
+	[  440,   352,   272,   208], //  29
+	[  640,   512,   384,   288], //  33
+	[  864,   688,   496,   368], //  37
+	[ 1088,   864,   608,   480], //  41
+	[ 1248,   992,   704,   528], //  45
+	[ 1552,  1232,   880,   688], //  49
+	[ 1856,  1456,  1056,   800], //  53
+	[ 2192,  1728,  1232,   976], //  57
+	[ 2592,  2032,  1440,  1120], //  61
+	[ 2960,  2320,  1648,  1264], //  65
+	[ 3424,  2672,  1952,  1440], //  69 NICE!
+	[ 3688,  2920,  2088,  1576], //  73
+	[ 4184,  3320,  2360,  1784], //  77
+	[ 4712,  3624,  2600,  2024], //  81
+	[ 5176,  4056,  2936,  2264], //  85
+	[ 5768,  4504,  3176,  2504], //  89
+	[ 6360,  5016,  3560,  2728], //  93
+	[ 6888,  5352,  3880,  3080], //  97
+	[ 7456,  5712,  4096,  3248], // 101
+	[ 8048,  6256,  4544,  3536], // 105
+	[ 8752,  6880,  4912,  3712], // 109
+	[ 9392,  7312,  5312,  4112], // 113
+	[10208,  8000,  5744,  4304], // 117
+	[10960,  8496,  6032,  4768], // 121
+	[11744,  9024,  6464,  5024], // 125
+	[12248,  9544,  6968,  5288], // 129
+	[13048, 10136,  7288,  5608], // 133
+	[13880, 10984,  7880,  5960], // 137
+	[14744, 11640,  8264,  6344], // 141
+	[15640, 12328,  8920,  6760], // 145
+	[16568, 13048,  9368,  7208], // 149
+	[17528, 13800,  9848,  7688], // 153
+	[18448, 14496, 10288,  7888], // 157
+	[19472, 15312, 10832,  8432], // 161
+	[20528, 15936, 11408,  8768], // 165
+	[21616, 16816, 12016,  9136], // 169
+	[22496, 17728, 12656,  9776], // 173
+	[23648, 18672, 13328, 10208], // 177
+];
+
+/**
+ * ISO/IEC 18004:2000 Section 8.9 - Format Information
+ *
+ * ECC level -> mask pattern
+ *
+ * @type {int[][]}
+ *
+ * @private
+ */
+const FORMAT_PATTERN = [
+	[ // L
+		0b111011111000100,
+		0b111001011110011,
+		0b111110110101010,
+		0b111100010011101,
+		0b110011000101111,
+		0b110001100011000,
+		0b110110001000001,
+		0b110100101110110,
+	],
+	[ // M
+		0b101010000010010,
+		0b101000100100101,
+		0b101111001111100,
+		0b101101101001011,
+		0b100010111111001,
+		0b100000011001110,
+		0b100111110010111,
+		0b100101010100000,
+	],
+	[ // Q
+		0b011010101011111,
+		0b011000001101000,
+		0b011111100110001,
+		0b011101000000110,
+		0b010010010110100,
+		0b010000110000011,
+		0b010111011011010,
+		0b010101111101101,
+	],
+	[ // H
+		0b001011010001001,
+		0b001001110111110,
+		0b001110011100111,
+		0b001100111010000,
+		0b000011101100010,
+		0b000001001010101,
+		0b000110100001100,
+		0b000100000111011,
+	],
+];
+
+
+/**
+ * This class encapsulates the four error correction levels defined by the QR code standard.
+ */
+class EccLevel{
+
+	/**
+	 * The current ECC level value
+	 *
+	 * L: 0b01
+	 * M: 0b00
+	 * Q: 0b11
+	 * H: 0b10
+	 *
+	 * @type {int}
+	 * @private
+	 */
+	eccLevel;
+
+	/**
+	 * @param {int} $eccLevel containing the two bits encoding a QR Code's error correction level
+	 *
+	 * @throws \chillerlan\QRCode\QRCodeException
+	 */
+	constructor($eccLevel){
+
+		if((0b11 &amp; $eccLevel) !== $eccLevel){
+			throw new QRCodeException('invalid ECC level');
+		}
+
+		this.eccLevel = $eccLevel;
+	}
+
+	/**
+	 * returns the string representation of the current ECC level
+	 *
+	 * @returns {string}
+	 */
+	toString(){
+		return PHPJS.array_combine(ECC_LEVELS, ['L', 'M', 'Q', 'H'])[this.eccLevel];
+	}
+
+	/**
+	 * returns the current ECC level
+	 *
+	 * @returns {int}
+	 */
+	getLevel(){
+		return this.eccLevel;
+	}
+
+	/**
+	 * returns the ordinal value of the current ECC level
+	 *
+	 * references to the keys of the following tables:
+	 *
+	 * @see \chillerlan\QRCode\Common\EccLevel::MAX_BITS
+	 * @see \chillerlan\QRCode\Common\EccLevel::FORMAT_PATTERN
+	 * @see \chillerlan\QRCode\Common\Version::RSBLOCKS
+	 */
+	getOrdinal(){
+		return PHPJS.array_combine(ECC_LEVELS, [0, 1, 2, 3])[this.eccLevel];
+	}
+
+	/**
+	 * returns the format pattern for the given $eccLevel and $maskPattern
+	 *
+	 * @param {MaskPattern} $maskPattern
+	 *
+	 * @returns {int}
+	 */
+	getformatPattern($maskPattern){
+		return FORMAT_PATTERN[this.getOrdinal()][$maskPattern.getPattern()];
+	}
+
+	/**
+	 * @returns {int[]} an array with the max bit lengths for version 1-40 and the current ECC level
+	 */
+	getMaxBits(){
+		let $v = [];
+		let $c = this.getOrdinal();
+
+		for(let $k in MAX_BITS){
+			$v.push(MAX_BITS[$k][$c]);
+		}
+
+		return $v;
+	}
+
+}
+
+export {EccLevel, ECC_L, ECC_M, ECC_Q, ECC_H};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="EccLevel.html">EccLevel</a></li><li><a href="MaskPattern.html">MaskPattern</a></li><li><a href="Mode.html">Mode</a></li><li><a href="module.exports.html">exports</a></li><li><a href="QRMatrix.html">QRMatrix</a></li><li><a href="Version.html">Version</a></li></ul><h3>Interfaces</h3><ul><li><a href="QROutputInterface.html">QROutputInterface</a></li></ul><h3>Global</h3><ul><li><a href="global.html#%255Cchillerlan%255CQRCode%255CData%255CQRDataModeInterface">\chillerlan\QRCode\Data\QRDataModeInterface</a></li><li><a href="global.html#_set_circleRadius">_set_circleRadius</a></li><li><a href="global.html#_set_eccLevel">_set_eccLevel</a></li><li><a href="global.html#_set_logoSpaceHeight">_set_logoSpaceHeight</a></li><li><a href="global.html#_set_logoSpaceStartX">_set_logoSpaceStartX</a></li><li><a href="global.html#_set_logoSpaceStartY">_set_logoSpaceStartY</a></li><li><a href="global.html#_set_logoSpaceWidth">_set_logoSpaceWidth</a></li><li><a href="global.html#_set_maskPattern">_set_maskPattern</a></li><li><a href="global.html#_set_quietzoneSize">_set_quietzoneSize</a></li><li><a href="global.html#_set_version">_set_version</a></li><li><a href="global.html#_set_versionMax">_set_versionMax</a></li><li><a href="global.html#_set_versionMin">_set_versionMin</a></li><li><a href="global.html#addAlphaNumSegment">addAlphaNumSegment</a></li><li><a href="global.html#addByteSegment">addByteSegment</a></li><li><a href="global.html#addNumericSegment">addNumericSegment</a></li><li><a href="global.html#addSegment">addSegment</a></li><li><a href="global.html#array_combine">array_combine</a></li><li><a href="global.html#array_merge">array_merge</a></li><li><a href="global.html#array_search">array_search</a></li><li><a href="global.html#available">available</a></li><li><a href="global.html#base64encode">base64encode</a></li><li><a href="global.html#CHAR_TO_ORD">CHAR_TO_ORD</a></li><li><a href="global.html#clampLogoSpaceValue">clampLogoSpaceValue</a></li><li><a href="global.html#clear">clear</a></li><li><a href="global.html#clearSegments">clearSegments</a></li><li><a href="global.html#collectModules">collectModules</a></li><li><a href="global.html#createMarkup">createMarkup</a></li><li><a href="global.html#dump">dump</a></li><li><a href="global.html#exp">exp</a></li><li><a href="global.html#fill_array">fill_array</a></li><li><a href="global.html#getBuffer">getBuffer</a></li><li><a href="global.html#getCharCount">getCharCount</a></li><li><a href="global.html#getCoefficient">getCoefficient</a></li><li><a href="global.html#getCoefficients">getCoefficients</a></li><li><a href="global.html#getCssClass">getCssClass</a></li><li><a href="global.html#getDataMode">getDataMode</a></li><li><a href="global.html#getDefaultModuleValue">getDefaultModuleValue</a></li><li><a href="global.html#getDegree">getDegree</a></li><li><a href="global.html#getLength">getLength</a></li><li><a href="global.html#getLengthInBits">getLengthInBits</a></li><li><a href="global.html#getMatrix">getMatrix</a></li><li><a href="global.html#getModuleValue">getModuleValue</a></li><li><a href="global.html#header">header</a></li><li><a href="global.html#initCustomOutputInterface">initCustomOutputInterface</a></li><li><a href="global.html#initOutputInterface">initOutputInterface</a></li><li><a href="global.html#interleaveEcBytes">interleaveEcBytes</a></li><li><a href="global.html#intval">intval</a></li><li><a href="global.html#IS_DARK">IS_DARK</a></li><li><a href="global.html#isset">isset</a></li><li><a href="global.html#isZero">isZero</a></li><li><a href="global.html#json">json</a></li><li><a href="global.html#log">log</a></li><li><a href="global.html#M_ALIGNMENT">M_ALIGNMENT</a></li><li><a href="global.html#M_DARKMODULE">M_DARKMODULE</a></li><li><a href="global.html#M_DATA">M_DATA</a></li><li><a href="global.html#M_FINDER">M_FINDER</a></li><li><a href="global.html#M_FINDER_DOT">M_FINDER_DOT</a></li><li><a href="global.html#M_FORMAT">M_FORMAT</a></li><li><a href="global.html#M_LOGO">M_LOGO</a></li><li><a href="global.html#M_NULL">M_NULL</a></li><li><a href="global.html#M_QUIETZONE">M_QUIETZONE</a></li><li><a href="global.html#M_SEPARATOR">M_SEPARATOR</a></li><li><a href="global.html#M_TEST">M_TEST</a></li><li><a href="global.html#M_TIMING">M_TIMING</a></li><li><a href="global.html#M_VERSION">M_VERSION</a></li><li><a href="global.html#MASK_PATTERN_AUTO">MASK_PATTERN_AUTO</a></li><li><a href="global.html#MATRIX_NEIGHBOUR_FLAGS">MATRIX_NEIGHBOUR_FLAGS</a></li><li><a href="global.html#MATRIX_NEIGHBOURS">MATRIX_NEIGHBOURS</a></li><li><a href="global.html#mod">mod</a></li><li><a href="global.html#MODE_INTERFACES">MODE_INTERFACES</a></li><li><a href="global.html#MODE_LENGTH_BITS">MODE_LENGTH_BITS</a></li><li><a href="global.html#module">module</a></li><li><a href="global.html#MODULE_VALUES_KEYS">MODULE_VALUES_KEYS</a></li><li><a href="global.html#moduleValueIsValid">moduleValueIsValid</a></li><li><a href="global.html#multiply">multiply</a></li><li><a href="global.html#ord">ord</a></li><li><a href="global.html#OUTPUT_MODE_INTERFACES">OUTPUT_MODE_INTERFACES</a></li><li><a href="global.html#paths">paths</a></li><li><a href="global.html#put">put</a></li><li><a href="global.html#putBit">putBit</a></li><li><a href="global.html#read">read</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#saveToFile">saveToFile</a></li><li><a href="global.html#setData">setData</a></li><li><a href="global.html#setMatrixDimensions">setMatrixDimensions</a></li><li><a href="global.html#setMinMaxVersion">setMinMaxVersion</a></li><li><a href="global.html#setModuleValues">setModuleValues</a></li><li><a href="global.html#text">text</a></li><li><a href="global.html#toHtmlElement">toHtmlElement</a></li><li><a href="global.html#TOTAL_CODEWORDS">TOTAL_CODEWORDS</a></li><li><a href="global.html#validateString">validateString</a></li><li><a href="global.html#validateStringI">validateStringI</a></li><li><a href="global.html#VERSION_AUTO">VERSION_AUTO</a></li><li><a href="global.html#write">write</a></li><li><a href="global.html#writeMatrix">writeMatrix</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.11</a> on Sun Jul 24 2022 12:48:20 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

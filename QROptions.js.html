@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: QROptions.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: QROptions.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @created      11.07.2022
+ * @author       smiley &lt;smiley@chillerlan.net>
+ * @copyright    2022 smiley
+ * @license      MIT
+ */
+
+import QRCodeException from './QRCodeException.js';
+import PHPJS from './Common/PHPJS.js';
+import {ECC_H, ECC_L, ECC_M, ECC_Q} from './Common/EccLevel.js';
+import {MASK_PATTERN_AUTO} from './Common/MaskPattern.js';
+import {VERSION_AUTO} from './Common/Version.js';
+import {OUTPUT_MARKUP_SVG} from './Output/QROutputInterface.js';
+
+/**
+ * The QRCode plug-in settings &amp; setter functionality
+ */
+export default class QROptions{
+
+	/**
+	 * QR Code version number
+	 *
+	 * [1 ... 40] or QRCode.VERSION_AUTO
+	 *
+	 * @type {int}
+	 * @protected
+	 */
+	_version = VERSION_AUTO;
+
+	/**
+	 * Minimum QR version
+	 *
+	 * if $version = QRCode.VERSION_AUTO
+	 *
+	 * @type {int}
+	 * @protected
+	 */
+	_versionMin = 1;
+
+	/**
+	 * Maximum QR version
+	 *
+	 * @type {int}
+	 * @protected
+	 */
+	_versionMax = 40;
+
+	/**
+	 * Error correct level
+	 *
+	 * QRCode::ECC_X where X is:
+	 *
+	 *   - L =>  7%
+	 *   - M => 15%
+	 *   - Q => 25%
+	 *   - H => 30%
+	 *
+	 * @type {int}
+	 * @protected
+	 */
+	_eccLevel = ECC_L;
+
+	/**
+	 * Mask Pattern to use (no value in using, mostly for unit testing purposes)
+	 *
+	 * [0...7] or QRCode::MASK_PATTERN_AUTO
+	 *
+	 * @type {int}
+	 * @protected
+	 */
+	_maskPattern = MASK_PATTERN_AUTO;
+
+	/**
+	 * Add a "quiet zone" (margin) according to the QR code spec
+	 *
+	 * @see https://www.qrcode.com/en/howto/code.html
+	 *
+	 * @type {boolean}
+	 */
+	addQuietzone = true;
+
+	/**
+	 * Size of the quiet zone
+	 *
+	 * internally clamped to [0 ... $moduleCount / 2], defaults to 4 modules
+	 *
+	 * @type {int}
+	 * @protected
+	 */
+	_quietzoneSize = 4;
+
+	/**
+	 * The output type
+	 *
+	 *   - QRCode::OUTPUT_MARKUP_XXXX where XXXX = HTML, SVG
+	 *   - QRCode::OUTPUT_IMAGE_XXX where XXX = PNG, GIF, JPG
+	 *   - QRCode::OUTPUT_STRING_XXXX where XXXX = TEXT, JSON
+	 *   - QRCode::OUTPUT_CUSTOM
+	 *
+	 * @type {string}
+	 */
+	outputType = OUTPUT_MARKUP_SVG;
+
+	/**
+	 * the FQCN of the custom QROutputInterface if $outputType is set to QRCode::OUTPUT_CUSTOM
+	 *
+	 * @type {string|null}
+	 */
+	outputInterface = null;
+
+	/**
+	 * /path/to/cache.file
+	 *
+	 * @type {string|null}
+	 */
+	cachefile = null;
+
+	/**
+	 * newline string [HTML, SVG, TEXT]
+	 *
+	 * @type {string}
+	 */
+	eol = '\n';
+
+	/**
+	 * size of a QR code pixel [SVG, IMAGE_*], HTML via CSS
+	 *
+	 * @type {int}
+	 */
+	scale = 5;
+
+	/**
+	 * a common css class
+	 *
+	 * @type {string}
+	 */
+	cssClass = 'qrcode';
+
+	/**
+	 * SVG opacity
+	 *
+	 * @type {float}
+	 */
+	svgOpacity = 1.0;
+
+	/**
+	 * anything between &lt;defs>
+	 *
+	 * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Element/defs
+	 *
+	 * @type {string}
+	 */
+	svgDefs = '';
+
+	/**
+	 * SVG viewBox size. a single integer number which defines width/height of the viewBox attribute.
+	 *
+	 * viewBox="0 0 x x"
+	 *
+	 * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox
+	 * @see https://css-tricks.com/scale-svg/#article-header-id-3
+	 *
+	 * @type {int|null}
+	 */
+	svgViewBoxSize = null;
+
+	/**
+	 * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/preserveAspectRatio
+	 *
+	 * @type {string}
+	 */
+	svgPreserveAspectRatio = 'xMidYMid';
+
+	/**
+	 * optional "width" attribute with the specified value (note that the value is not checked!)
+	 *
+	 * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/width
+	 *
+	 * @type {string|null}
+	 */
+	svgWidth = null;
+
+	/**
+	 * optional "height" attribute with the specified value (note that the value is not checked!)
+	 *
+	 * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/height
+	 *
+	 * @type {string|null}
+	 */
+	svgHeight = null;
+
+	/**
+	 * whether to connect the paths for the several module types to avoid weird glitches when using gradients etc.
+	 *
+	 * @see https://github.com/chillerlan/php-qrcode/issues/57
+	 *
+	 * @type {boolean}
+	 */
+	connectPaths = false;
+
+	/**
+	 * specify which paths/patterns to exclude from connecting if $svgConnectPaths is set to true
+	 *
+	 * @type {int[]}
+	 */
+	excludeFromConnect = [];
+
+	/**
+	 * specify whether to draw the modules as filled circles
+	 *
+	 * a note for GDImage output:
+	 *
+	 * if QROptions::$scale is less or equal than 20, the image will be upscaled internally, then the modules will be drawn
+	 * using imagefilledellipse() and then scaled back to the expected size using IMG_BICUBIC which in turn produces
+	 * unexpected outcomes in combination with transparency - to avoid this, set scale to a value greater than 20.
+	 *
+	 * @see https://github.com/chillerlan/php-qrcode/issues/23
+	 * @see https://github.com/chillerlan/php-qrcode/discussions/122
+	 *
+	 * @type {boolean}
+	 */
+	drawCircularModules = false;
+
+	/**
+	 * specifies the radius of the modules when $svgDrawCircularModules is set to true
+	 *
+	 * @type {float}
+	 * @protected
+	 */
+	_circleRadius = 0.45;
+
+	/**
+	 * specifies which module types to exclude when $svgDrawCircularModules is set to true
+	 *
+	 * @type {int[]}
+	 */
+	keepAsSquare = [];
+
+	/**
+	 * string substitute for dark
+	 *
+	 * @type {string}
+	 */
+	textDark = '🔴';
+
+	/**
+	 * string substitute for light
+	 *
+	 * @type {string}
+	 */
+	textLight = '⭕';
+
+	/**
+	 * markup substitute for dark (CSS value)
+	 *
+	 * @type {string}
+	 */
+	markupDark = '#000';
+
+	/**
+	 * markup substitute for light (CSS value)
+	 *
+	 * @type {string}
+	 */
+	markupLight = '#fff';
+
+	/**
+	 * toggle base64 or raw image data
+	 *
+	 * @type {boolean}
+	 */
+	imageBase64 = true;
+
+	/**
+	 * toggle background transparency
+	 *
+	 * - In GdImage mode (png, gif) it sets imagecolortransparent() with QROptions::$imageTransparencyBG.
+	 *   It also sets the "normal" background color without transparency switch.
+	 *
+	 * - In SVG mode (as of v5), it won't render the "light" modules,
+	 *   as opacity/transparency can easily be set with css properties.
+	 *
+	 * - It has no effect in the FPDF and Imagick output modules.
+	 *
+	 * @see \chillerlan\QRCode\QROptions::$imageTransparencyBG
+	 * @see https://github.com/chillerlan/php-qrcode/discussions/121
+	 *
+	 * @type {boolean}
+	 */
+	imageTransparent = true;
+
+	/**
+	 * Module values map
+	 *
+	 *   - HTML, IMAGICK: #ABCDEF, cssname, rgb(), rgba()...
+	 *   - IMAGE: [63, 127, 255] // R, G, B
+	 *
+	 * @type {{}|null}
+	 */
+	moduleValues = null;
+
+	/**
+	 * Toggles logo space creation
+	 *
+	 * @type {boolean}
+	 */
+	addLogoSpace = false;
+
+	/**
+	 * width of the logo space
+	 *
+	 * @type {int}
+	 * @protected
+	 */
+	_logoSpaceWidth = 0;
+
+	/**
+	 * height of the logo space
+	 *
+	 * @type {int}
+	 * @protected
+	 */
+	_logoSpaceHeight = 0;
+
+	/**
+	 * optional horizontal start position of the logo space (top left corner)
+	 *
+	 * @type {int|null}
+	 * @protected
+	 */
+	_logoSpaceStartX = null;
+
+	/**
+	 * optional vertical start position of the logo space (top left corner)
+	 *
+	 * @type {int|null}
+	 * @protected
+	 */
+	_logoSpaceStartY = null;
+
+	/**
+	 * @param {{}|null} $options
+	 */
+	constructor($options = null){
+		// because javascript is dumb and we can't call getters and setters directly we have to a this silly workaround
+		let _workaround = [
+			'circleRadius', 'eccLevel', 'logoSpaceHeight', 'logoSpaceWidth', 'logoSpaceStartX', 'logoSpaceStartY',
+			'maskPattern', 'quietzoneSize', 'version', 'versionMin', 'versionMax',
+		];
+
+		if(typeof $options === 'object'){
+			for(let $property in $options){
+				if(_workaround.includes($property)){
+					this['_set_'+$property]($options[$property]);
+				}
+				else if(Object.prototype.hasOwnProperty.call(this, $property)){
+					this[$property] = $options[$property];
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * clamp min/max version number
+	 *
+	 * @param {int} $versionMin
+	 * @param {int} $versionMax
+	 *
+	 * @returns {void}
+	 *
+	 * @protected
+	 */
+	setMinMaxVersion($versionMin, $versionMax){
+		let $min = Math.max(1, Math.min(40, $versionMin));
+		let $max = Math.max(1, Math.min(40, $versionMax));
+
+		this._versionMin = Math.min($min, $max);
+		this._versionMax = Math.max($min, $max);
+	}
+
+	/**
+	 * sets the minimum version number
+	 *
+	 * @param {int} $versionMin
+	 *
+	 * @returns {void}
+	 * @protected
+	 */
+	_set_versionMin($versionMin){
+		this.setMinMaxVersion($versionMin, this._versionMax);
+	}
+
+	set versionMin($versionMin){ // eslint-disable-line no-dupe-class-members
+		this._set_versionMin($versionMin);
+	}
+
+	get versionMin(){ // eslint-disable-line no-dupe-class-members
+		return this._versionMin;
+	}
+
+	/**
+	 * sets the maximum version number
+	 *
+	 * @param {int} $versionMax
+	 *
+	 * @returns {void}
+	 * @protected
+	 */
+	_set_versionMax($versionMax){
+		this.setMinMaxVersion(this._versionMin, $versionMax);
+	}
+
+	set versionMax($versionMax){ // eslint-disable-line no-dupe-class-members
+		this._set_versionMax($versionMax);
+	}
+
+	get versionMax(){ // eslint-disable-line no-dupe-class-members
+		return this._versionMax;
+	}
+
+	/**
+	 * sets/clamps the version number
+	 *
+	 * @param {int} $version
+	 *
+	 * @returns {void}
+	 * @protected
+	 */
+	_set_version($version){
+		this._version = $version !== VERSION_AUTO ? Math.max(1, Math.min(40, $version)) : VERSION_AUTO;
+	}
+
+	set version($version){ // eslint-disable-line no-dupe-class-members
+		this._set_version($version);
+	}
+
+	get version(){ // eslint-disable-line no-dupe-class-members
+		return this._version;
+	}
+
+	/**
+	 * sets the error correction level
+	 *
+	 * @param {int} $eccLevel
+	 *
+	 * @returns {void}
+	 * @throws \chillerlan\QRCode\QRCodeException
+	 * @protected
+	 */
+	_set_eccLevel($eccLevel){
+
+		if(![ECC_L, ECC_M, ECC_Q, ECC_H].includes($eccLevel)){
+			throw new QRCodeException('Invalid error correct level: ' + $eccLevel);
+		}
+
+		this._eccLevel = $eccLevel;
+	}
+
+	set eccLevel($eccLevel){ // eslint-disable-line no-dupe-class-members
+		this._set_eccLevel($eccLevel);
+	}
+
+	get eccLevel(){ // eslint-disable-line no-dupe-class-members
+		return this._eccLevel;
+	}
+
+	/**
+	 * sets/clamps the mask pattern
+	 *
+	 * @param {int} $maskPattern
+	 *
+	 * @returns {void}
+	 * @protected
+	 */
+	_set_maskPattern($maskPattern){
+
+		if($maskPattern !== MASK_PATTERN_AUTO){
+			this._maskPattern = Math.max(0, Math.min(7, $maskPattern));
+		}
+
+	}
+
+	set maskPattern($maskPattern){ // eslint-disable-line no-dupe-class-members
+		this._set_maskPattern($maskPattern);
+	}
+
+	get maskPattern(){ // eslint-disable-line no-dupe-class-members
+		return this._maskPattern;
+	}
+
+	/**
+	 * sets/clamps the quiet zone size
+	 *
+	 * @param {int} $quietzoneSize
+	 *
+	 * @returns {void}
+	 * @protected
+	 */
+	_set_quietzoneSize($quietzoneSize){
+		this._quietzoneSize = Math.max(0, Math.min($quietzoneSize, 75));
+	}
+
+	set quietzoneSize($quietzoneSize){ // eslint-disable-line no-dupe-class-members
+		this._set_quietzoneSize($quietzoneSize) ;
+	}
+
+	get quietzoneSize(){ // eslint-disable-line no-dupe-class-members
+		return this._quietzoneSize;
+	}
+
+	/**
+	 * clamp the logo space values between 0 and maximum length (177 modules at version 40)
+	 *
+	 * @param {int} $value
+	 *
+	 * @returns {int}
+	 * @protected
+	 */
+	clampLogoSpaceValue($value){
+		$value = PHPJS.intval($value);
+
+		return Math.max(0, Math.min(177, $value));
+	}
+
+	/**
+	 * clamp/set logo space width
+	 *
+	 * @param {int} $width
+	 *
+	 * @returns {void}
+	 * @protected
+	 */
+	_set_logoSpaceWidth($width){
+		this._logoSpaceWidth = this.clampLogoSpaceValue($width);
+	}
+
+	set logoSpaceWidth($width){ // eslint-disable-line no-dupe-class-members
+		this._set_logoSpaceWidth($width);
+	}
+
+	get logoSpaceWidth(){ // eslint-disable-line no-dupe-class-members
+		return this._logoSpaceWidth;
+	}
+
+	/**
+	 * clamp/set logo space height
+	 *
+	 * @param {int} $height
+	 *
+	 * @returns {void}
+	 * @protected
+	 */
+	_set_logoSpaceHeight($height){
+		this._logoSpaceHeight = this.clampLogoSpaceValue($height);
+	}
+
+	set logoSpaceHeight($height){ // eslint-disable-line no-dupe-class-members
+		this._set_logoSpaceHeight($height);
+	}
+
+	get logoSpaceHeight(){ // eslint-disable-line no-dupe-class-members
+		return this._logoSpaceHeight;
+	}
+
+	/**
+	 * clamp/set horizontal logo space start
+	 *
+	 * @param {int|null} $startX
+	 *
+	 * @returns {void}
+	 * @protected
+	 */
+	_set_logoSpaceStartX($startX){
+		this._logoSpaceStartX = (typeof $startX === 'undefined' || $startX === null) ? null : this.clampLogoSpaceValue($startX);
+	}
+
+	set logoSpaceStartX($startX){ // eslint-disable-line no-dupe-class-members
+		this._set_logoSpaceStartX($startX);
+	}
+
+	get logoSpaceStartX(){ // eslint-disable-line no-dupe-class-members
+		return this._logoSpaceStartX;
+	}
+
+	/**
+	 * clamp/set vertical logo space start
+	 *
+	 * @param {int|null} $startY
+	 *
+	 * @returns {void}
+	 * @protected
+	 */
+	_set_logoSpaceStartY($startY){
+		this._logoSpaceStartY = (typeof $startY === 'undefined' || $startY === null) ? null : this.clampLogoSpaceValue($startY);
+	}
+
+	set logoSpaceStartY($startY){ // eslint-disable-line no-dupe-class-members
+		this._set_logoSpaceStartY($startY);
+	}
+
+	get logoSpaceStartY(){ // eslint-disable-line no-dupe-class-members
+		return this._logoSpaceStartY;
+	}
+
+	/**
+	 * clamp/set SVG circle radius
+	 *
+	 * @param {float} $circleRadius
+	 *
+	 * @returns {void}
+	 * @protected
+	 */
+	_set_circleRadius($circleRadius){
+		this._circleRadius = Math.max(0.1, Math.min(0.75, $circleRadius));
+	}
+
+	set circleRadius($circleRadius){ // eslint-disable-line no-dupe-class-members
+		this._set_circleRadius($circleRadius);
+	}
+
+	get circleRadius(){ // eslint-disable-line no-dupe-class-members
+		return this._circleRadius;
+	}
+
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="EccLevel.html">EccLevel</a></li><li><a href="MaskPattern.html">MaskPattern</a></li><li><a href="Mode.html">Mode</a></li><li><a href="module.exports.html">exports</a></li><li><a href="QRMatrix.html">QRMatrix</a></li><li><a href="Version.html">Version</a></li></ul><h3>Interfaces</h3><ul><li><a href="QROutputInterface.html">QROutputInterface</a></li></ul><h3>Global</h3><ul><li><a href="global.html#%255Cchillerlan%255CQRCode%255CData%255CQRDataModeInterface">\chillerlan\QRCode\Data\QRDataModeInterface</a></li><li><a href="global.html#_set_circleRadius">_set_circleRadius</a></li><li><a href="global.html#_set_eccLevel">_set_eccLevel</a></li><li><a href="global.html#_set_logoSpaceHeight">_set_logoSpaceHeight</a></li><li><a href="global.html#_set_logoSpaceStartX">_set_logoSpaceStartX</a></li><li><a href="global.html#_set_logoSpaceStartY">_set_logoSpaceStartY</a></li><li><a href="global.html#_set_logoSpaceWidth">_set_logoSpaceWidth</a></li><li><a href="global.html#_set_maskPattern">_set_maskPattern</a></li><li><a href="global.html#_set_quietzoneSize">_set_quietzoneSize</a></li><li><a href="global.html#_set_version">_set_version</a></li><li><a href="global.html#_set_versionMax">_set_versionMax</a></li><li><a href="global.html#_set_versionMin">_set_versionMin</a></li><li><a href="global.html#addAlphaNumSegment">addAlphaNumSegment</a></li><li><a href="global.html#addByteSegment">addByteSegment</a></li><li><a href="global.html#addNumericSegment">addNumericSegment</a></li><li><a href="global.html#addSegment">addSegment</a></li><li><a href="global.html#array_combine">array_combine</a></li><li><a href="global.html#array_merge">array_merge</a></li><li><a href="global.html#array_search">array_search</a></li><li><a href="global.html#available">available</a></li><li><a href="global.html#base64encode">base64encode</a></li><li><a href="global.html#CHAR_TO_ORD">CHAR_TO_ORD</a></li><li><a href="global.html#clampLogoSpaceValue">clampLogoSpaceValue</a></li><li><a href="global.html#clear">clear</a></li><li><a href="global.html#clearSegments">clearSegments</a></li><li><a href="global.html#collectModules">collectModules</a></li><li><a href="global.html#createMarkup">createMarkup</a></li><li><a href="global.html#dump">dump</a></li><li><a href="global.html#exp">exp</a></li><li><a href="global.html#fill_array">fill_array</a></li><li><a href="global.html#getBuffer">getBuffer</a></li><li><a href="global.html#getCharCount">getCharCount</a></li><li><a href="global.html#getCoefficient">getCoefficient</a></li><li><a href="global.html#getCoefficients">getCoefficients</a></li><li><a href="global.html#getCssClass">getCssClass</a></li><li><a href="global.html#getDataMode">getDataMode</a></li><li><a href="global.html#getDefaultModuleValue">getDefaultModuleValue</a></li><li><a href="global.html#getDegree">getDegree</a></li><li><a href="global.html#getLength">getLength</a></li><li><a href="global.html#getLengthInBits">getLengthInBits</a></li><li><a href="global.html#getMatrix">getMatrix</a></li><li><a href="global.html#getModuleValue">getModuleValue</a></li><li><a href="global.html#header">header</a></li><li><a href="global.html#initCustomOutputInterface">initCustomOutputInterface</a></li><li><a href="global.html#initOutputInterface">initOutputInterface</a></li><li><a href="global.html#interleaveEcBytes">interleaveEcBytes</a></li><li><a href="global.html#intval">intval</a></li><li><a href="global.html#IS_DARK">IS_DARK</a></li><li><a href="global.html#isset">isset</a></li><li><a href="global.html#isZero">isZero</a></li><li><a href="global.html#json">json</a></li><li><a href="global.html#log">log</a></li><li><a href="global.html#M_ALIGNMENT">M_ALIGNMENT</a></li><li><a href="global.html#M_DARKMODULE">M_DARKMODULE</a></li><li><a href="global.html#M_DATA">M_DATA</a></li><li><a href="global.html#M_FINDER">M_FINDER</a></li><li><a href="global.html#M_FINDER_DOT">M_FINDER_DOT</a></li><li><a href="global.html#M_FORMAT">M_FORMAT</a></li><li><a href="global.html#M_LOGO">M_LOGO</a></li><li><a href="global.html#M_NULL">M_NULL</a></li><li><a href="global.html#M_QUIETZONE">M_QUIETZONE</a></li><li><a href="global.html#M_SEPARATOR">M_SEPARATOR</a></li><li><a href="global.html#M_TEST">M_TEST</a></li><li><a href="global.html#M_TIMING">M_TIMING</a></li><li><a href="global.html#M_VERSION">M_VERSION</a></li><li><a href="global.html#MASK_PATTERN_AUTO">MASK_PATTERN_AUTO</a></li><li><a href="global.html#MATRIX_NEIGHBOUR_FLAGS">MATRIX_NEIGHBOUR_FLAGS</a></li><li><a href="global.html#MATRIX_NEIGHBOURS">MATRIX_NEIGHBOURS</a></li><li><a href="global.html#mod">mod</a></li><li><a href="global.html#MODE_INTERFACES">MODE_INTERFACES</a></li><li><a href="global.html#MODE_LENGTH_BITS">MODE_LENGTH_BITS</a></li><li><a href="global.html#module">module</a></li><li><a href="global.html#MODULE_VALUES_KEYS">MODULE_VALUES_KEYS</a></li><li><a href="global.html#moduleValueIsValid">moduleValueIsValid</a></li><li><a href="global.html#multiply">multiply</a></li><li><a href="global.html#ord">ord</a></li><li><a href="global.html#OUTPUT_MODE_INTERFACES">OUTPUT_MODE_INTERFACES</a></li><li><a href="global.html#paths">paths</a></li><li><a href="global.html#put">put</a></li><li><a href="global.html#putBit">putBit</a></li><li><a href="global.html#read">read</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#saveToFile">saveToFile</a></li><li><a href="global.html#setData">setData</a></li><li><a href="global.html#setMatrixDimensions">setMatrixDimensions</a></li><li><a href="global.html#setMinMaxVersion">setMinMaxVersion</a></li><li><a href="global.html#setModuleValues">setModuleValues</a></li><li><a href="global.html#text">text</a></li><li><a href="global.html#toHtmlElement">toHtmlElement</a></li><li><a href="global.html#TOTAL_CODEWORDS">TOTAL_CODEWORDS</a></li><li><a href="global.html#validateString">validateString</a></li><li><a href="global.html#validateStringI">validateStringI</a></li><li><a href="global.html#VERSION_AUTO">VERSION_AUTO</a></li><li><a href="global.html#write">write</a></li><li><a href="global.html#writeMatrix">writeMatrix</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.11</a> on Sun Jul 24 2022 12:48:20 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Output/QRMarkupSVG.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Output/QRMarkupSVG.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @created      11.07.2022
+ * @author       smiley &lt;smiley@chillerlan.net>
+ * @copyright    2022 smiley
+ * @license      MIT
+ */
+
+import QRMarkup from './QRMarkup.js';
+import {IS_DARK} from '../Data/QRMatrix.js';
+
+/**
+ * SVG output
+ *
+ * @see https://github.com/codemasher/php-qrcode/pull/5
+ * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Element/svg
+ * @see https://www.sarasoueidan.com/demos/interactive-svg-coordinate-system/
+ * @see http://apex.infogridpacific.com/SVG/svg-tutorial-contents.html
+ */
+export default class QRMarkupSVG extends QRMarkup{
+
+	/**
+	 * @inheritDoc
+	 */
+	createMarkup($saveToFile){
+		let $svg = this.header();
+		let $eol = this.options.eol;
+
+		if(this.options.svgDefs){
+			let $s1 = this.options.svgDefs;
+
+			$svg += `&lt;defs>${$s1}${$eol}&lt;/defs>${$eol}`;
+		}
+
+		$svg += this.paths();
+
+		// close svg
+		$svg += `${$eol}&lt;/svg>${$eol}`;
+
+		// transform to data URI only when not saving to file
+		if(!$saveToFile &amp;&amp; this.options.imageBase64){
+			$svg = this.base64encode($svg, 'image/svg+xml');
+		}
+
+		return $svg;
+	}
+
+	/**
+	 * returns the &lt;svg> header with the given options parsed
+	 *
+	 * @returns {string}
+	 */
+	header(){
+		let $size   = this.options.svgViewBoxSize || this.moduleCount;
+		let $width  = this.options.svgWidth !== null ? ` width="${this.options.svgWidth}"` : '';
+		let $height = this.options.svgHeight !== null ? ` height="${this.options.svgHeight}"` : '';
+
+		return `&lt;?xml version="1.0" encoding="UTF-8"?>${this.options.eol}&lt;svg xmlns="http://www.w3.org/2000/svg" class="qr-svg ${this.options.cssClass}" viewBox="0 0 ${$size} ${$size}" preserveAspectRatio="${this.options.svgPreserveAspectRatio}"${$width}${$height}>${this.options.eol}`;
+	}
+
+	/**
+	 * returns one or more SVG &lt;path> elements
+	 *
+	 * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Element/path
+	 *
+	 * @returns {string}
+	 */
+	paths(){
+		let $paths = this.collectModules(($x, $y, $M_TYPE) => this.module($x, $y, $M_TYPE));
+		let $svg = [];
+
+		// create the path elements
+		for(let $M_TYPE in $paths){
+			// limit the total line length
+			let $chunkSize = 100;
+			let $chonks    = [];
+
+			for(let $i = 0; $i &lt; $paths[$M_TYPE].length; $i += $chunkSize){
+				$chonks.push($paths[$M_TYPE].slice($i, $i + $chunkSize).join(' '));
+			}
+
+			let $path = $chonks.join(this.options.eol);
+
+			if($path === ''){
+				continue;
+			}
+
+			let $type = this.moduleValues[$M_TYPE] || '';
+			let $cssClass = this.getCssClass($M_TYPE);
+
+			// ignore non-existent module values
+			let $element = $type === ''
+				? `&lt;path class="${$cssClass}" d="${$path}"/>`
+				: `&lt;path class="${$cssClass}" fill="${$type}" fill-opacity="${this.options.svgOpacity}" d="${$path}"/>`;
+
+			$svg.push($element);
+		}
+
+		return $svg.join(this.options.eol);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	getCssClass($M_TYPE){
+		return [
+			`qr-${$M_TYPE}`,
+			($M_TYPE &amp; IS_DARK) === IS_DARK ? 'dark' : 'light',
+			this.options.cssClass,
+		].join(' ');
+	}
+
+	/**
+	 * returns a path segment for a single module
+	 *
+	 * yes, &lt;symbol>/&lt;use> is better except it isn't.
+	 * @see https://github.com/chillerlan/php-qrcode/issues/127#issuecomment-1148627245
+	 *
+	 * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d
+	 *
+	 * @param {int} $x
+	 * @param {int} $y
+	 * @param {int} $M_TYPE
+	 *
+	 * @returns {string}
+	 */
+	module($x, $y, $M_TYPE){
+
+		if(this.options.imageTransparent &amp;&amp; !this.matrix.check($x, $y)){
+			return '';
+		}
+
+		if(this.options.drawCircularModules &amp;&amp; this.matrix.checkTypeNotIn($x, $y, this.options.keepAsSquare)){
+			// some values come with the usual JS float fun and i won't do shit about it
+			let r  = parseFloat(this.options.circleRadius);
+			let d  = (r * 2);
+			let ix = ($x + 0.5 - r);
+			let iy = ($y + 0.5);
+
+			if(ix &lt; 1){
+				ix = ix.toPrecision(3);
+			}
+
+			return `M${ix} ${iy} a${r} ${r} 0 1 0 ${d} 0 a${r} ${r} 0 1 0 -${d} 0Z`;
+		}
+
+		return `M${$x} ${$y} h1 v1 h-1Z`;
+	}
+
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="EccLevel.html">EccLevel</a></li><li><a href="MaskPattern.html">MaskPattern</a></li><li><a href="Mode.html">Mode</a></li><li><a href="module.exports.html">exports</a></li><li><a href="QRMatrix.html">QRMatrix</a></li><li><a href="Version.html">Version</a></li></ul><h3>Interfaces</h3><ul><li><a href="QROutputInterface.html">QROutputInterface</a></li></ul><h3>Global</h3><ul><li><a href="global.html#%255Cchillerlan%255CQRCode%255CData%255CQRDataModeInterface">\chillerlan\QRCode\Data\QRDataModeInterface</a></li><li><a href="global.html#_set_circleRadius">_set_circleRadius</a></li><li><a href="global.html#_set_eccLevel">_set_eccLevel</a></li><li><a href="global.html#_set_logoSpaceHeight">_set_logoSpaceHeight</a></li><li><a href="global.html#_set_logoSpaceStartX">_set_logoSpaceStartX</a></li><li><a href="global.html#_set_logoSpaceStartY">_set_logoSpaceStartY</a></li><li><a href="global.html#_set_logoSpaceWidth">_set_logoSpaceWidth</a></li><li><a href="global.html#_set_maskPattern">_set_maskPattern</a></li><li><a href="global.html#_set_quietzoneSize">_set_quietzoneSize</a></li><li><a href="global.html#_set_version">_set_version</a></li><li><a href="global.html#_set_versionMax">_set_versionMax</a></li><li><a href="global.html#_set_versionMin">_set_versionMin</a></li><li><a href="global.html#addAlphaNumSegment">addAlphaNumSegment</a></li><li><a href="global.html#addByteSegment">addByteSegment</a></li><li><a href="global.html#addNumericSegment">addNumericSegment</a></li><li><a href="global.html#addSegment">addSegment</a></li><li><a href="global.html#array_combine">array_combine</a></li><li><a href="global.html#array_merge">array_merge</a></li><li><a href="global.html#array_search">array_search</a></li><li><a href="global.html#available">available</a></li><li><a href="global.html#base64encode">base64encode</a></li><li><a href="global.html#CHAR_TO_ORD">CHAR_TO_ORD</a></li><li><a href="global.html#clampLogoSpaceValue">clampLogoSpaceValue</a></li><li><a href="global.html#clear">clear</a></li><li><a href="global.html#clearSegments">clearSegments</a></li><li><a href="global.html#collectModules">collectModules</a></li><li><a href="global.html#createMarkup">createMarkup</a></li><li><a href="global.html#dump">dump</a></li><li><a href="global.html#exp">exp</a></li><li><a href="global.html#fill_array">fill_array</a></li><li><a href="global.html#getBuffer">getBuffer</a></li><li><a href="global.html#getCharCount">getCharCount</a></li><li><a href="global.html#getCoefficient">getCoefficient</a></li><li><a href="global.html#getCoefficients">getCoefficients</a></li><li><a href="global.html#getCssClass">getCssClass</a></li><li><a href="global.html#getDataMode">getDataMode</a></li><li><a href="global.html#getDefaultModuleValue">getDefaultModuleValue</a></li><li><a href="global.html#getDegree">getDegree</a></li><li><a href="global.html#getLength">getLength</a></li><li><a href="global.html#getLengthInBits">getLengthInBits</a></li><li><a href="global.html#getMatrix">getMatrix</a></li><li><a href="global.html#getModuleValue">getModuleValue</a></li><li><a href="global.html#header">header</a></li><li><a href="global.html#initCustomOutputInterface">initCustomOutputInterface</a></li><li><a href="global.html#initOutputInterface">initOutputInterface</a></li><li><a href="global.html#interleaveEcBytes">interleaveEcBytes</a></li><li><a href="global.html#intval">intval</a></li><li><a href="global.html#IS_DARK">IS_DARK</a></li><li><a href="global.html#isset">isset</a></li><li><a href="global.html#isZero">isZero</a></li><li><a href="global.html#json">json</a></li><li><a href="global.html#log">log</a></li><li><a href="global.html#M_ALIGNMENT">M_ALIGNMENT</a></li><li><a href="global.html#M_DARKMODULE">M_DARKMODULE</a></li><li><a href="global.html#M_DATA">M_DATA</a></li><li><a href="global.html#M_FINDER">M_FINDER</a></li><li><a href="global.html#M_FINDER_DOT">M_FINDER_DOT</a></li><li><a href="global.html#M_FORMAT">M_FORMAT</a></li><li><a href="global.html#M_LOGO">M_LOGO</a></li><li><a href="global.html#M_NULL">M_NULL</a></li><li><a href="global.html#M_QUIETZONE">M_QUIETZONE</a></li><li><a href="global.html#M_SEPARATOR">M_SEPARATOR</a></li><li><a href="global.html#M_TEST">M_TEST</a></li><li><a href="global.html#M_TIMING">M_TIMING</a></li><li><a href="global.html#M_VERSION">M_VERSION</a></li><li><a href="global.html#MASK_PATTERN_AUTO">MASK_PATTERN_AUTO</a></li><li><a href="global.html#MATRIX_NEIGHBOUR_FLAGS">MATRIX_NEIGHBOUR_FLAGS</a></li><li><a href="global.html#MATRIX_NEIGHBOURS">MATRIX_NEIGHBOURS</a></li><li><a href="global.html#mod">mod</a></li><li><a href="global.html#MODE_INTERFACES">MODE_INTERFACES</a></li><li><a href="global.html#MODE_LENGTH_BITS">MODE_LENGTH_BITS</a></li><li><a href="global.html#module">module</a></li><li><a href="global.html#MODULE_VALUES_KEYS">MODULE_VALUES_KEYS</a></li><li><a href="global.html#moduleValueIsValid">moduleValueIsValid</a></li><li><a href="global.html#multiply">multiply</a></li><li><a href="global.html#ord">ord</a></li><li><a href="global.html#OUTPUT_MODE_INTERFACES">OUTPUT_MODE_INTERFACES</a></li><li><a href="global.html#paths">paths</a></li><li><a href="global.html#put">put</a></li><li><a href="global.html#putBit">putBit</a></li><li><a href="global.html#read">read</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#saveToFile">saveToFile</a></li><li><a href="global.html#setData">setData</a></li><li><a href="global.html#setMatrixDimensions">setMatrixDimensions</a></li><li><a href="global.html#setMinMaxVersion">setMinMaxVersion</a></li><li><a href="global.html#setModuleValues">setModuleValues</a></li><li><a href="global.html#text">text</a></li><li><a href="global.html#toHtmlElement">toHtmlElement</a></li><li><a href="global.html#TOTAL_CODEWORDS">TOTAL_CODEWORDS</a></li><li><a href="global.html#validateString">validateString</a></li><li><a href="global.html#validateStringI">validateStringI</a></li><li><a href="global.html#VERSION_AUTO">VERSION_AUTO</a></li><li><a href="global.html#write">write</a></li><li><a href="global.html#writeMatrix">writeMatrix</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.11</a> on Sun Jul 24 2022 12:48:20 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
