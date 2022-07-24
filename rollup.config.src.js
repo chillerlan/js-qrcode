@@ -7,6 +7,12 @@ export default {
 			sourcemap: true,
 		},
 		{
+			file: 'dist/js-qrcode-iife-src.js',
+			format: 'iife',
+			sourcemap: true,
+			name: 'jsqrcode',
+		},
+		{
 			file: 'dist/js-qrcode-node-src.cjs',
 			format: 'cjs',
 			sourcemap: true,

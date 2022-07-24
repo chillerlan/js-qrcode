@@ -10,6 +10,12 @@ export default {
 			sourcemap: false,
 		},
 		{
+			file: 'dist/js-qrcode-iife.js',
+			format: 'iife',
+			sourcemap: false,
+			name: 'jsqrcode',
+		},
+		{
 			file: 'dist/js-qrcode-node.cjs',
 			format: 'cjs',
 			sourcemap: false,
