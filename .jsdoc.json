@@ -1,0 +1,12 @@
+{
+	"opts": {
+		"encoding": "utf8",
+		"destination": "./doc/",
+		"recurse": true
+	},
+	"source": {
+		"include": ["lib/"],
+		"exclude": ["lib/index.js"]
+	},
+	"sourceType": "module"
+}

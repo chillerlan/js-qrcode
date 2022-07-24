@@ -59,6 +59,7 @@
 		"core-js": "~3.23.4",
 		"chai": "~4.3.6",
 		"eslint": "~8.19.0",
+		"jsdoc": "~3.6.11",
 		"mocha": "~10.0.0",
 		"node": "~18.5.0",
 		"nyc": "~15.1.0",
@@ -70,6 +71,7 @@
 		"build": "rollup -c rollup.config.dist.js",
 		"build-src": "rollup -c rollup.config.src.js",
 		"test": "mocha",
-		"test-with-coverage": "c8 mocha"
+		"test-with-coverage": "c8 mocha",
+		"jsdoc": "jsdoc -c .jsdoc.json"
 	}
 }

@@ -35,3 +35,13 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           directory: ./.build/coverage/
+
+      - name: "Build Docs"
+        run: npm run jsdoc
+
+      - name: "Publish Docs to gh-pages"
+        uses: JamesIves/github-pages-deploy-action@v4.3.4
+        with:
+          branch: gh-pages
+          folder: doc
+          clean: true
