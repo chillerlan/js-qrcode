@@ -49,5 +49,5 @@ jobs:
       - name: "upload artifacts"
         uses: actions/upload-artifact@v3
         with:
-          name: js-qrcode-${{GITHUB_SHA}}
+          name: js-qrcode-${{ github.sha }}
           path: ./dist
