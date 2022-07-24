@@ -23,7 +23,8 @@ Server-side, in nodejs:
 ```js
 import {QRCode} from './dist/js-qrcode-node-src.cjs';
 
-let qrcode = (new QRCode()).render('otpauth://totp/test?secret=B3JX4VCVJDVNXNZ5&issuer=chillerlan.net');
+let data   = 'otpauth://totp/test?secret=B3JX4VCVJDVNXNZ5&issuer=chillerlan.net';
+let qrcode = (new QRCode()).render(data);
 
 // do stuff
 console.log(qrcode);
