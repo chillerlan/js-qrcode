@@ -177,9 +177,9 @@ export default class QRData{
 				return $version;
 			}
 		}
-
+		/* c8 ignore next 2 */
 		// it's almost impossible to run into this one as $this::estimateTotalBitLength() would throw first
-		throw new QRCodeDataException('failed to guess minimum version'); // @codeCoverageIgnore
+		throw new QRCodeDataException('failed to guess minimum version');
 	}
 
 	/**

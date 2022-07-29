@@ -76,15 +76,6 @@ export default class QROutputAbstract extends QROutputInterface{
 	}
 
 	/**
-	 * generates the output, optionally dumps it to a file, and returns it
-	 *
-	 * @param {string|null} $file
-	 * @return {*}
-	 * @abstract
-	 */
-	dump($file = null){}
-
-	/**
 	 * Sets/updates the matrix dimensions
 	 *
 	 * Call this method if you modify the matrix from within your custom module in case the dimensions have been changed
