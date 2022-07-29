@@ -103,52 +103,6 @@ export default class PHPJS{
 	}
 
 	/**
-	 * @link https://locutus.io/php/array/array_search/
-	 *
-	 * @param {*} needle
-	 * @param {array} haystack
-	 * @param {boolean} argStrict
-	 * @returns {string|int|boolean}
-	 */
-	static array_search(needle, haystack, argStrict){
-		let strict = !!argStrict;
-		let key = '';
-
-		if(typeof needle === 'object' && needle.exec){
-			// Duck-type for RegExp
-			if(!strict){
-				// Let's consider case sensitive searches as strict
-				let flags = 'i' + (needle.global ? 'g' : '') +
-					(needle.multiline ? 'm' : '') +
-					// sticky is FF only
-					(needle.sticky ? 'y' : '');
-				needle = new RegExp(needle.source, flags);
-			}
-
-			for(key in haystack){
-				if(Object.prototype.hasOwnProperty.call(haystack, key)){
-					if(needle.test(haystack[key])){
-						return key;
-					}
-				}
-			}
-
-			return false;
-		}
-
-		for(key in haystack){
-			if(Object.prototype.hasOwnProperty.call(haystack, key)){
-				// noinspection EqualityComparisonWithCoercionJS
-				if((strict && haystack[key] === needle) || (!strict && haystack[key] == needle)){ // eslint-disable-line eqeqeq
-					return key;
-				}
-			}
-		}
-
-		return false;
-	}
-
-	/**
 	 * @link https://locutus.io/php/array/array_merge/
 	 *
 	 * @returns {Array|{}}

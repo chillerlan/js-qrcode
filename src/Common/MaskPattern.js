@@ -106,7 +106,7 @@ export default class MaskPattern{
 			$penalties[$pattern] = PHPJS.intval($penalty);
 		}
 
-		return new MaskPattern(PHPJS.array_search(Math.min(...$penalties), $penalties, true));
+		return new MaskPattern($penalties.indexOf(Math.min(...$penalties)));
 	}
 
 	/**
