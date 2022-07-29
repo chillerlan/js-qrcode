@@ -227,7 +227,7 @@ export default class Version{
 	constructor($version){
 
 		if($version < 1 || $version > 40){
-			throw new QRCodeException('invalid version number');
+			throw new QRCodeException('invalid version given');
 		}
 
 		this.version = $version;

@@ -63,7 +63,12 @@ export default class Mode{
 	 * @param {int} $mode
 	 */
 	static getLengthBitsForMode($mode){
-		return MODE_LENGTH_BITS[$mode];
+
+		if(PHPJS.isset(() => MODE_LENGTH_BITS[$mode])){
+			return MODE_LENGTH_BITS[$mode];
+		}
+
+		throw new QRCodeException('invalid mode given');
 	}
 
 }

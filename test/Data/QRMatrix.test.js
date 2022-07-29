@@ -84,6 +84,10 @@ suite('QRMatrixTest', function(){
 		_matrix.set(20, 20, false, M_TEST);
 		assert.strictEqual(_matrix.get(20, 20), M_TEST);
 		assert.isFalse(_matrix.check(20, 20));
+
+		// out of range
+		assert.isFalse(_matrix.check(-1, -1));
+		assert.strictEqual(_matrix.get(-1, -1), -1);
 	});
 
 	/**

@@ -13,11 +13,14 @@ export default class PHPJS{
 	 * @returns {Array}
 	 */
 	static fill_array(length, mixedVal){
-		let arr = [];
+		let valIsObject = (typeof mixedVal === 'object');
+		let arr         = [];
 
 		for(let key = 0; key < length; key++){
-			// abuse JSON to create a true clone of the value
-			arr[key] = JSON.parse(JSON.stringify(mixedVal));
+			arr[key] = valIsObject
+				// abuse JSON to create a true clone of the value
+				? JSON.parse(JSON.stringify(mixedVal))
+				: mixedVal;
 		}
 
 		return arr;
@@ -73,25 +76,21 @@ export default class PHPJS{
 	 * @param {Array} values
 	 * @returns {{}|boolean}
 	 */
-	static array_combine(keys, values) {
+	static array_combine(keys, values){
 		let newArray = {};
 		let i = 0;
 		// input sanitation
-		// Only accept arrays or array-like objects
-		// Require arrays to have a count
-		if(typeof keys !== 'object' || typeof values !== 'object'){
-			return false;
-		}
-
-		if(typeof keys.length !== 'number' || typeof values.length !== 'number'){
-			return false;
-		}
-
-		if(!keys.length){
-			return false;
-		}
-		// number of elements does not match
-		if(keys.length !== values.length){
+		if(
+			// Only accept arrays or array-like objects
+			typeof keys !== 'object'
+			|| typeof values !== 'object'
+			// Require arrays to have a count
+			|| typeof keys.length !== 'number'
+			|| typeof values.length !== 'number'
+			|| !keys.length
+			// number of elements does not match
+			|| keys.length !== values.length
+		){
 			return false;
 		}
 
