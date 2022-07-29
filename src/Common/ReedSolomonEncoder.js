@@ -48,7 +48,7 @@ export default class ReedSolomonEncoder{
 		let $rsBlocks        = PHPJS.fill_array($l1, [$numEccCodewords + $b1, $b1]);
 
 		if($l2 > 0){
-			$rsBlocks = PHPJS.array_merge($rsBlocks, PHPJS.fill_array($l2, [$numEccCodewords + $b2, $b2]));
+			$rsBlocks = $rsBlocks.concat(PHPJS.fill_array($l2, [$numEccCodewords + $b2, $b2]));
 		}
 
 
