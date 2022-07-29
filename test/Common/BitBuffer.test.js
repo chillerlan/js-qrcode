@@ -33,11 +33,4 @@ suite('BitBufferTest', function(){
 
 	});
 
-	test('testReadException', function(){
-		let bitBuffer = new BitBuffer()
-		bitBuffer.put(MODE_KANJI, 4);
-
-		assert.throws(() => bitBuffer.read(bitBuffer.available() + 1), 'invalid $numBits');
-	});
-
 });
