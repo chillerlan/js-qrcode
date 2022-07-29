@@ -28,20 +28,6 @@ export default class BitBuffer{
 	length = 0;
 
 	/**
-	 * Read count (bytes)
-	 *
-	 * @type {int}
-	 */
-	bytesRead = 0;
-
-	/**
-	 * Read count (bits)
-	 *
-	 * @type {int}
-	 */
-	bitsRead = 0;
-
-	/**
 	 * BitBuffer constructor.
 	 *
 	 * @param {int[]|null} $bytes
@@ -110,66 +96,6 @@ export default class BitBuffer{
 	}
 
 	/**
-	 * @returns {int} number of bits that can be read successfully
-	 */
-	available(){
-		return 8 * (this.length - this.bytesRead) - this.bitsRead;
-	}
-
-	/**
-	 * @author Sean Owen, ZXing
-	 *
-	 * @param {int} $numBits number of bits to read
-	 *
-	 * @returns {int} representing the bits read. The bits will appear as the least-significant bits of the int
-	 * @throws \chillerlan\QRCode\QRCodeException if numBits isn't in [1,32] or more than is available
-	 */
-	read($numBits){
-
-		if($numBits < 1 || $numBits > this.available()){
-			throw new QRCodeException('invalid $numBits: ' + $numBits);
-		}
-
-		let $result = 0;
-
-		// First, read remainder from current byte
-		if(this.bitsRead > 0){
-			let $bitsLeft      = 8 - this.bitsRead;
-			let $toRead        = Math.min($numBits, $bitsLeft);
-			let $bitsToNotRead = $bitsLeft - $toRead;
-			let $mask          = (0xff >> (8 - $toRead)) << $bitsToNotRead;
-			$result            = (this.buffer[this.bytesRead] & $mask) >> $bitsToNotRead;
-			$numBits          -= $toRead;
-			this.bitsRead     += $toRead;
-
-			if(this.bitsRead === 8){
-				this.bitsRead = 0;
-				this.bytesRead++;
-			}
-		}
-
-		// Next read whole bytes
-		if($numBits > 0){
-
-			while($numBits >= 8){
-				$result = ($result << 8) | (this.buffer[this.bytesRead] & 0xff);
-				this.bytesRead++;
-				$numBits -= 8;
-			}
-
-			// Finally read a partial byte
-			if($numBits > 0){
-				let $bitsToNotRead = 8 - $numBits;
-				let $mask          = (0xff >> $bitsToNotRead) << $bitsToNotRead;
-				$result            = ($result << $numBits) | ((this.buffer[this.bytesRead] & $mask) >> $bitsToNotRead);
-				this.bitsRead     += $numBits;
-			}
-		}
-
-		return $result;
-	}
-
-	/**
 	 * clears the buffer
 	 *
 	 * @returns {BitBuffer}
@@ -177,8 +103,6 @@ export default class BitBuffer{
 	clear(){
 		this.buffer    = [];
 		this.length    = 0;
-		this.bytesRead = 0;
-		this.bitsRead  = 0;
 
 		return this;
 	}
