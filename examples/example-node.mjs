@@ -10,8 +10,8 @@ import {IS_DARK, M_ALIGNMENT, M_FINDER, M_FINDER_DOT, QRCode, QROptions} from '.
 let $options = new QROptions();
 
 $options.imageBase64 = false;
-// if set to true, the light modules won't be rendered
-$options.imageTransparent = false;
+// if set to false, the light modules won't be rendered
+$options.drawLightModules = true;
 // empty the default value to remove the fill* attributes from the <path> elements
 $options.markupDark = '';
 $options.markupLight = '';

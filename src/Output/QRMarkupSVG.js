@@ -125,7 +125,7 @@ export default class QRMarkupSVG extends QRMarkup{
 	 */
 	module($x, $y, $M_TYPE){
 
-		if(this.options.imageTransparent && !this.matrix.check($x, $y)){
+		if(!this.options.drawLightModules && !this.matrix.check($x, $y)){
 			return '';
 		}
 

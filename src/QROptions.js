@@ -273,20 +273,18 @@ export default class QROptions{
 	/**
 	 * toggle background transparency
 	 *
-	 * - In GdImage mode (png, gif) it sets imagecolortransparent() with QROptions::$imageTransparencyBG.
-	 *   It also sets the "normal" background color without transparency switch.
-	 *
-	 * - In SVG mode (as of v5), it won't render the "light" modules,
-	 *   as opacity/transparency can easily be set with css properties.
-	 *
-	 * - It has no effect in the FPDF and Imagick output modules.
-	 *
 	 * @see \chillerlan\QRCode\QROptions::$imageTransparencyBG
-	 * @see https://github.com/chillerlan/php-qrcode/discussions/121
 	 *
 	 * @type {boolean}
 	 */
 	imageTransparent = true;
+
+	/**
+	 * whether to draw the light (false) modules
+	 *
+	 * @type {boolean}
+	 */
+	drawLightModules = true;
 
 	/**
 	 * Module values map
