@@ -46,6 +46,10 @@ export default class QRMarkup extends QROutputAbstract{
 
 		let $data = this.createMarkup($saveToFile);
 
+		if(!$saveToFile && this.options.returnMarkupAsHtmlElement){
+			return this.toHtmlElement($data);
+		}
+
 		if($saveToFile){
 			this.saveToFile($data, $file);
 		}

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title>QRCode example</title>
+	<style>
+		/* wrapper - css class specified with QROptions.cssClass */
+		div.qr{
+			margin: 2em;
+		}
+
+		/* rows */
+		div.qr > div {
+			height: 10px;
+		}
+
+		/* modules */
+		div.qr > div > span {
+			display: inline-block;
+			width: 10px;
+			height: 10px;
+		}
+
+		/* default values specified with QROptions.markupDark and QROptions.markupLight*/
+		span.dark{
+			background: #000;
+		}
+		span.light{
+			background: #fff;
+		}
+
+		/* custom module values */
+		span.data {
+			background: #ecf9be;
+		}
+		span.data-dark {
+			background: #4a6000;
+		}
+		span.finder {
+			background: #ffbfbf;
+		}
+		span.finder-dark {
+			background: #a71111;
+		}
+		span.finder-dot {
+			background: #a71111;
+		}
+		span.alignment {
+			background: #ffc9c9;
+		}
+		span.alignment-dark {
+			background: #a70364;
+		}
+		span.timing {
+			background: #ffb8e9;
+		}
+		span.timing-dark {
+			background: #98005d;
+		}
+		span.format {
+			background: #00fb12;
+		}
+		span.format-dark {
+			background: #003804;
+		}
+		span.version {
+			background: #e0b8ff;
+		}
+		span.version-dark {
+			background: #650098;
+		}
+		span.darkmodule {
+			background: #080063;
+		}
+		span.separator {
+			background: #afbfbf;
+		}
+		span.quietzone {
+			background: #DDDDDD;
+		}
+	</style>
+</head>
+<body>
+<div class="container" id="qrcode-container-html"></div>
+<script type="module">
+	import {
+		QRCode, QROptions, OUTPUT_MARKUP_HTML, IS_DARK,
+		M_DATA, M_FINDER, M_FINDER_DOT, M_ALIGNMENT, M_TIMING, M_FORMAT,
+		M_VERSION, M_DARKMODULE, M_SEPARATOR, M_QUIETZONE
+	} from '../src/index.js';
+
+	let mv = {};
+
+	// data
+	mv[M_DATA]               = 'data';      // (false)
+	mv[M_DATA|IS_DARK]       = 'data-dark'; // (true)
+	// finder
+	mv[M_FINDER]             = 'finder';
+	mv[M_FINDER|IS_DARK]     = 'finder-dark';
+	mv[M_FINDER_DOT|IS_DARK] = 'finder-dot';
+	// alignment
+	mv[M_ALIGNMENT]          = 'alignment';
+	mv[M_ALIGNMENT|IS_DARK]  = 'alignment-dark';
+	// timing
+	mv[M_TIMING]             = 'timing';
+	mv[M_TIMING|IS_DARK]     = 'timing-dark';
+	// format
+	mv[M_FORMAT]             = 'format';
+	mv[M_FORMAT|IS_DARK]     = 'format-dark';
+	// version
+	mv[M_VERSION]            = 'version';
+	mv[M_VERSION|IS_DARK]    = 'version-dark';
+	// darkmodule
+	mv[M_DARKMODULE|IS_DARK] = 'darkmodule';
+	// separator
+	mv[M_SEPARATOR]          = 'separator';
+	// quietzone
+	mv[M_QUIETZONE]          = 'quietzone';
+
+
+	let options = new QROptions({
+		outputType               : OUTPUT_MARKUP_HTML,
+		version                  : 7,
+		cssClass                 : 'qr',
+		markupDark               : 'dark',
+		markupLight              : 'light',
+		moduleValues             : mv,
+		eol                      : '',
+		returnMarkupAsHtmlElement: true,
+	});
+
+	let qrcode = (new QRCode(options)).render('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
+
+	document.getElementById('qrcode-container-html').appendChild(qrcode);
+</script>
+</body>
+</html>

@@ -338,6 +338,13 @@ export default class QROptions{
 	_logoSpaceStartY = null;
 
 	/**
+	 * whether to return the marup as DOM element
+	 *
+	 * @type {boolean}
+	 */
+	returnMarkupAsHtmlElement = false;
+
+	/**
 	 * @param {{}|null} $options
 	 */
 	constructor($options = null){
