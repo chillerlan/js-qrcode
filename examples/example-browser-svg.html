@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-	<title>QRCode example</title>
+	<title>QRCode SVG example</title>
 	<style>
 		.container{
 			width: 600px;
@@ -22,9 +22,13 @@
 <div class="container" id="qrcode-container-img"></div>
 <div class="container" id="qrcode-container-svg"></div>
 <script type="module">
-	import {IS_DARK, M_ALIGNMENT, M_FINDER, M_FINDER_DOT, QRCode, QROptions} from '../src/index.js';
+	import {
+		QRCode, QROptions,
+		IS_DARK, M_ALIGNMENT, M_FINDER, M_FINDER_DOT, OUTPUT_MARKUP_SVG
+	} from '../src/index.js';
 
 	let options = new QROptions({
+		outputType: OUTPUT_MARKUP_SVG,
 		version: 7,
 		// toggle base64 data URI
 		imageBase64: true,

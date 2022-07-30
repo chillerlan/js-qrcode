@@ -336,7 +336,7 @@ export default class QROptions{
 	_logoSpaceStartY = null;
 
 	/**
-	 * whether to return the marup as DOM element
+	 * whether to return the markup as DOM element
 	 *
 	 * @type {boolean}
 	 */
@@ -455,7 +455,7 @@ export default class QROptions{
 	_set_eccLevel($eccLevel){
 
 		if(![ECC_L, ECC_M, ECC_Q, ECC_H].includes($eccLevel)){
-			throw new QRCodeException('Invalid error correct level: ' + $eccLevel);
+			throw new QRCodeException(`Invalid error correct level: ${$eccLevel}`);
 		}
 
 		this._eccLevel = $eccLevel;

@@ -18,7 +18,7 @@ export default class QRMarkup extends QROutputAbstract{
 	 * @inheritDoc
 	 */
 	moduleValueIsValid($value){
-		return typeof $value === 'string';
+		return typeof $value === 'string' && $value.trim().length > 0;
 	}
 
 	/**
