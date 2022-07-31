@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: QRCode.js</title>
+    <title>JSDoc: Source: Output/QRCanvas.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: QRCode.js</h1>
+    <h1 class="page-title">Source: Output/QRCanvas.js</h1>
 
     
 
@@ -33,258 +33,141 @@
  * @license      MIT
  */
 
-import QROptions from './QROptions.js';
-import MaskPattern from './Common/MaskPattern.js';
-import AlphaNum from './Data/AlphaNum.js';
-import Byte from './Data/Byte.js';
-//import Kanji from './Data/Kanji.js';
-import Numeric from './Data/Numeric.js';
-import QRCodeDataException from './Data/QRCodeDataException.js';
-import QRData from './Data/QRData.js';
-import QRCodeOutputException from './Output/QRCodeOutputException.js';
-import QROutputAbstract from './Output/QROutputAbstract.js';
-import PHPJS from './Common/PHPJS.js';
-import QRMarkupSVG from './Output/QRMarkupSVG.js';
-import QRMarkupHTML from './Output/QRMarkupHTML.js';
-import QRString from './Output/QRString.js';
-import QRCanvas from './Output/QRCanvas.js';
-import {
-	MASK_PATTERN_AUTO, MODE_ALPHANUM, MODE_BYTE, MODE_NUMBER, OUTPUT_CUSTOM, OUTPUT_MODES
-} from './Common/constants.js';
+import QROutputAbstract from './QROutputAbstract.js';
+import QRCodeOutputException from './QRCodeOutputException.js';
 
 /**
- * Map of data mode => interface (detection order)
- *
- * @type {string[]}
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API
+ * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas
  */
-const MODE_INTERFACES = PHPJS.array_combine([
-	MODE_NUMBER,
-	MODE_ALPHANUM,
-//	MODE_KANJI, // we ignore Kanji for now
-	MODE_BYTE,
-], [
-	Numeric,
-	AlphaNum,
-//	Kanji,
-	Byte,
-]);
-
-/**
- * Map of built-in output modes => modules
- */
-const OUTPUT_MODE_INTERFACES = PHPJS.array_combine(OUTPUT_MODES, [
-	QRMarkupSVG,
-	QRMarkupHTML,
-	QRString,
-	QRString,
-	QRCanvas,
-]);
-
-/**
- * Turns a text string into a Model 2 QR Code
- *
- * @see https://github.com/chillerlan/php-qrcode
- * @see https://github.com/kazuhikoarase/qrcode-generator/tree/master/php
- * @see http://www.qrcode.com/en/codes/model12.html
- * @see https://www.swisseduc.ch/informatik/theoretische_informatik/qr_codes/docs/qr_standard.pdf
- * @see https://en.wikipedia.org/wiki/QR_code
- * @see http://www.thonky.com/qr-code-tutorial/
- * @see https://jamie.build/const
- */
-export default class QRCode{
+export default class QRCanvas extends QROutputAbstract{
 
 	/**
-	 * @type {QROptions}
-	 * @protected
+	 * @type {HTMLCanvasElement}
+	 * @private
 	 */
-	options;
+	_canvas;
 
 	/**
-	 * @type {Array}
-	 * @protected
+	 * @type {CanvasRenderingContext2D}
+	 * @private
 	 */
-	dataSegments = [];
+	_context;
 
 	/**
-	 * QRCode constructor.
-	 *
-	 * Sets the options instance
-	 *
-	 * @param {QROptions} $options
+	 * @todo: validate css value
+	 * @inheritDoc
 	 */
-	constructor($options){
-
-		if(!($options instanceof QROptions)){
-			$options = new QROptions();
-		}
-
-		this.options = $options;
+	moduleValueIsValid($value){
+		return typeof $value === 'string' &amp;&amp; $value.trim().length > 0;
 	}
 
 	/**
-	 * Renders a QR Code for the given $data and QROptions
-	 *
-	 * @returns {*}
+	 * @inheritDoc
 	 */
-	render($data = null, $file = null){
+	getModuleValue($value){
+		return $value.trim();
+	}
 
-		if($data !== null){
-			for(let $mode in MODE_INTERFACES){
-				let $dataInterface = MODE_INTERFACES[$mode];
+	/**
+	 * @inheritDoc
+	 */
+	getDefaultModuleValue($isDark){
+		return $isDark ? this.options.markupDark : this.options.markupLight;
+	}
 
-				if($dataInterface.validateString($data)){
-					this.addSegment(new $dataInterface($data));
+	/**
+	 * @inheritDoc
+	 *
+	 * @returns {HTMLCanvasElement|*}
+	 */
+	dump($file = null){
+		this._canvas  = this.options.canvasElement;
 
-					break;
-				}
+		// @todo: test if instance check also works with nodejs canvas modules etc.
+		// otherwise check for this._canvas.getContext
+		if(!this._canvas || !(this._canvas instanceof HTMLCanvasElement)){
+			throw new QRCodeOutputException('invalid canvas element');
+		}
+
+		$file           = $file || this.options.cachefile;
+		let $saveToFile = $file !== null;
+		let data        = null;
+
+		this._drawImage();
+
+		if($saveToFile){
+			data = this._canvasToBase64();
+
+			this.saveToFile(atob(data.substring(data.indexOf(',') + 1)), $file);
+		}
+
+		if(this.options.imageBase64){
+			return data || this._canvasToBase64();
+		}
+
+		return this._canvas;
+	}
+
+	/**
+	 * @returns {void}
+	 * @private
+	 */
+	_drawImage(){
+		this._canvas.width  = this.length;
+		this._canvas.height = this.length;
+		this._context       = this._canvas.getContext('2d', {alpha: this.options.imageTransparent})
+
+		if(this.options.bgcolor &amp;&amp; this.moduleValueIsValid(this.options.bgcolor)){
+			this._context.fillStyle = this.options.bgcolor;
+			this._context.fillRect(0, 0, this.length, this.length);
+		}
+
+		for(let $y = 0; $y &lt; this.moduleCount; $y++){
+			for(let $x = 0; $x &lt; this.moduleCount; $x++){
+				this._setPixel($x, $y, this.matrix.get($x, $y))
 			}
 		}
 
-		return this.initOutputInterface().dump($file);
 	}
 
 	/**
-	 * Returns a QRMatrix object for the given $data and current QROptions
-	 *
-	 * @returns {QRMatrix}
-	 * @throws \chillerlan\QRCode\Data\QRCodeDataException
+	 * @returns {void}
+	 * @private
 	 */
-	getMatrix(){
+	_setPixel($x, $y, $M_TYPE){
 
-		if(!this.dataSegments.length){
-			throw new QRCodeDataException('QRCode::getMatrix() No data given.');
+		if(!this.options.drawLightModules &amp;&amp; !this.matrix.check($x, $y)){
+			return;
 		}
 
-		let $dataInterface = new QRData(this.options, this.dataSegments);
-		let $maskPattern   = this.options.maskPattern === MASK_PATTERN_AUTO
-			? MaskPattern.getBestPattern($dataInterface)
-			: new MaskPattern(this.options.maskPattern);
+		this._context.fillStyle = this.moduleValues[$M_TYPE];
 
-		let $matrix = $dataInterface.writeMatrix($maskPattern);
+		if(this.options.drawCircularModules &amp;&amp; this.matrix.checkTypeNotIn($x, $y, this.options.keepAsSquare)){
+			this._context.beginPath();
 
-		// add matrix modifications after mask pattern evaluation and before handing over to output
-		if(this.options.addLogoSpace){
-			$matrix.setLogoSpace(
-				this.options.logoSpaceWidth,
-				this.options.logoSpaceHeight,
-				this.options.logoSpaceStartX,
-				this.options.logoSpaceStartY
-			);
+			this._context.arc(
+				($x + 0.5) * this.scale,
+				($y + 0.5) * this.scale,
+				(this.options.circleRadius * this.scale),
+				0,
+				2 * Math.PI
+			)
+
+			this._context.fill();
+		}
+		else{
+			this._context.fillRect($x * this.scale, $y * this.scale, this.scale, this.scale);
 		}
 
-		if(this.options.addQuietzone){
-			$matrix.setQuietZone(this.options.quietzoneSize);
-		}
-
-		return $matrix;
 	}
 
 	/**
-	 * returns a fresh (built-in) QROutputInterface
-	 *
-	 * @returns {QROutputAbstract}
-	 * @throws \chillerlan\QRCode\Output\QRCodeOutputException
-	 * @protected
+	 * @returns {string}
+	 * @private
 	 */
-	initOutputInterface(){
-
-		if(this.options.outputType === OUTPUT_CUSTOM){
-			return this.initCustomOutputInterface();
-		}
-
-		let $outputInterface = OUTPUT_MODE_INTERFACES[this.options.outputType] || false;
-
-		if($outputInterface){
-			return new $outputInterface(this.options, this.getMatrix());
-		}
-
-		throw new QRCodeOutputException('invalid output type');
-	}
-
-	/**
-	 * initializes a custom output module after checking the existence of the class and if it implemnts the required interface
-	 *
-	 * @throws \chillerlan\QRCode\Output\QRCodeOutputException
-	 * @protected
-	 */
-	initCustomOutputInterface(){
-
-		if(typeof this.options.outputInterface !== 'function'){
-			throw new QRCodeOutputException('invalid custom output module');
-		}
-
-		let $outputInterface = new this.options.outputInterface(this.options, this.getMatrix());
-
-		if(!($outputInterface instanceof QROutputAbstract)){
-			throw new QRCodeOutputException('custom output module does not implement QROutputInterface');
-		}
-
-		return $outputInterface
-	}
-
-	/**
-	 * Adds a data segment
-	 *
-	 * ISO/IEC 18004:2000 8.3.6 - Mixing modes
-	 * ISO/IEC 18004:2000 Annex H - Optimisation of bit stream length
-	 *
-	 * @protected
-	 */
-	addSegment($segment){
-		this.dataSegments.push($segment);
-	}
-
-	/**
-	 * Clears the data segments array
-	 */
-	clearSegments(){
-		this.dataSegments = [];
-
-		return this;
-	}
-
-	/**
-	 * Adds a numeric data segment
-	 *
-	 * ISO/IEC 18004:2000 8.3.2 - Numeric Mode
-	 */
-	addNumericSegment($data){
-		this.addSegment(new Numeric($data));
-
-		return this;
-	}
-
-	/**
-	 * Adds an alphanumeric data segment
-	 *
-	 * ISO/IEC 18004:2000 8.3.3 - Alphanumeric Mode
-	 */
-	addAlphaNumSegment($data){
-		this.addSegment(new AlphaNum($data));
-
-		return this;
-	}
-
-	/**
-	 * Adds a Kanji data segment
-	 *
-	 * ISO/IEC 18004:2000 8.3.5 - Kanji Mode
-	 */
-//	addKanjiSegment($data){
-//		this.addSegment(new Kanji($data));
-//
-//		return this;
-//	}
-
-	/**
-	 * Adds an 8-bit byte data segment
-	 *
-	 * ISO/IEC 18004:2000 8.3.4 - 8-bit Byte Mode
-	 */
-	addByteSegment($data){
-		this.addSegment(new Byte($data));
-
-		return this;
+	_canvasToBase64(){
+		return this._canvas.toDataURL(`image/${this.options.canvasImageType}`, this.options.canvasImageQuality)
 	}
 
 }
