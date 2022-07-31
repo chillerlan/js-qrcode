@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title>QRCode canvas example</title>
+	<style>
+		#qrcode-canvas{
+			width: 500px;
+			height: 500px;
+		}
+	</style>
+</head>
+<body>
+<canvas id="qrcode-canvas">QR Code container</canvas>
+<script type="module">
+	import {
+		QRCode, QROptions, OUTPUT_CANVAS, IS_DARK,
+		M_DATA, M_FINDER, M_FINDER_DOT, M_ALIGNMENT, M_TIMING, M_FORMAT,
+		M_VERSION, M_DARKMODULE, M_SEPARATOR, M_QUIETZONE
+	} from '../src/index.js';
+
+	// assign module values
+	let mv = {};
+
+	// data
+	mv[M_DATA]               = '#ecf9be'; // (false)
+	mv[M_DATA|IS_DARK]       = '#4a6000'; // (true)
+	// finder
+	mv[M_FINDER]             = '#ffbfbf';
+	mv[M_FINDER|IS_DARK]     = '#a71111';
+	mv[M_FINDER_DOT|IS_DARK] = '#a71111';
+	// alignment
+	mv[M_ALIGNMENT]          = '#ffc9c9';
+	mv[M_ALIGNMENT|IS_DARK]  = '#a70364';
+	// timing
+	mv[M_TIMING]             = '#ffb8e9';
+	mv[M_TIMING|IS_DARK]     = '#98005d';
+	// format
+	mv[M_FORMAT]             = '#00fb12';
+	mv[M_FORMAT|IS_DARK]     = '#003804';
+	// version
+	mv[M_VERSION]            = '#e0b8ff';
+	mv[M_VERSION|IS_DARK]    = '#650098';
+	// darkmodule
+	mv[M_DARKMODULE|IS_DARK] = '#080063';
+	// separator
+	mv[M_SEPARATOR]          = '#afbfbf';
+	// quietzone
+	mv[M_QUIETZONE]          = '#DDDDDD';
+
+
+	let options = new QROptions({
+		outputType         : OUTPUT_CANVAS,
+		version            : 5,
+		scale              : 20,
+		moduleValues       : mv,
+		canvasElement      : document.getElementById('qrcode-canvas'),
+		// the image type to output as base64 URI
+		canvasImageType    : 'webp',
+		// toggle drawing of light modules
+		drawLightModules   : false,
+		// draw the modules as circles isntead of squares
+		drawCircularModules: true,
+		circleRadius       : 0.4,
+		// keep modules of these types as square
+		keepAsSquare       :[
+			M_FINDER|IS_DARK,
+			M_FINDER_DOT|IS_DARK,
+			M_ALIGNMENT|IS_DARK,
+		],
+		// backround color, set to null for transparency (if QROptions.imageTransparent = true)
+		bgcolor            : '#eeeeee',
+		// toggle alpha transparency mode (if false, a bgcolor should be specified)
+		imageTransparent   : false,
+		// the default values for non-assigned M_TYPEs
+		markupDark         : '#424242',
+		markupLight        : '#eeeeee',
+		// toggle base64 data URI output, if false, the canvas element will be returned
+		imageBase64        : false,
+	});
+
+	(new QRCode(options)).render('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
+</script>
+</body>
+</html>

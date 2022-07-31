@@ -273,7 +273,9 @@ export default class QROptions{
 	/**
 	 * toggle background transparency
 	 *
-	 * @see \chillerlan\QRCode\QROptions::$imageTransparencyBG
+	 * if transparency is disabled, a background color should be specified to avoid unexpected outcomes
+	 *
+	 * @see QROptions.bgcolor
 	 *
 	 * @type {boolean}
 	 */
@@ -343,13 +345,64 @@ export default class QROptions{
 	returnMarkupAsHtmlElement = false;
 
 	/**
+	 * background color
+	 *
+	 * supported in:
+	 *
+	 * - OUTPUT_CANVAS
+	 *
+	 * @type {*|null}
+	 */
+	bgcolor = null;
+
+	/**
+	 * the canvas HTML element (canvas output only)
+	 *
+	 * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement
+	 *
+	 * @type {HTMLCanvasElement}
+	 */
+	canvasElement = null;
+
+	/**
+	 * canvas image type for bas64/file output
+	 *
+	 * the value may be one of the following (depends on browser/engine):
+	 *
+	 * - png
+	 * - jpeg
+	 * - bmp
+	 * - webp
+	 *
+	 * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL
+	 *
+	 * @type {string}
+	 * @protected
+	 */
+	_canvasImageType = 'png';
+
+	/**
+	 * canvas image quality
+	 *
+	 *  "A Number between 0 and 1 indicating the image quality to be used when creating images
+	 *   using file formats that support lossy compression (such as image/jpeg or image/webp).
+	 *   A user agent will use its default quality value if this option is not specified,
+	 *   or if the number is outside the allowed range."
+	 *
+	 * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL
+	 *
+	 * @type {number}
+	 */
+	canvasImageQuality = 0.85;
+
+	/**
 	 * @param {{}|null} $options
 	 */
 	constructor($options = null){
 		// because javascript is dumb and we can't call getters and setters directly we have to a this silly workaround
 		let _workaround = [
-			'circleRadius', 'eccLevel', 'logoSpaceHeight', 'logoSpaceWidth', 'logoSpaceStartX', 'logoSpaceStartY',
-			'maskPattern', 'quietzoneSize', 'version', 'versionMin', 'versionMax',
+			'canvasImageType', 'circleRadius', 'eccLevel', 'logoSpaceHeight', 'logoSpaceWidth', 'logoSpaceStartX',
+			'logoSpaceStartY', 'maskPattern', 'quietzoneSize', 'version', 'versionMin', 'versionMax',
 		];
 
 		if(typeof $options === 'object'){
@@ -625,6 +678,32 @@ export default class QROptions{
 
 	get circleRadius(){ // eslint-disable-line no-dupe-class-members
 		return this._circleRadius;
+	}
+
+	/**
+	 * set canvas image type
+	 *
+	 * @param {string} $canvasImageType
+	 *
+	 * @returns {void}
+	 * @protected
+	 */
+	_set_canvasImageType($canvasImageType){
+		$canvasImageType = $canvasImageType.toLowerCase();
+
+		if(!['bmp', 'jpeg', 'png', 'webp'].includes($canvasImageType)){
+			throw new QRCodeException(`Invalid canvas image type: ${$canvasImageType}`);
+		}
+
+		this._canvasImageType = $canvasImageType;
+	}
+
+	set canvasImageType($canvasImageType){ // eslint-disable-line no-dupe-class-members
+		this._set_canvasImageType($canvasImageType);
+	}
+
+	get canvasImageType(){ // eslint-disable-line no-dupe-class-members
+		return this._canvasImageType;
 	}
 
 }
