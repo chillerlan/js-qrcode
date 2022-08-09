@@ -92,12 +92,7 @@ export default class QRData{
 	 */
 	setData($dataSegments){
 		this.dataSegments = $dataSegments;
-
-		let $version = this.options.version === VERSION_AUTO
-			? this.getMinimumVersion()
-			: this.options.version;
-
-		this.version = new Version($version);
+		this.version      = this.getMinimumVersion();
 
 		this.bitBuffer.clear();
 		this.writeBitBuffer();
@@ -164,17 +159,22 @@ export default class QRData{
 	/**
 	 * returns the minimum version number for the given string
 	 *
-	 * @return {int}
+	 * @return {Version}
 	 * @throws \chillerlan\QRCode\Data\QRCodeDataException
 	 * @private
 	 */
 	getMinimumVersion(){
+
+		if(this.options.version !== VERSION_AUTO){
+			return new Version(this.options.version);
+		}
+
 		let $total = this.estimateTotalBitLength();
 
 		// guess the version number within the given range
 		for(let $version = this.options.versionMin; $version <= this.options.versionMax; $version++){
 			if($total <= this.maxBitsForEcc[$version]){
-				return $version;
+				return new Version($version);
 			}
 		}
 		/* c8 ignore next 2 */
@@ -204,7 +204,7 @@ export default class QRData{
 
 		// add terminator (ISO/IEC 18004:2000 Table 2)
 		if(this.bitBuffer.getLength() + 4 <= $MAX_BITS){
-			this.bitBuffer.put(0b0000, 4);
+			this.bitBuffer.put(0, 4);
 		}
 
 		// Padding: ISO/IEC 18004:2000 8.4.9 Bit stream to codeword conversion
@@ -220,12 +220,7 @@ export default class QRData{
 		// Codewords 11101100 and 00010001 alternately.
 		let $alternate = false;
 
-		for (;;){
-
-			if(this.bitBuffer.getLength() >= $MAX_BITS){
-				break;
-			}
-
+		while(this.bitBuffer.getLength() <= $MAX_BITS){
 			this.bitBuffer.put($alternate ? 0b00010001 : 0b11101100, 8);
 			$alternate = !$alternate;
 		}

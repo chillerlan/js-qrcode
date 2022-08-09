@@ -20,7 +20,7 @@ suite('QRDataModeTest', function(){
 	let _qrdata;
 
 	beforeEach(function(){
-		_qrdata = new QRData(new QROptions({version: 4}));
+		_qrdata = new QRData(new QROptions());
 	});
 
 	/**
@@ -124,9 +124,6 @@ suite('QRDataModeTest', function(){
 
 							let matrix = _qrdata.writeMatrix(new MaskPattern($maskPattern));
 
-							// test proper version detection override
-							assert.strictEqual(_qrdata.version.getVersionNumber(), 4);
-
 							assert.instanceOf(matrix, QRMatrix);
 							assert.strictEqual(matrix.maskPattern().getPattern(), $maskPattern);
 						});
@@ -139,7 +136,7 @@ suite('QRDataModeTest', function(){
 				test('testGetMinimumVersion', function(){
 					_qrdata.setData([new $fqn(testData)]);
 
-					assert.strictEqual(_qrdata.getMinimumVersion(), 1);
+					assert.strictEqual(_qrdata.getMinimumVersion().getVersionNumber(), 1);
 				});
 
 				/**
@@ -147,10 +144,7 @@ suite('QRDataModeTest', function(){
 				 */
 				test('testGetMinimumVersionException', function(){
 					assert.throws(() => {
-						new QRData(
-							new QROptions({version: VERSION_AUTO}),
-							[new $fqn(testData.repeat(1337))]
-						);
+						_qrdata.setData([new $fqn(testData.repeat(1337))]);
 					}, 'estimated data exceeds');
 				});
 
@@ -158,7 +152,12 @@ suite('QRDataModeTest', function(){
 				 * Tests if an exception is thrown on data overflow
 				 */
 				test('testCodeLengthOverflowException', function(){
-					assert.throws(() => _qrdata.setData([new $fqn(testData.repeat(42))]), 'code length overflow');
+					assert.throws(() => {
+						new QRData(
+							new QROptions({version: 4}),
+							[new $fqn(testData.repeat(42))]
+						);
+					}, 'code length overflow');
 				});
 
 				/**
