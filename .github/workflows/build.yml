@@ -40,7 +40,7 @@ jobs:
         run: npm run jsdoc
 
       - name: "publish docs to gh-pages"
-        uses: JamesIves/github-pages-deploy-action@v4.3.4
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
           folder: doc

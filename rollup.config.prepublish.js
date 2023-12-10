@@ -1,18 +1,21 @@
 // https://stackoverflow.com/a/57718411
 
-import {babel} from '@rollup/plugin-babel';
+import babel from '@rollup/plugin-babel';
 
-export default {
+/**
+ * @type {import('rollup').RollupOptions}
+ */
+let config = {
 	input: 'src/index.js',
 	output: [
 		{
 			file: 'lib/browser.js',
-			format: "es",
+			format: 'es',
 			sourcemap: true,
 		},
 		{
-			file: 'lib/index.js',
-			format: "cjs",
+			file: 'lib/main.cjs',
+			format: 'cjs',
 			sourcemap: true,
 		},
 	],
@@ -23,3 +26,5 @@ export default {
 		}),
 	],
 };
+
+export default config;

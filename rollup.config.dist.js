@@ -1,12 +1,20 @@
-import {babel} from '@rollup/plugin-babel';
-import {terser} from 'rollup-plugin-terser';
+import babel from '@rollup/plugin-babel';
+import terser from '@rollup/plugin-terser';
 
-export default {
+/**
+ * @type {import('rollup').RollupOptions}
+ */
+let config = {
 	input: 'src/index.js',
 	output: [
 		{
 			file: 'dist/js-qrcode-es6.js',
 			format: 'es',
+			sourcemap: false,
+		},
+		{
+			file: 'dist/js-qrcode-amd.js',
+			format: 'amd',
 			sourcemap: false,
 		},
 		{
@@ -34,6 +42,7 @@ export default {
 				quote_style: 3,
 				preamble: '/*\n'
 					+ ' * js-qrcode - a javascript port of chillerlan/php-qrcode\n'
+					+ ' * @link       https://github.com/chillerlan/php-qrcode\n'
 					+ ' *\n'
 					+ ' * @copyright  2022 smiley\n'
 					+ ' * @license    MIT\n'
@@ -43,3 +52,5 @@ export default {
 		}),
 	],
 };
+
+export default config;
