@@ -338,25 +338,64 @@ export default class QROptions{
 	canvasImageQuality = 0.85;
 
 	/**
+	 * because javascript is dumb, and we can't call getters and setters directly we have to this silly workaround.
+	 * if your inherited options class uses magic getters and setters, add the relevant property names to this array
+	 * and call _fromIterable() afterwards:
+	 *
+	 *     constructor($options = null){
+	 *         super();
+	 *         this.__workaround__.push('myMagicProp');
+	 *         this._fromIterable($options)
+	 *     }
+	 *
+	 *
+	 *     let o = new MyExtendedOptions({myMagicProp: 'foo', ...});
+	 *
+	 * @protected
+	 */
+	__workaround__ = [
+		'canvasImageType',
+		'circleRadius',
+		'eccLevel',
+		'logoSpaceHeight',
+		'logoSpaceWidth',
+		'logoSpaceStartX',
+		'logoSpaceStartY',
+		'maskPattern',
+		'quietzoneSize',
+		'version',
+		'versionMin',
+		'versionMax',
+	];
+
+	/**
 	 * @param {Object<{}>|null} $options
 	 */
 	constructor($options = null){
-		// because javascript is dumb and we can't call getters and setters directly we have to a this silly workaround
-		let _workaround = [
-			'canvasImageType', 'circleRadius', 'eccLevel', 'logoSpaceHeight', 'logoSpaceWidth', 'logoSpaceStartX',
-			'logoSpaceStartY', 'maskPattern', 'quietzoneSize', 'version', 'versionMin', 'versionMax',
-		];
+		this._fromIterable($options);
+	}
 
-		if(typeof $options === 'object'){
-			for(let $property in $options){
-				if(_workaround.includes($property)){
-					this['_set_'+$property]($options[$property]);
-				}
-				else if(Object.prototype.hasOwnProperty.call(this, $property)){
-					this[$property] = $options[$property];
-				}
-			}
+	/**
+	 * @param {Object<{}>} $options
+	 * @returns {void}
+	 * @protected
+	 */
+	_fromIterable($options){
+
+		if(Object.prototype.toString.call($options) !== '[object Object]'){
+			return;
 		}
+
+		Object.keys($options).forEach($property => {
+			if(this.__workaround__.includes($property)){
+				this['_set_'+$property]($options[$property]);
+			}
+			// since Object.prototype.hasOwnProperty.call(this, $property) will cause issues with extended classes,
+			// we'll just check if the property is defined. have i mentioned yet how much i loathe javascript?
+			else if(this[$property] !== undefined){
+				this[$property] = $options[$property];
+			}
+		});
 
 	}
 
