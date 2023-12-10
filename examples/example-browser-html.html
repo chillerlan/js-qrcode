@@ -84,53 +84,46 @@
 <body>
 <div class="container" id="qrcode-container-html"></div>
 <script type="module">
-	import {
-		QRCode, QROptions, OUTPUT_MARKUP_HTML, IS_DARK,
-		M_DATA, M_FINDER, M_FINDER_DOT, M_ALIGNMENT, M_TIMING, M_FORMAT,
-		M_VERSION, M_DARKMODULE, M_SEPARATOR, M_QUIETZONE
-	} from '../src/index.js';
+	import * as qrc from '../src/index.js';
 
 	let mv = {};
 
 	// data
-	mv[M_DATA]               = 'data';      // (false)
-	mv[M_DATA|IS_DARK]       = 'data-dark'; // (true)
+	mv[qrc.M_DATA]           = 'data';      // (false)
+	mv[qrc.M_DATA_DARK]      = 'data-dark'; // (true)
 	// finder
-	mv[M_FINDER]             = 'finder';
-	mv[M_FINDER|IS_DARK]     = 'finder-dark';
-	mv[M_FINDER_DOT|IS_DARK] = 'finder-dot';
+	mv[qrc.M_FINDER]         = 'finder';
+	mv[qrc.M_FINDER_DARK]    = 'finder-dark';
+	mv[qrc.M_FINDER_DOT]     = 'finder-dot';
 	// alignment
-	mv[M_ALIGNMENT]          = 'alignment';
-	mv[M_ALIGNMENT|IS_DARK]  = 'alignment-dark';
+	mv[qrc.M_ALIGNMENT]      = 'alignment';
+	mv[qrc.M_ALIGNMENT_DARK] = 'alignment-dark';
 	// timing
-	mv[M_TIMING]             = 'timing';
-	mv[M_TIMING|IS_DARK]     = 'timing-dark';
+	mv[qrc.M_TIMING]         = 'timing';
+	mv[qrc.M_TIMING_DARK]    = 'timing-dark';
 	// format
-	mv[M_FORMAT]             = 'format';
-	mv[M_FORMAT|IS_DARK]     = 'format-dark';
+	mv[qrc.M_FORMAT]         = 'format';
+	mv[qrc.M_FORMAT_DARK]    = 'format-dark';
 	// version
-	mv[M_VERSION]            = 'version';
-	mv[M_VERSION|IS_DARK]    = 'version-dark';
+	mv[qrc.M_VERSION]        = 'version';
+	mv[qrc.M_VERSION_DARK]   = 'version-dark';
 	// darkmodule
-	mv[M_DARKMODULE|IS_DARK] = 'darkmodule';
+	mv[qrc.M_DARKMODULE]     = 'darkmodule';
 	// separator
-	mv[M_SEPARATOR]          = 'separator';
+	mv[qrc.M_SEPARATOR]      = 'separator';
 	// quietzone
-	mv[M_QUIETZONE]          = 'quietzone';
+	mv[qrc.M_QUIETZONE]      = 'quietzone';
 
 
-	let options = new QROptions({
-		outputType               : OUTPUT_MARKUP_HTML,
-		version                  : 7,
-		cssClass                 : 'qr',
-		markupDark               : 'dark',
-		markupLight              : 'light',
-		moduleValues             : mv,
-		eol                      : '',
-		returnMarkupAsHtmlElement: true,
-	});
+	let options = new qrc.QROptions;
+	options.outputType                = qrc.OUTPUT_MARKUP_HTML;
+	options.version                   = 7;
+	options.cssClass                  = 'qr';
+	options.moduleValues              = mv;
+	options.eol                       = '';
+	options.returnMarkupAsHtmlElement = true;
 
-	let qrcode = (new QRCode(options)).render('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
+	let qrcode = (new qrc.QRCode(options)).render('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
 
 	document.getElementById('qrcode-container-html').appendChild(qrcode);
 </script>

@@ -78,36 +78,75 @@ const VERSION_AUTO = -1;
  * from QRMatrix
  */
 
-/** @type {int} */
-const M_NULL       = 0b000000000000;
-/** @type {int} */
-const M_DARKMODULE = 0b000000000001;
-/** @type {int} */
-const M_DATA       = 0b000000000010;
-/** @type {int} */
-const M_FINDER     = 0b000000000100;
-/** @type {int} */
-const M_SEPARATOR  = 0b000000001000;
-/** @type {int} */
-const M_ALIGNMENT  = 0b000000010000;
-/** @type {int} */
-const M_TIMING     = 0b000000100000;
-/** @type {int} */
-const M_FORMAT     = 0b000001000000;
-/** @type {int} */
-const M_VERSION    = 0b000010000000;
-/** @type {int} */
-const M_QUIETZONE  = 0b000100000000;
-/** @type {int} */
-const M_LOGO       = 0b001000000000;
-/** @type {int} */
-const M_FINDER_DOT = 0b010000000000;
-/** @type {int} */
-const M_TEST       = 0b011111111111;
-/** @type {int} */
-const IS_DARK      = 0b100000000000;
+/*
+ * special values
+ */
 
-/** @type {int[]} */
+/** @type {Number<int>} */
+const IS_DARK            = 0b100000000000;
+/** @type {Number<int>} */
+const M_NULL             = 0b000000000000;
+/** @type {Number<int>} */
+const M_LOGO             = 0b001000000000;
+/** @type {Number<int>} */
+const M_LOGO_DARK        = 0b101000000000;
+
+/*
+ * light values
+ */
+
+/** @type {Number<int>} */
+const M_DATA             = 0b000000000010;
+/** @type {Number<int>} */
+const M_FINDER           = 0b000000000100;
+/** @type {Number<int>} */
+const M_SEPARATOR        = 0b000000001000;
+/** @type {Number<int>} */
+const M_ALIGNMENT        = 0b000000010000;
+/** @type {Number<int>} */
+const M_TIMING           = 0b000000100000;
+/** @type {Number<int>} */
+const M_FORMAT           = 0b000001000000;
+/** @type {Number<int>} */
+const M_VERSION          = 0b000010000000;
+/** @type {Number<int>} */
+const M_QUIETZONE        = 0b000100000000;
+
+/*
+ * dark values
+ */
+
+/** @type {Number<int>} */
+const M_DARKMODULE       = 0b100000000001;
+/** @type {Number<int>} */
+const M_DATA_DARK        = 0b100000000010;
+/** @type {Number<int>} */
+const M_FINDER_DARK      = 0b100000000100;
+/** @type {Number<int>} */
+const M_ALIGNMENT_DARK   = 0b100000010000;
+/** @type {Number<int>} */
+const M_TIMING_DARK      = 0b100000100000;
+/** @type {Number<int>} */
+const M_FORMAT_DARK      = 0b100001000000;
+/** @type {Number<int>} */
+const M_VERSION_DARK     = 0b100010000000;
+/** @type {Number<int>} */
+const M_FINDER_DOT       = 0b110000000000;
+
+/*
+ * values used for reversed reflectance
+ */
+
+/** @type {Number<int>} */
+const M_DARKMODULE_LIGHT = 0b000000000001;
+/** @type {Number<int>} */
+const M_FINDER_DOT_LIGHT = 0b010000000000;
+/** @type {Number<int>} */
+const M_SEPARATOR_DARK   = 0b100000001000;
+/** @type {Number<int>} */
+const M_QUIETZONE_DARK   = 0b100100000000;
+
+/** @type {Number<int>[]} */
 const MATRIX_NEIGHBOUR_FLAGS = [
 	0b00000001,
 	0b00000010,
@@ -165,6 +204,7 @@ const OUTPUT_MODES = [
 const MODULE_VALUES_KEYS = [
 	// light
 	M_NULL,
+	M_DARKMODULE_LIGHT,
 	M_DATA,
 	M_FINDER,
 	M_SEPARATOR,
@@ -174,17 +214,19 @@ const MODULE_VALUES_KEYS = [
 	M_VERSION,
 	M_QUIETZONE,
 	M_LOGO,
-	M_TEST,
+	M_FINDER_DOT_LIGHT,
 	// dark
-	M_DARKMODULE | IS_DARK,
-	M_DATA | IS_DARK,
-	M_FINDER | IS_DARK,
-	M_ALIGNMENT | IS_DARK,
-	M_TIMING | IS_DARK,
-	M_FORMAT | IS_DARK,
-	M_VERSION | IS_DARK,
-	M_FINDER_DOT | IS_DARK,
-	M_TEST | IS_DARK,
+	M_DARKMODULE,
+	M_DATA_DARK,
+	M_FINDER_DARK,
+	M_SEPARATOR_DARK,
+	M_ALIGNMENT_DARK,
+	M_TIMING_DARK,
+	M_FORMAT_DARK,
+	M_VERSION_DARK,
+	M_QUIETZONE_DARK,
+	M_LOGO_DARK,
+	M_FINDER_DOT,
 ];
 
 const DEFAULT_MODULE_VALUES = PHPJS.array_combine(MODULE_VALUES_KEYS, [
@@ -200,7 +242,10 @@ const DEFAULT_MODULE_VALUES = PHPJS.array_combine(MODULE_VALUES_KEYS, [
 	false,
 	false,
 	false,
+	false,
 	// dark
+	true,
+	true,
 	true,
 	true,
 	true,
@@ -218,8 +263,10 @@ export {
 	PATTERN_011, PATTERN_100, PATTERN_101, PATTERN_110, PATTERN_111,
 	MODES, MODE_NUMBER, MODE_ALPHANUM, MODE_BYTE, MODE_KANJI,
 	VERSION_AUTO,
-	M_NULL, M_DARKMODULE, M_DATA, M_FINDER, M_SEPARATOR, M_ALIGNMENT, M_TIMING,
-	M_FORMAT, M_VERSION, M_QUIETZONE, M_LOGO, M_FINDER_DOT, M_TEST, IS_DARK,
+	M_NULL, M_DARKMODULE, M_DARKMODULE_LIGHT, M_DATA, M_FINDER, M_SEPARATOR, M_ALIGNMENT, M_TIMING,
+	M_FORMAT, M_VERSION, M_QUIETZONE, M_LOGO, M_FINDER_DOT, M_FINDER_DOT_LIGHT, IS_DARK,
+	M_DATA_DARK, M_FINDER_DARK, M_SEPARATOR_DARK, M_ALIGNMENT_DARK, M_TIMING_DARK,
+	M_FORMAT_DARK, M_VERSION_DARK, M_QUIETZONE_DARK, M_LOGO_DARK,
 	MATRIX_NEIGHBOUR_FLAGS, MATRIX_NEIGHBOURS,
 	DEFAULT_MODULE_VALUES, OUTPUT_MODES, OUTPUT_CANVAS, OUTPUT_CUSTOM,
 	OUTPUT_MARKUP_SVG, OUTPUT_MARKUP_HTML, OUTPUT_STRING_JSON, OUTPUT_STRING_TEXT,

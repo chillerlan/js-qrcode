@@ -7,8 +7,8 @@
 
 import {
 	EccLevel, MaskPattern, QRCode, QRMatrix, QROptions, Version,
-	ECC_H, ECC_L, IS_DARK, M_ALIGNMENT, M_DARKMODULE, M_FINDER, M_FINDER_DOT, M_FORMAT,
-	M_LOGO, M_QUIETZONE, M_SEPARATOR, M_TEST, M_TIMING, M_VERSION, PATTERN_000,
+	ECC_H, ECC_L, M_ALIGNMENT, M_ALIGNMENT_DARK, M_DARKMODULE, M_DARKMODULE_LIGHT, M_FINDER, M_FINDER_DARK,
+	M_FINDER_DOT, M_FORMAT, M_LOGO, M_QUIETZONE, M_SEPARATOR, M_DATA, M_DATA_DARK, M_TIMING_DARK, M_VERSION, PATTERN_000,
 } from '../../src/index.js';
 
 import {beforeEach, suite, test} from 'mocha';
@@ -77,12 +77,12 @@ suite('QRMatrixTest', function(){
 	 * Tests the set(), get() and check() methods
 	 */
 	test('testGetSetCheck', function(){
-		_matrix.set(10, 10, true, M_TEST);
-		assert.strictEqual(_matrix.get(10, 10), M_TEST|IS_DARK);
+		_matrix.set(10, 10, true, M_DATA);
+		assert.strictEqual(_matrix.get(10, 10), M_DATA_DARK);
 		assert.isTrue(_matrix.check(10, 10));
 
-		_matrix.set(20, 20, false, M_TEST);
-		assert.strictEqual(_matrix.get(20, 20), M_TEST);
+		_matrix.set(20, 20, false, M_DATA);
+		assert.strictEqual(_matrix.get(20, 20), M_DATA);
 		assert.isFalse(_matrix.check(20, 20));
 
 		// out of range
@@ -119,7 +119,7 @@ suite('QRMatrixTest', function(){
 				test(`${desc}`, function(){
 					$matrix.setDarkModule();
 
-					assert.strictEqual($matrix.get(8, $matrix.size() - 8), (M_DARKMODULE|IS_DARK));
+					assert.strictEqual($matrix.get(8, $matrix.size() - 8), M_DARKMODULE);
 				});
 			});
 		});
@@ -132,9 +132,9 @@ suite('QRMatrixTest', function(){
 				test(`${desc}`, function(){
 					$matrix.setFinderPattern();
 
-					assert.strictEqual($matrix.get(0, 0), (M_FINDER|IS_DARK));
-					assert.strictEqual($matrix.get(0, $matrix.size() - 1), (M_FINDER|IS_DARK));
-					assert.strictEqual($matrix.get($matrix.size() - 1, 0), (M_FINDER|IS_DARK));
+					assert.strictEqual($matrix.get(0, 0), M_FINDER_DARK);
+					assert.strictEqual($matrix.get(0, $matrix.size() - 1), M_FINDER_DARK);
+					assert.strictEqual($matrix.get($matrix.size() - 1, 0), M_FINDER_DARK);
 				});
 			});
 		});
@@ -179,7 +179,7 @@ suite('QRMatrixTest', function(){
 						for(let $px in $alignmentPattern){
 							// skip finder pattern
 							if($matrix.checkTypeNotIn($px, $py, [M_FINDER, M_FINDER_DOT])){
-								assert.strictEqual($matrix.get($px, $py), (M_ALIGNMENT|IS_DARK));
+								assert.strictEqual($matrix.get($px, $py), M_ALIGNMENT_DARK);
 							}
 						}
 					}
@@ -204,12 +204,10 @@ suite('QRMatrixTest', function(){
 					let $size = $matrix.size();
 
 					for(let $i = 7; $i < $size - 7; $i++){
-						if($i % 2 === 0){
-							// skip alignment pattern
-							if($matrix.checkTypeNotIn(6, $i, [M_ALIGNMENT])){
-								assert.strictEqual($matrix.get(6, $i), (M_TIMING|IS_DARK));
-								assert.strictEqual($matrix.get($i, 6), (M_TIMING|IS_DARK));
-							}
+						// skip alignment pattern
+						if($i % 2 === 0 && $matrix.checkTypeNotIn(6, $i, [M_ALIGNMENT])){
+							assert.strictEqual($matrix.get(6, $i), M_TIMING_DARK);
+							assert.strictEqual($matrix.get($i, 6), M_TIMING_DARK);
 						}
 					}
 
@@ -264,8 +262,8 @@ suite('QRMatrixTest', function(){
 					let $size = $matrix.size();
 					let $q    = 5;
 
-					$matrix.set(0, 0, true, M_TEST);
-					$matrix.set($size - 1, $size - 1, true, M_TEST);
+					$matrix.set(0, 0, true, M_DATA);
+					$matrix.set($size - 1, $size - 1, true, M_DATA);
 
 					$matrix.setQuietZone($q);
 
@@ -276,8 +274,8 @@ suite('QRMatrixTest', function(){
 					assert.isTrue($matrix.checkType(0, 0, M_QUIETZONE));
 					assert.isTrue($matrix.checkType($size - 1, $size - 1, M_QUIETZONE));
 
-					assert.strictEqual($matrix.get($q, $q), (M_TEST|IS_DARK));
-					assert.strictEqual($matrix.get($size - 1 - $q, $size - 1 - $q), (M_TEST|IS_DARK));
+					assert.strictEqual($matrix.get($q, $q), M_DATA_DARK);
+					assert.strictEqual($matrix.get($size - 1 - $q, $size - 1 - $q), M_DATA_DARK);
 				});
 			});
 		});
@@ -349,15 +347,15 @@ suite('QRMatrixTest', function(){
 		// cover checkType()
 		assert.isTrue(_matrix.checkType($x, $y, M_DARKMODULE));
 		// verify the current state (dark)
-		assert.strictEqual(_matrix.get($x, $y), (M_DARKMODULE|IS_DARK));
+		assert.strictEqual(_matrix.get($x, $y), (M_DARKMODULE));
 		// flip
 		_matrix.flip($x, $y);
 		// verify flip
-		assert.strictEqual(_matrix.get($x, $y), M_DARKMODULE);
+		assert.strictEqual(_matrix.get($x, $y), M_DARKMODULE_LIGHT);
 		// flip again
 		_matrix.flip($x, $y);
 		// verify flip
-		assert.strictEqual(_matrix.get($x, $y), (M_DARKMODULE|IS_DARK));
+		assert.strictEqual(_matrix.get($x, $y), (M_DARKMODULE));
 	});
 
 });

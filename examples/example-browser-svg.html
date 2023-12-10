@@ -22,21 +22,15 @@
 <div class="container" id="qrcode-container-img"></div>
 <div class="container" id="qrcode-container-svg"></div>
 <script type="module">
-	import {
-		QRCode, QROptions,
-		IS_DARK, M_ALIGNMENT, M_FINDER, M_FINDER_DOT, OUTPUT_MARKUP_SVG
-	} from '../src/index.js';
+	import * as qrc from '../src/index.js';
 
-	let options = new QROptions({
-		outputType: OUTPUT_MARKUP_SVG,
+	let options = new qrc.QROptions({
+		outputType: qrc.OUTPUT_MARKUP_SVG,
 		version: 7,
 		// toggle base64 data URI
 		imageBase64: true,
 		// if set to false, the light modules won't be rendered
 		drawLightModules: true,
-		// empty the default value to remove the fill* attributes from the <path> elements
-		markupDark: '',
-		markupLight: '',
 		// draw the modules as circles isntead of squares
 		drawCircularModules: true,
 		circleRadius: 0.4,
@@ -44,9 +38,9 @@
 		connectPaths: true,
 		// keep modules of these types as square
 		keepAsSquare:[
-			M_FINDER|IS_DARK,
-			M_FINDER_DOT|IS_DARK,
-			M_ALIGNMENT|IS_DARK,
+			qrc.M_FINDER_DARK,
+			qrc.M_FINDER_DOT,
+			qrc.M_ALIGNMENT_DARK,
 		],
 	});
 
@@ -70,7 +64,7 @@
 
 	let img = document.createElement('img');
 	img.alt = 'QRCode';
-	img.src = (new QRCode(options)).render(data);
+	img.src = (new qrc.QRCode(options)).render(data);
 
 	document.getElementById('qrcode-container-img').appendChild(img);
 
@@ -79,7 +73,7 @@
 	options.imageBase64 = false;
 	options.svgDefs = '';
 
-	document.getElementById('qrcode-container-svg').innerHTML = (new QRCode(options)).render(data);
+	document.getElementById('qrcode-container-svg').innerHTML = (new qrc.QRCode(options)).render(data);
 </script>
 </body>
 </html>
