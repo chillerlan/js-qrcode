@@ -12,7 +12,7 @@ import QRCodeException from '../QRCodeException.js';
  *
  * version -> pattern
  *
- * @type {int[][]}
+ * @type {Number<int>[][]}
  * @private
  */
 const ALIGNMENT_PATTERN = [
@@ -64,7 +64,7 @@ const ALIGNMENT_PATTERN = [
  *
  * no version pattern for QR Codes < 7
  *
- * @type {int[]}
+ * @type {Number<int>[]}
  * @private
  */
 const VERSION_PATTERN = [
@@ -158,7 +158,7 @@ const RSBLOCKS = [
 ];
 
 /**
- * @type {int[]}
+ * @type {Number<int>[]}
  */
 const TOTAL_CODEWORDS = [
 	null, // version count starts at 1
@@ -212,7 +212,7 @@ export default class Version{
 	/**
 	 * QR Code version number
 	 *
-	 * @type {int}
+	 * @type {Number<int>}
 	 * @private
 	 */
 	version;
@@ -220,9 +220,9 @@ export default class Version{
 	/**
 	 * Version constructor.
 	 *
-	 * @param {int} $version
+	 * @param {Number<int>} $version
 	 *
-	 * @throws \chillerlan\QRCode\QRCodeException
+	 * @throws QRCodeException
 	 */
 	constructor($version){
 
@@ -236,7 +236,7 @@ export default class Version{
 	/**
 	 * returns the current version number as string
 	 *
-	 * @returns {string}
+	 * @returns {String}
 	 */
 	toString(){
 		return this.version + '';
@@ -245,7 +245,7 @@ export default class Version{
 	/**
 	 * returns the current version number
 	 *
-	 * @returns {int}
+	 * @returns {Number<int>}
 	 */
 	getVersionNumber(){
 		return this.version;
@@ -254,7 +254,7 @@ export default class Version{
 	/**
 	 * the matrix size for the given version
 	 *
-	 * @returns {int}
+	 * @returns {Number<int>}
 	 */
 	getDimension(){
 		return this.version * 4 + 17;
@@ -263,7 +263,7 @@ export default class Version{
 	/**
 	 * the version pattern for the given version
 	 *
-	 * @returns {int|null}
+	 * @returns {Number<int>|null}
 	 */
 	getVersionPattern(){
 		return VERSION_PATTERN[this.version] || null;
@@ -272,7 +272,7 @@ export default class Version{
 	/**
 	 * the alignment patterns for the current version
 	 *
-	 * @returns {int[]}
+	 * @returns {Number<int>[]}
 	 */
 	getAlignmentPattern(){
 		return ALIGNMENT_PATTERN[this.version];
@@ -292,7 +292,7 @@ export default class Version{
 	/**
 	 * returns the maximum codewords for the current version
 	 *
-	 * @returns {int}
+	 * @returns {Number<int>}
 	 */
 	getTotalCodewords(){
 		return TOTAL_CODEWORDS[this.version];

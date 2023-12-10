@@ -70,7 +70,7 @@ export default class QRMarkupSVG extends QRMarkup{
 	/**
 	 * returns the <svg> header with the given options parsed
 	 *
-	 * @returns {string}
+	 * @returns {String}
 	 */
 	header(){
 		return `<?xml version="1.0" encoding="UTF-8"?>${this.options.eol}<svg xmlns="http://www.w3.org/2000/svg" class="qr-svg ${this.options.cssClass}" viewBox="${this.getViewBox()}" preserveAspectRatio="${this.options.svgPreserveAspectRatio}">${this.options.eol}`;
@@ -81,7 +81,7 @@ export default class QRMarkupSVG extends QRMarkup{
 	 *
 	 * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Element/path
 	 *
-	 * @returns {string}
+	 * @returns {String}
 	 */
 	paths(){
 		let $paths = this.collectModules(($x, $y, $M_TYPE) => this.module($x, $y, $M_TYPE));
@@ -136,11 +136,11 @@ export default class QRMarkupSVG extends QRMarkup{
 	 *
 	 * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d
 	 *
-	 * @param {int} $x
-	 * @param {int} $y
-	 * @param {int} $M_TYPE
+	 * @param {Number<int>} $x
+	 * @param {Number<int>} $y
+	 * @param {Number<int>} $M_TYPE
 	 *
-	 * @returns {string}
+	 * @returns {String}
 	 */
 	module($x, $y, $M_TYPE){
 

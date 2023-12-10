@@ -11,7 +11,7 @@ import {MODE_ALPHANUM} from '../Common/constants.js';
 /**
  * ISO/IEC 18004:2000 Table 5
  *
- * @type {{}}
+ * @type {Object<{}>}
  */
 const CHAR_TO_ORD = {
 	'0':  0, '1':  1, '2':  2, '3':  3, '4':  4, '5':  5, '6':  6, '7':  7,

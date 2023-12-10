@@ -6,7 +6,6 @@
  */
 
 import PHPJS from './PHPJS.js';
-import QRCodeException from '../QRCodeException.js';
 
 /**
  * Holds the raw binary data
@@ -16,21 +15,21 @@ export default class BitBuffer{
 	/**
 	 * The buffer content
 	 *
-	 * @type {Array}
+	 * @type {Number<int>[]}
 	 */
 	buffer = [];
 
 	/**
 	 * Length of the content (bits)
 	 *
-	 * @type {int}
+	 * @type {Number<int>}
 	 */
 	length = 0;
 
 	/**
 	 * BitBuffer constructor.
 	 *
-	 * @param {int[]|null} $bytes
+	 * @param {Number<int>[]|null} $bytes
 	 */
 	constructor($bytes = null){
 		this.buffer = $bytes || [];
@@ -40,8 +39,8 @@ export default class BitBuffer{
 	/**
 	 * appends a sequence of bits
 	 *
-	 * @param {int} $bits
-	 * @param {int} $length
+	 * @param {Number<int>} $bits
+	 * @param {Number<int>} $length
 	 *
 	 * @returns {BitBuffer}
 	 */
@@ -57,7 +56,7 @@ export default class BitBuffer{
 	/**
 	 * appends a single bit
 	 *
-	 * @param {boolean} $bit
+	 * @param {Boolean} $bit
 	 *
 	 * @returns {BitBuffer}
 	 */
@@ -80,7 +79,7 @@ export default class BitBuffer{
 	/**
 	 * returns the current buffer length
 	 *
-	 * @returns {int}
+	 * @returns {Number<int>}
 	 */
 	getLength(){
 		return this.length;
@@ -89,7 +88,7 @@ export default class BitBuffer{
 	/**
 	 * returns the buffer content
 	 *
-	 * @returns {Array}
+	 * @returns {Number<int>[]}
 	 */
 	getBuffer(){
 		return this.buffer;

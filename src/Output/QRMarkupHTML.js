@@ -48,6 +48,7 @@ export default class QRMarkupHTML extends QRMarkup{
 
 	/**
 	 * @inheritDoc
+	 * @throws {QRCodeOutputException}
 	 */
 	getCssClass($M_TYPE){
 

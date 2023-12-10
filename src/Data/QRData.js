@@ -60,7 +60,7 @@ export default class QRData{
 	/**
 	 * Max bits for the current ECC mode
 	 *
-	 * @type {int[]}
+	 * @type {Number<int>[]}
 	 * @private
 	 */
 	maxBitsForEcc;
@@ -118,8 +118,8 @@ export default class QRData{
 	/**
 	 * estimates the total length of the several mode segments in order to guess the minimum version
 	 *
-	 * @returns {int}
-	 * @throws \chillerlan\QRCode\Data\QRCodeDataException
+	 * @returns {Number<int>}
+	 * @throws {QRCodeDataException}
 	 * @private
 	 */
 	estimateTotalBitLength(){
@@ -160,7 +160,7 @@ export default class QRData{
 	 * returns the minimum version number for the given string
 	 *
 	 * @return {Version}
-	 * @throws \chillerlan\QRCode\Data\QRCodeDataException
+	 * @throws {QRCodeDataException}
 	 * @private
 	 */
 	getMinimumVersion(){
@@ -186,7 +186,7 @@ export default class QRData{
 	 * creates a BitBuffer and writes the string data to it
 	 *
 	 * @returns {void}
-	 * @throws \chillerlan\QRCode\QRCodeException on data overflow
+	 * @throws {QRCodeException} on data overflow
 	 * @private
 	 */
 	writeBitBuffer(){

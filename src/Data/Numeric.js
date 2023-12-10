@@ -95,8 +95,8 @@ export default class Numeric extends QRDataModeAbstract{
 	/**
 	 * get the code for the given numeric string
 	 *
-	 * @param {string} $string
-	 * @returns {int}
+	 * @param {String} $string
+	 * @returns {Number<int>}
 	 * @private
 	 */
 	parseInt($string){

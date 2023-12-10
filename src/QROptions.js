@@ -21,7 +21,7 @@ export default class QROptions{
 	 *
 	 * [1 ... 40] or QRCode.VERSION_AUTO
 	 *
-	 * @type {int}
+	 * @type {Number<int>}
 	 * @protected
 	 */
 	_version = VERSION_AUTO;
@@ -31,7 +31,7 @@ export default class QROptions{
 	 *
 	 * if $version = QRCode.VERSION_AUTO
 	 *
-	 * @type {int}
+	 * @type {Number<int>}
 	 * @protected
 	 */
 	_versionMin = 1;
@@ -39,7 +39,7 @@ export default class QROptions{
 	/**
 	 * Maximum QR version
 	 *
-	 * @type {int}
+	 * @type {Number<int>}
 	 * @protected
 	 */
 	_versionMax = 40;
@@ -54,7 +54,7 @@ export default class QROptions{
 	 *   - Q => 25%
 	 *   - H => 30%
 	 *
-	 * @type {int}
+	 * @type {Number<int>}
 	 * @protected
 	 */
 	_eccLevel = ECC_L;
@@ -64,7 +64,7 @@ export default class QROptions{
 	 *
 	 * [0...7] or QRCode::MASK_PATTERN_AUTO
 	 *
-	 * @type {int}
+	 * @type {Number<int>}
 	 * @protected
 	 */
 	_maskPattern = MASK_PATTERN_AUTO;
@@ -74,7 +74,7 @@ export default class QROptions{
 	 *
 	 * @see https://www.qrcode.com/en/howto/code.html
 	 *
-	 * @type {boolean}
+	 * @type {Boolean}
 	 */
 	addQuietzone = true;
 
@@ -83,7 +83,7 @@ export default class QROptions{
 	 *
 	 * internally clamped to [0 ... $moduleCount / 2], defaults to 4 modules
 	 *
-	 * @type {int}
+	 * @type {Number<int>}
 	 * @protected
 	 */
 	_quietzoneSize = 4;
@@ -96,49 +96,49 @@ export default class QROptions{
 	 *   - QRCode::OUTPUT_STRING_XXXX where XXXX = TEXT, JSON
 	 *   - QRCode::OUTPUT_CUSTOM
 	 *
-	 * @type {string}
+	 * @type {String}
 	 */
 	outputType = OUTPUT_MARKUP_SVG;
 
 	/**
 	 * the FQCN of the custom QROutputInterface if $outputType is set to QRCode::OUTPUT_CUSTOM
 	 *
-	 * @type {string|null}
+	 * @type {String|null}
 	 */
 	outputInterface = null;
 
 	/**
 	 * /path/to/cache.file
 	 *
-	 * @type {string|null}
+	 * @type {String|null}
 	 */
 	cachefile = null;
 
 	/**
 	 * newline string [HTML, SVG, TEXT]
 	 *
-	 * @type {string}
+	 * @type {String}
 	 */
 	eol = '\n';
 
 	/**
 	 * size of a QR code pixel [SVG, IMAGE_*], HTML via CSS
 	 *
-	 * @type {int}
+	 * @type {Number<int>}
 	 */
 	scale = 5;
 
 	/**
 	 * a common css class
 	 *
-	 * @type {string}
+	 * @type {String}
 	 */
 	cssClass = 'qrcode';
 
 	/**
 	 * SVG opacity
 	 *
-	 * @type {float}
+	 * @type {Number<float>}
 	 */
 	svgOpacity = 1.0;
 
@@ -147,14 +147,14 @@ export default class QROptions{
 	 *
 	 * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Element/defs
 	 *
-	 * @type {string}
+	 * @type {String}
 	 */
 	svgDefs = '';
 
 	/**
 	 * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/preserveAspectRatio
 	 *
-	 * @type {string}
+	 * @type {String}
 	 */
 	svgPreserveAspectRatio = 'xMidYMid';
 
@@ -163,14 +163,14 @@ export default class QROptions{
 	 *
 	 * @see https://github.com/chillerlan/php-qrcode/issues/57
 	 *
-	 * @type {boolean}
+	 * @type {Boolean}
 	 */
 	connectPaths = false;
 
 	/**
 	 * specify which paths/patterns to exclude from connecting if $svgConnectPaths is set to true
 	 *
-	 * @type {int[]}
+	 * @type {Number<int>[]}
 	 */
 	excludeFromConnect = [];
 
@@ -186,14 +186,14 @@ export default class QROptions{
 	 * @see https://github.com/chillerlan/php-qrcode/issues/23
 	 * @see https://github.com/chillerlan/php-qrcode/discussions/122
 	 *
-	 * @type {boolean}
+	 * @type {Boolean}
 	 */
 	drawCircularModules = false;
 
 	/**
 	 * specifies the radius of the modules when $svgDrawCircularModules is set to true
 	 *
-	 * @type {float}
+	 * @type {Number<float>}
 	 * @protected
 	 */
 	_circleRadius = 0.45;
@@ -201,16 +201,16 @@ export default class QROptions{
 	/**
 	 * specifies which module types to exclude when $svgDrawCircularModules is set to true
 	 *
-	 * @type {int[]}
+	 * @type {Number<int>[]}
 	 */
 	keepAsSquare = [];
 
 	/**
 	 * toggle base64 or raw image data
 	 *
-	 * @type {boolean}
+	 * @type {Boolean}
 	 */
-	imageBase64 = true;
+	imageBase64 = false;
 
 	/**
 	 * toggle background transparency
@@ -219,14 +219,14 @@ export default class QROptions{
 	 *
 	 * @see QROptions.bgcolor
 	 *
-	 * @type {boolean}
+	 * @type {Boolean}
 	 */
 	imageTransparent = true;
 
 	/**
 	 * whether to draw the light (false) modules
 	 *
-	 * @type {boolean}
+	 * @type {Boolean}
 	 */
 	drawLightModules = true;
 
@@ -243,14 +243,14 @@ export default class QROptions{
 	/**
 	 * Toggles logo space creation
 	 *
-	 * @type {boolean}
+	 * @type {Boolean}
 	 */
 	addLogoSpace = false;
 
 	/**
 	 * width of the logo space
 	 *
-	 * @type {int}
+	 * @type {Number<int>}
 	 * @protected
 	 */
 	_logoSpaceWidth = 0;
@@ -258,7 +258,7 @@ export default class QROptions{
 	/**
 	 * height of the logo space
 	 *
-	 * @type {int}
+	 * @type {Number<int>}
 	 * @protected
 	 */
 	_logoSpaceHeight = 0;
@@ -266,7 +266,7 @@ export default class QROptions{
 	/**
 	 * optional horizontal start position of the logo space (top left corner)
 	 *
-	 * @type {int|null}
+	 * @type {Number<int>|null}
 	 * @protected
 	 */
 	_logoSpaceStartX = null;
@@ -274,7 +274,7 @@ export default class QROptions{
 	/**
 	 * optional vertical start position of the logo space (top left corner)
 	 *
-	 * @type {int|null}
+	 * @type {Number<int>|null}
 	 * @protected
 	 */
 	_logoSpaceStartY = null;
@@ -282,7 +282,7 @@ export default class QROptions{
 	/**
 	 * whether to return the markup as DOM element
 	 *
-	 * @type {boolean}
+	 * @type {Boolean}
 	 */
 	returnMarkupAsHtmlElement = false;
 
@@ -318,7 +318,7 @@ export default class QROptions{
 	 *
 	 * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL
 	 *
-	 * @type {string}
+	 * @type {String}
 	 * @protected
 	 */
 	_canvasImageType = 'png';
@@ -333,12 +333,12 @@ export default class QROptions{
 	 *
 	 * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL
 	 *
-	 * @type {number}
+	 * @type {Number<float>}
 	 */
 	canvasImageQuality = 0.85;
 
 	/**
-	 * @param {{}|null} $options
+	 * @param {Object<{}>|null} $options
 	 */
 	constructor($options = null){
 		// because javascript is dumb and we can't call getters and setters directly we have to a this silly workaround
@@ -363,8 +363,8 @@ export default class QROptions{
 	/**
 	 * clamp min/max version number
 	 *
-	 * @param {int} $versionMin
-	 * @param {int} $versionMax
+	 * @param {Number<int>} $versionMin
+	 * @param {Number<int>} $versionMax
 	 *
 	 * @returns {void}
 	 *
@@ -381,7 +381,7 @@ export default class QROptions{
 	/**
 	 * sets the minimum version number
 	 *
-	 * @param {int} $versionMin
+	 * @param {Number<int>} $versionMin
 	 *
 	 * @returns {void}
 	 * @protected
@@ -401,7 +401,7 @@ export default class QROptions{
 	/**
 	 * sets the maximum version number
 	 *
-	 * @param {int} $versionMax
+	 * @param {Number<int>} $versionMax
 	 *
 	 * @returns {void}
 	 * @protected
@@ -421,7 +421,7 @@ export default class QROptions{
 	/**
 	 * sets/clamps the version number
 	 *
-	 * @param {int} $version
+	 * @param {Number<int>} $version
 	 *
 	 * @returns {void}
 	 * @protected
@@ -441,10 +441,10 @@ export default class QROptions{
 	/**
 	 * sets the error correction level
 	 *
-	 * @param {int} $eccLevel
+	 * @param {Number<int>} $eccLevel
 	 *
 	 * @returns {void}
-	 * @throws \chillerlan\QRCode\QRCodeException
+	 * @throws QRCodeException
 	 * @protected
 	 */
 	_set_eccLevel($eccLevel){
@@ -467,7 +467,7 @@ export default class QROptions{
 	/**
 	 * sets/clamps the mask pattern
 	 *
-	 * @param {int} $maskPattern
+	 * @param {Number<int>} $maskPattern
 	 *
 	 * @returns {void}
 	 * @protected
@@ -491,7 +491,7 @@ export default class QROptions{
 	/**
 	 * sets/clamps the quiet zone size
 	 *
-	 * @param {int} $quietzoneSize
+	 * @param {Number<int>} $quietzoneSize
 	 *
 	 * @returns {void}
 	 * @protected
@@ -511,9 +511,9 @@ export default class QROptions{
 	/**
 	 * clamp the logo space values between 0 and maximum length (177 modules at version 40)
 	 *
-	 * @param {int} $value
+	 * @param {Number<int>} $value
 	 *
-	 * @returns {int}
+	 * @returns {Number<int>}
 	 * @protected
 	 */
 	clampLogoSpaceValue($value){
@@ -525,7 +525,7 @@ export default class QROptions{
 	/**
 	 * clamp/set logo space width
 	 *
-	 * @param {int} $width
+	 * @param {Number<int>} $width
 	 *
 	 * @returns {void}
 	 * @protected
@@ -545,7 +545,7 @@ export default class QROptions{
 	/**
 	 * clamp/set logo space height
 	 *
-	 * @param {int} $height
+	 * @param {Number<int>} $height
 	 *
 	 * @returns {void}
 	 * @protected
@@ -565,7 +565,7 @@ export default class QROptions{
 	/**
 	 * clamp/set horizontal logo space start
 	 *
-	 * @param {int|null} $startX
+	 * @param {Number<int>|null} $startX
 	 *
 	 * @returns {void}
 	 * @protected
@@ -585,7 +585,7 @@ export default class QROptions{
 	/**
 	 * clamp/set vertical logo space start
 	 *
-	 * @param {int|null} $startY
+	 * @param {Number<int>|null} $startY
 	 *
 	 * @returns {void}
 	 * @protected
@@ -605,7 +605,7 @@ export default class QROptions{
 	/**
 	 * clamp/set SVG circle radius
 	 *
-	 * @param {float} $circleRadius
+	 * @param {Number<float>} $circleRadius
 	 *
 	 * @returns {void}
 	 * @protected
@@ -625,7 +625,7 @@ export default class QROptions{
 	/**
 	 * set canvas image type
 	 *
-	 * @param {string} $canvasImageType
+	 * @param {String} $canvasImageType
 	 *
 	 * @returns {void}
 	 * @protected

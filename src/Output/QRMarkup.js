@@ -38,7 +38,7 @@ export default class QRMarkup extends QROutputAbstract{
 	/**
 	 * @inheritDoc
 	 *
-	 * @returns {string|*}
+	 * @returns {String|*}
 	 */
 	dump($file = null){
 		$file = $file || this.options.cachefile;
@@ -60,16 +60,16 @@ export default class QRMarkup extends QROutputAbstract{
 	/**
 	 * returns a string with all css classes for the current element
 	 *
-	 * @param {int} $M_TYPE
-	 * @returns {string}
+	 * @param {Number<int>} $M_TYPE
+	 * @returns {String}
 	 * @abstract
 	 * @protected
 	 */
 	getCssClass($M_TYPE){}
 
 	/**
-	 * @param {boolean} $saveToFile
-	 * @returns {string}
+	 * @param {Boolean} $saveToFile
+	 * @returns {String}
 	 * @abstract
 	 * @protected
 	 */

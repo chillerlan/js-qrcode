@@ -8,7 +8,7 @@
 
 import QRCodeException from '../QRCodeException.js';
 /**
- * @type {int[]}
+ * @type {Number<int>[]}
  * @private
  */
 const logTable = [
@@ -32,7 +32,7 @@ const logTable = [
 ];
 
 /**
- * @type {int[]}
+ * @type {Number<int>[]}
  * @private
  */
 const expTable = [
@@ -69,9 +69,9 @@ const expTable = [
 export default class GF256{
 
 	/**
-	 * @param {int} $a
+	 * @param {Number<int>} $a
 	 *
-	 * @returns {int} 2 to the power of a in GF(size)
+	 * @returns {Number<int>} 2 to the power of a in GF(size)
 	 */
 	static exp($a){
 
@@ -86,10 +86,10 @@ export default class GF256{
 	}
 
 	/**
-	 * @param {int} $a
+	 * @param {Number<int>} $a
 	 *
-	 * @returns {int} base 2 log of a in GF(size)
-	 * @throws \chillerlan\QRCode\QRCodeException
+	 * @returns {Number<int>} base 2 log of a in GF(size)
+	 * @throws QRCodeException
 	 */
 	static log($a){
 
@@ -101,8 +101,8 @@ export default class GF256{
 	}
 
 	/**
-	 * @param {int} $a
-	 * @param {int} $b
+	 * @param {Number<int>} $a
+	 * @param {Number<int>} $b
 	 *
 	 * @return int product of a and b in GF(size)
 	 */

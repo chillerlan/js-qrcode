@@ -17,13 +17,13 @@ import GF256 from './GF256.js';
 export default class ReedSolomonEncoder{
 
 	/**
-	 * @type {{}}
+	 * @type {Object<{}>}
 	 * @private
 	 */
 	interleavedData;
 
 	/**
-	 * @type {int}
+	 * @type {Number<int>}
 	 * @private
 	 */
 	interleavedDataIndex;
@@ -35,8 +35,8 @@ export default class ReedSolomonEncoder{
 	 * @param {Version} $version
 	 * @param {EccLevel} $eccLevel
 	 *
-	 * @returns {{}}
-	 * @throws \chillerlan\QRCode\QRCodeException
+	 * @returns {Object<{}>}
+	 * @throws QRCodeException
 	 */
 	interleaveEcBytes($bitBuffer, $version, $eccLevel){
 		let $rsblockData     = $version.getRSBlocks($eccLevel);
@@ -50,7 +50,6 @@ export default class ReedSolomonEncoder{
 		if($l2 > 0){
 			$rsBlocks = $rsBlocks.concat(PHPJS.fill_array($l2, [$numEccCodewords + $b2, $b2]));
 		}
-
 
 		let $bitBufferData  = $bitBuffer.getBuffer();
 		let $dataBytes      = [];
@@ -88,9 +87,9 @@ export default class ReedSolomonEncoder{
 
 	/**
 	 * @param {Array} $dataBytes
-	 * @param {int} $ecByteCount
+	 * @param {Number<int>} $ecByteCount
 	 *
-	 * @returns {{}}
+	 * @returns {Object<{}>}
 	 * @private
 	 */
 	generateEcBytes($dataBytes, $ecByteCount){
@@ -118,9 +117,9 @@ export default class ReedSolomonEncoder{
 	}
 
 	/**
-	 * @param {{}} $byteArray
-	 * @param {int} $maxBytes
-	 * @param {int} $numRsBlocks
+	 * @param {Object<{}>} $byteArray
+	 * @param {Number<int>} $maxBytes
+	 * @param {Number<int>} $numRsBlocks
 	 *
 	 * @returns {void}
 	 * @private

@@ -22,7 +22,7 @@ export default class MaskPattern{
 	/**
 	 * The current mask pattern value (0-7)
 	 *
-	 * @type {int}
+	 * @type {Number<int>}
 	 * @private
 	 */
 	maskPattern;
@@ -30,9 +30,9 @@ export default class MaskPattern{
 	/**
 	 * MaskPattern constructor.
 	 *
-	 * @param {int} $maskPattern
+	 * @param {Number<int>} $maskPattern
 	 *
-	 * @throws \chillerlan\QRCode\QRCodeException
+	 * @throws QRCodeException
 	 */
 	constructor($maskPattern){
 		$maskPattern = PHPJS.intval($maskPattern);
@@ -47,7 +47,7 @@ export default class MaskPattern{
 	/**
 	 * Returns the current mask pattern
 	 *
-	 * @returns {int}
+	 * @returns {Number<int>}
 	 */
 	getPattern(){
 		return this.maskPattern;
@@ -67,7 +67,7 @@ export default class MaskPattern{
 	 * @see https://www.thonky.com/qr-code-tutorial/mask-patterns
 	 * @see https://github.com/zxing/zxing/blob/e9e2bd280bcaeabd59d0f955798384fe6c018a6c/core/src/main/java/com/google/zxing/qrcode/decoder/DataMask.java#L32-L117
 	 *
-	 * @returns {function}
+	 * @returns {Function}
 	 */
 	getMask(){
 		// $x = column (width), $y = row (height)
@@ -114,10 +114,10 @@ export default class MaskPattern{
 	 * give penalty to them. Example: 00000 or 11111.
 	 *
 	 * @param {QRMatrix} $matrix
-	 * @param {int} $height
-	 * @param {int} $width
+	 * @param {Number<int>} $height
+	 * @param {Number<int>} $width
 	 *
-	 * @returns {int}
+	 * @returns {Number<int>}
 	 */
 	static testRule1($matrix, $height, $width){
 		return MaskPattern.applyRule1($matrix, $height, $width, true) + MaskPattern.applyRule1($matrix, $height, $width, false);
@@ -125,11 +125,11 @@ export default class MaskPattern{
 
 	/**
 	 * @param {QRMatrix} $matrix
-	 * @param {int} $height
-	 * @param {int} $width
-	 * @param {boolean} $isHorizontal
+	 * @param {Number<int>} $height
+	 * @param {Number<int>} $width
+	 * @param {Boolean} $isHorizontal
 	 *
-	 * @returns {int}
+	 * @returns {Number<int>}
 	 * @private
 	 */
 	static applyRule1($matrix, $height, $width, $isHorizontal){
@@ -172,10 +172,10 @@ export default class MaskPattern{
 	 * penalty proportional to (M-1)x(N-1), because this is the number of 2x2 blocks inside such a block.
 	 *
 	 * @param {QRMatrix} $matrix
-	 * @param {int} $height
-	 * @param {int} $width
+	 * @param {Number<int>} $height
+	 * @param {Number<int>} $width
 	 *
-	 * @returns {int}
+	 * @returns {Number<int>}
 	 */
 	static testRule2($matrix, $height, $width){
 		let $penalty = 0;
@@ -213,10 +213,10 @@ export default class MaskPattern{
 	 * find patterns like 000010111010000, we give penalty once.
 	 *
 	 * @param {QRMatrix} $matrix
-	 * @param {int} $height
-	 * @param {int} $width
+	 * @param {Number<int>} $height
+	 * @param {Number<int>} $width
 	 *
-	 * @returns {int}
+	 * @returns {Number<int>}
 	 */
 	static testRule3($matrix, $height, $width){
 		let $penalties = 0;
@@ -266,12 +266,12 @@ export default class MaskPattern{
 
 	/**
 	 * @param {QRMatrix} $matrix
-	 * @param {int} $width
-	 * @param {int} $y
-	 * @param {int} $from
-	 * @param {int} $to
+	 * @param {Number<int>} $width
+	 * @param {Number<int>} $y
+	 * @param {Number<int>} $from
+	 * @param {Number<int>} $to
 	 *
-	 * @returns {boolean}
+	 * @returns {Boolean}
 	 * @private
 	 */
 	static isWhiteHorizontal($matrix, $width, $y, $from, $to){
@@ -291,12 +291,12 @@ export default class MaskPattern{
 
 	/**
 	 * @param {QRMatrix} $matrix
-	 * @param {int} $height
-	 * @param {int} $x
-	 * @param {int} $from
-	 * @param {int} $to
+	 * @param {Number<int>} $height
+	 * @param {Number<int>} $x
+	 * @param {Number<int>} $from
+	 * @param {Number<int>} $to
 	 *
-	 * @returns {boolean}
+	 * @returns {Boolean}
 	 * @private
 	 */
 	static isWhiteVertical($matrix, $height, $x, $from, $to){
@@ -319,10 +319,10 @@ export default class MaskPattern{
 	 * penalty if the ratio is far from 50%. It gives 10 penalty for 5% distance.
 	 *
 	 * @param {QRMatrix} $matrix
-	 * @param {int} $height
-	 * @param {int} $width
+	 * @param {Number<int>} $height
+	 * @param {Number<int>} $width
 	 *
-	 * @returns {int}
+	 * @returns {Number<int>}
 	 */
 	static testRule4($matrix, $height, $width){
 		let $darkCells  = 0;

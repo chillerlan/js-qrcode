@@ -18,8 +18,8 @@ export default class QROutputAbstract extends QROutputInterface{
 	/**
 	 * the current size of the QR matrix
 	 *
-	 * @see \chillerlan\QRCode\Data\QRMatrix.size()
-	 * @type {int}
+	 * @see QRMatrix.size()
+	 * @type {Number<int>}
 	 * @protected
 	 */
 	moduleCount;
@@ -27,22 +27,22 @@ export default class QROutputAbstract extends QROutputInterface{
 	/**
 	 * the current scaling for a QR pixel
 	 *
-	 * @see \chillerlan\QRCode\QROptions.$scale
-	 * @type {int}
+	 * @see QROptions.$scale
+	 * @type {Number<int>}
 	 * @protected
 	 */
 	scale;
 
 	/**
 	 * the side length of the QR image (modules * scale)
-	 * @type {int}
+	 * @type {Number<int>}
 	 * @protected
 	 */
 	length;
 
 	/**
 	 * an (optional) array of color values for the several QR matrix parts
-	 * @type {{}}
+	 * @type {Object<{}>}
 	 * @protected
 	 */
 	moduleValues = {};
@@ -93,7 +93,7 @@ export default class QROutputAbstract extends QROutputInterface{
 	 * Determines whether the given value is valid
 	 *
 	 * @param {*|null} $value
-	 * @returns {boolean}
+	 * @returns {Boolean}
 	 * @abstract
 	 * @protected
 	 */
@@ -112,7 +112,7 @@ export default class QROutputAbstract extends QROutputInterface{
 	/**
 	 * Returns a defualt value for either dark or light modules (return value depends on the output module)
 	 *
-	 * @param {boolean} $isDark
+	 * @param {Boolean} $isDark
 	 * @returna {*}
 	 * @abstract
 	 * @protected
@@ -156,9 +156,9 @@ export default class QROutputAbstract extends QROutputInterface{
 	/**
 	 * Returns a base64 data URI for the given string and mime type
 	 *
-	 * @param {string} $data
-	 * @param {string} $mime
-	 * @returna {string}
+	 * @param {String} $data
+	 * @param {String} $mime
+	 * @returna {String}
 	 * @protected
 	 */
 	base64encode($data, $mime){
@@ -169,7 +169,7 @@ export default class QROutputAbstract extends QROutputInterface{
 	 *
 	 * @see https://stackoverflow.com/a/35385518
 	 *
-	 * @param {string} $html
+	 * @param {String} $html
 	 * @returns {ChildNode}
 	 */
 	toHtmlElement($html){
@@ -183,12 +183,12 @@ export default class QROutputAbstract extends QROutputInterface{
 	 * saves the qr data to a file
 	 *
 	 * @see file_put_contents()
-	 * @see \chillerlan\QRCode\QROptions.cachefile
+	 * @see QROptions.cachefile
 	 *
-	 * @param {string} $data
-	 * @param {string} $file
+	 * @param {String} $data
+	 * @param {String} $file
 	 * @returns {void}
-	 * @throws \chillerlan\QRCode\Output\QRCodeOutputException
+	 * @throws QRCodeOutputException
 	 * @protected
 	 */
 	saveToFile($data, $file){
@@ -207,7 +207,7 @@ export default class QROutputAbstract extends QROutputInterface{
 	 *   $M_TYPE_LAYER - (possibly modified) field value that acts as layer id
 	 *
 	 * @param {function} $transform
-	 * @returns {{}}
+	 * @returns {Object<{}>}
 	 * @protected
 	 */
 	collectModules($transform){

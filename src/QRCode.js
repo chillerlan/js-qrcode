@@ -119,7 +119,7 @@ export default class QRCode{
 	 * Returns a QRMatrix object for the given $data and current QROptions
 	 *
 	 * @returns {QRMatrix}
-	 * @throws \chillerlan\QRCode\Data\QRCodeDataException
+	 * @throws {QRCodeDataException}
 	 */
 	getMatrix(){
 
@@ -155,7 +155,7 @@ export default class QRCode{
 	 * returns a fresh (built-in) QROutputInterface
 	 *
 	 * @returns {QROutputAbstract}
-	 * @throws \chillerlan\QRCode\Output\QRCodeOutputException
+	 * @throws {QRCodeOutputException}
 	 * @protected
 	 */
 	initOutputInterface(){
@@ -176,7 +176,7 @@ export default class QRCode{
 	/**
 	 * initializes a custom output module after checking the existence of the class and if it implemnts the required interface
 	 *
-	 * @throws \chillerlan\QRCode\Output\QRCodeOutputException
+	 * @throws {QRCodeOutputException}
 	 * @protected
 	 */
 	initCustomOutputInterface(){

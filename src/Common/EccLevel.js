@@ -14,7 +14,7 @@ const ECC_LEVELS = [ECC_L, ECC_M, ECC_Q, ECC_H];
 /**
  * ISO/IEC 18004:2000 Tables 7-11 - Number of symbol characters and input data capacity for versions 1 to 40
  *
- * @type {int[][]}
+ * @type {Number<int>[][]}
  *
  * @private
  */
@@ -68,7 +68,7 @@ const MAX_BITS = [
  *
  * ECC level -> mask pattern
  *
- * @type {int[][]}
+ * @type {Number<int>[][]}
  *
  * @private
  */
@@ -129,15 +129,15 @@ export default class EccLevel{
 	 * Q: 0b11
 	 * H: 0b10
 	 *
-	 * @type {int}
+	 * @type {Number<int>}
 	 * @private
 	 */
 	eccLevel;
 
 	/**
-	 * @param {int} $eccLevel containing the two bits encoding a QR Code's error correction level
+	 * @param {Number<int>} $eccLevel containing the two bits encoding a QR Code's error correction level
 	 *
-	 * @throws \chillerlan\QRCode\QRCodeException
+	 * @throws QRCodeException
 	 */
 	constructor($eccLevel){
 
@@ -151,7 +151,7 @@ export default class EccLevel{
 	/**
 	 * returns the string representation of the current ECC level
 	 *
-	 * @returns {string}
+	 * @returns {String}
 	 */
 	toString(){
 		return PHPJS.array_combine(ECC_LEVELS, ['L', 'M', 'Q', 'H'])[this.eccLevel];
@@ -160,7 +160,7 @@ export default class EccLevel{
 	/**
 	 * returns the current ECC level
 	 *
-	 * @returns {int}
+	 * @returns {Number<int>}
 	 */
 	getLevel(){
 		return this.eccLevel;
@@ -171,9 +171,9 @@ export default class EccLevel{
 	 *
 	 * references to the keys of the following tables:
 	 *
-	 * @see \chillerlan\QRCode\Common\EccLevel::MAX_BITS
-	 * @see \chillerlan\QRCode\Common\EccLevel::FORMAT_PATTERN
-	 * @see \chillerlan\QRCode\Common\Version::RSBLOCKS
+	 * @see MAX_BITS
+	 * @see FORMAT_PATTERN
+	 * @see RSBLOCKS
 	 */
 	getOrdinal(){
 		return PHPJS.array_combine(ECC_LEVELS, [0, 1, 2, 3])[this.eccLevel];
@@ -184,14 +184,14 @@ export default class EccLevel{
 	 *
 	 * @param {MaskPattern} $maskPattern
 	 *
-	 * @returns {int}
+	 * @returns {Number<int>}
 	 */
 	getformatPattern($maskPattern){
 		return FORMAT_PATTERN[this.getOrdinal()][$maskPattern.getPattern()];
 	}
 
 	/**
-	 * @returns {int[]} an array with the max bit lengths for version 1-40 and the current ECC level
+	 * @returns {Number<int>[]} an array with the max bit lengths for version 1-40 and the current ECC level
 	 */
 	getMaxBits(){
 		let $v = [];

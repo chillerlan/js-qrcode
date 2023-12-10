@@ -23,7 +23,7 @@ const ECC_H = 0b10; // 30%.
  * from MaskPattern
  */
 
-/** @type {int} */
+/** @type {Number<int>} */
 const MASK_PATTERN_AUTO = -1;
 
 const PATTERN_000 = 0b000;
@@ -36,7 +36,7 @@ const PATTERN_110 = 0b110;
 const PATTERN_111 = 0b111;
 
 /**
- * @type {int[]}
+ * @type {Number<int>[]}
  * @private
  */
 const PATTERNS = [
@@ -71,7 +71,7 @@ const MODES = [
  * from Version
  */
 
-/** @type {int} */
+/** @type {Number<int>} */
 const VERSION_AUTO = -1;
 
 /**
@@ -161,9 +161,9 @@ const MATRIX_NEIGHBOUR_FLAGS = [
 /**
  * Map of flag => coord
  *
- * @see \chillerlan\QRCode\Data\QRMatrix::checkNeighbours()
+ * @see QRMatrix::checkNeighbours()
  *
- * @type {int[][]}
+ * @type {Number<int>[][]}
  * @protected
  */
 const MATRIX_NEIGHBOURS = PHPJS.array_combine(MATRIX_NEIGHBOUR_FLAGS, [
@@ -198,7 +198,7 @@ const OUTPUT_MODES = [
 ];
 
 /**
- * @type {int[]}
+ * @type {Number<int>[]}
  * @internal
  */
 const MODULE_VALUES_KEYS = [
