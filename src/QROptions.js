@@ -152,41 +152,11 @@ export default class QROptions{
 	svgDefs = '';
 
 	/**
-	 * SVG viewBox size. a single integer number which defines width/height of the viewBox attribute.
-	 *
-	 * viewBox="0 0 x x"
-	 *
-	 * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox
-	 * @see https://css-tricks.com/scale-svg/#article-header-id-3
-	 *
-	 * @type {int|null}
-	 */
-	svgViewBoxSize = null;
-
-	/**
 	 * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/preserveAspectRatio
 	 *
 	 * @type {string}
 	 */
 	svgPreserveAspectRatio = 'xMidYMid';
-
-	/**
-	 * optional "width" attribute with the specified value (note that the value is not checked!)
-	 *
-	 * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/width
-	 *
-	 * @type {string|null}
-	 */
-	svgWidth = null;
-
-	/**
-	 * optional "height" attribute with the specified value (note that the value is not checked!)
-	 *
-	 * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/height
-	 *
-	 * @type {string|null}
-	 */
-	svgHeight = null;
 
 	/**
 	 * whether to connect the paths for the several module types to avoid weird glitches when using gradients etc.
@@ -234,34 +204,6 @@ export default class QROptions{
 	 * @type {int[]}
 	 */
 	keepAsSquare = [];
-
-	/**
-	 * string substitute for dark
-	 *
-	 * @type {string}
-	 */
-	textDark = '🔴';
-
-	/**
-	 * string substitute for light
-	 *
-	 * @type {string}
-	 */
-	textLight = '⭕';
-
-	/**
-	 * markup substitute for dark (CSS value)
-	 *
-	 * @type {string}
-	 */
-	markupDark = '#000';
-
-	/**
-	 * markup substitute for light (CSS value)
-	 *
-	 * @type {string}
-	 */
-	markupLight = '#fff';
 
 	/**
 	 * toggle base64 or raw image data

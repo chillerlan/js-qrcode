@@ -45,16 +45,35 @@ export default class QRMarkupSVG extends QRMarkup{
 	}
 
 	/**
+	 * @inheritDoc
+	 *
+	 * @returns {Number<int>[]}
+	 */
+	getOutputDimensions(){
+		return [this.moduleCount, this.moduleCount];
+	}
+
+	/**
+	 * returns the value for the SVG viewBox attribute
+	 *
+	 * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox
+	 * @see https://css-tricks.com/scale-svg/#article-header-id-3
+	 *
+	 * @returns {String}
+	 */
+	getViewBox(){
+		let [$width, $height] = this.getOutputDimensions();
+
+		return `0 0 ${$width} ${$height}`;
+	}
+
+	/**
 	 * returns the <svg> header with the given options parsed
 	 *
 	 * @returns {string}
 	 */
 	header(){
-		let $size   = this.options.svgViewBoxSize || this.moduleCount;
-		let $width  = this.options.svgWidth !== null ? ` width="${this.options.svgWidth}"` : '';
-		let $height = this.options.svgHeight !== null ? ` height="${this.options.svgHeight}"` : '';
-
-		return `<?xml version="1.0" encoding="UTF-8"?>${this.options.eol}<svg xmlns="http://www.w3.org/2000/svg" class="qr-svg ${this.options.cssClass}" viewBox="0 0 ${$size} ${$size}" preserveAspectRatio="${this.options.svgPreserveAspectRatio}"${$width}${$height}>${this.options.eol}`;
+		return `<?xml version="1.0" encoding="UTF-8"?>${this.options.eol}<svg xmlns="http://www.w3.org/2000/svg" class="qr-svg ${this.options.cssClass}" viewBox="${this.getViewBox()}" preserveAspectRatio="${this.options.svgPreserveAspectRatio}">${this.options.eol}`;
 	}
 
 	/**

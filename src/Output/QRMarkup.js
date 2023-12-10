@@ -32,7 +32,7 @@ export default class QRMarkup extends QROutputAbstract{
 	 * @inheritDoc
 	 */
 	getDefaultModuleValue($isDark){
-		return $isDark ? this.options.markupDark : this.options.markupLight;
+		return $isDark ? '#000' : '#fff';
 	}
 
 	/**

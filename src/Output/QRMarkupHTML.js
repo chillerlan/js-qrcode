@@ -13,6 +13,13 @@ export default class QRMarkupHTML extends QRMarkup{
 	/**
 	 * @inheritDoc
 	 */
+	getDefaultModuleValue($isDark){
+		return $isDark ? 'dark' : 'light';
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	createMarkup($saveToFile){
 		let cssClass = this.getCssClass();
 		let div      = '<div>';

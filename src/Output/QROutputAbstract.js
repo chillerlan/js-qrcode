@@ -142,6 +142,18 @@ export default class QROutputAbstract extends QROutputInterface{
 	}
 
 	/**
+	 * Returns a 2 element array with the current output width and height
+	 *
+	 * The type and units of the values depend on the output class. The default value is the current module count * scale.
+	 *
+	 * @returna {array}
+	 * @protected
+	 */
+	getOutputDimensions(){
+		return [this.length, this.length];
+	}
+
+	/**
 	 * Returns a base64 data URI for the given string and mime type
 	 *
 	 * @param {string} $data

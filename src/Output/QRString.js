@@ -35,7 +35,7 @@ export default class QRString extends QROutputAbstract{
 	 * @inheritDoc
 	 */
 	getDefaultModuleValue($isDark){
-		return $isDark ? this.options.textDark : this.options.textLight;
+		return $isDark ? '██' : '░░';
 	}
 
 	/**
