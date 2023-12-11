@@ -51,7 +51,7 @@ export default class QRCanvas extends QROutputAbstract{
 	/**
 	 * @inheritDoc
 	 *
-	 * @returns {HTMLCanvasElement|String|*}
+	 * @returns {HTMLCanvasElement|string|*}
 	 * @throws {QRCodeOutputException}
 	 */
 	dump($file = null){

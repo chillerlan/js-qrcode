@@ -50,7 +50,7 @@ export default class QRMatrix{
 	/**
 	 * the actual matrix data array
 	 *
-	 * @type {Number<int>[][]}
+	 * @type {number[][]|int[][]}
 	 * @protected
 	 */
 	_matrix;
@@ -58,7 +58,7 @@ export default class QRMatrix{
 	/**
 	 * the size (side length) of the matrix, including quiet zone (if created)
 	 *
-	 * @type {Number<int>}
+	 * @type {number|int}
 	 * @protected
 	 */
 	moduleCount;
@@ -81,8 +81,8 @@ export default class QRMatrix{
 	/**
 	 * Creates a 2-dimensional array (square) of the given $size
 	 *
-	 * @param {Number<int>} $size
-	 * @param {Number<int>} $value
+	 * @param {number|int} $size
+	 * @param {number|int} $value
 	 *
 	 * @returns {Object<{}>}
 	 * @protected
@@ -111,9 +111,9 @@ export default class QRMatrix{
 	/**
 	 * Returns the data matrix, returns a pure boolean representation if $boolean is set to true
 	 *
-	 * @param {Boolean} $boolean
+	 * @param {boolean} $boolean
 	 *
-	 * @returns {Number<int>[][]|Boolean[][]}
+	 * @returns {number[][]|int[][]|boolean[][]}
 	 */
 	matrix($boolean = false){
 
@@ -169,7 +169,7 @@ export default class QRMatrix{
 	 *
 	 * size = version * 4 + 17 [ + 2 * quietzone size]
 	 *
-	 * @returns {Number<int>}
+	 * @returns {number|int}
 	 */
 	size(){
 		return this.moduleCount;
@@ -178,10 +178,10 @@ export default class QRMatrix{
 	/**
 	 * Returns the value of the module at position [$x, $y] or -1 if the coordinate is outside of the matrix
 	 *
-	 * @param {Number<int>} $x
-	 * @param {Number<int>} $y
+	 * @param {number|int} $x
+	 * @param {number|int} $y
 	 *
-	 * @returns {Number<int>}
+	 * @returns {number|int}
 	 */
 	get($x, $y){
 
@@ -198,10 +198,10 @@ export default class QRMatrix{
 	 *   true  => $M_TYPE | 0x800
 	 *   false => $M_TYPE
 	 *
-	 * @param {Number<int>} $x
-	 * @param {Number<int>} $y
-	 * @param {Boolean} $value
-	 * @param {Number<int>} $M_TYPE
+	 * @param {number|int} $x
+	 * @param {number|int} $y
+	 * @param {boolean} $value
+	 * @param {number|int} $M_TYPE
 	 *
 	 * @returns {QRMatrix}
 	 */
@@ -217,8 +217,8 @@ export default class QRMatrix{
 	/**
 	 * Flips the value of the module
 	 *
-	 * @param {Number<int>} $x
-	 * @param {Number<int>} $y
+	 * @param {number|int} $x
+	 * @param {number|int} $y
 	 *
 	 * @returns {QRMatrix}
 	 */
@@ -236,11 +236,11 @@ export default class QRMatrix{
 	 *
 	 *   true => $value & $M_TYPE === $M_TYPE
 	 *
-	 * @param {Number<int>} $x
-	 * @param {Number<int>} $y
-	 * @param {Number<int>} $M_TYPE
+	 * @param {number|int} $x
+	 * @param {number|int} $y
+	 * @param {number|int} $M_TYPE
 	 *
-	 * @returns {Boolean}
+	 * @returns {boolean}
 	 */
 	checkType($x, $y, $M_TYPE){
 
@@ -255,11 +255,11 @@ export default class QRMatrix{
 	 * checks whether the module at ($x, $y) is not in the given array of $M_TYPES,
 	 * returns true if no matches are found, otherwise false.
 	 *
-	 * @param {Number<int>} $x
-	 * @param {Number<int>} $y
-	 * @param {Number<int>[]} $M_TYPES
+	 * @param {number|int} $x
+	 * @param {number|int} $y
+	 * @param {number[]|int[]} $M_TYPES
 	 *
-	 * @returns {Boolean}
+	 * @returns {boolean}
 	 */
 	checkTypeNotIn($x, $y, $M_TYPES){
 
@@ -278,10 +278,10 @@ export default class QRMatrix{
 	 *   true  => $value & 0x800 === 0x800
 	 *   false => $value & 0x800 === 0
 	 *
-	 * @param {Number<int>} $x
-	 * @param {Number<int>} $y
+	 * @param {number|int} $x
+	 * @param {number|int} $y
 	 *
-	 * @returns {Boolean}
+	 * @returns {boolean}
 	 */
 	check($x, $y){
 		return this.checkType($x, $y, IS_DARK);
@@ -297,11 +297,11 @@ export default class QRMatrix{
 	 *   8 # 4
 	 *   7 6 5
 	 *
-	 * @param {Number<int>} $x
-	 * @param {Number<int>} $y
-	 * @param {Number<int>|null} $M_TYPE_VALUE
+	 * @param {number|int} $x
+	 * @param {number|int} $y
+	 * @param {number|int|null} $M_TYPE_VALUE
 	 *
-	 * @returns {Number<int>}
+	 * @returns {number|int}
 	 */
 	checkNeighbours($x, $y, $M_TYPE_VALUE = null){
 		let $bits = 0;
@@ -529,7 +529,7 @@ export default class QRMatrix{
 	 *
 	 * ISO/IEC 18004:2000 Section 7.3.7
 	 *
-	 * @param {Number<int>} $quietZoneSize
+	 * @param {number|int} $quietZoneSize
 	 *
 	 * @returns {QRMatrix}
 	 * @throws {QRCodeDataException}
@@ -574,10 +574,10 @@ export default class QRMatrix{
 	 *
 	 * @link https://github.com/chillerlan/php-qrcode/issues/52
 	 *
-	 * @param {Number<int>} $width
-	 * @param {Number<int>} $height
-	 * @param {Number<int>|null} $startX
-	 * @param {Number<int>|null} $startY
+	 * @param {number|int} $width
+	 * @param {number|int} $height
+	 * @param {number|int|null} $startX
+	 * @param {number|int|null} $startY
 	 *
 	 * @returns {QRMatrix}
 	 * @throws {QRCodeDataException}

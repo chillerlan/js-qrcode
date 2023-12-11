@@ -29,10 +29,10 @@ export default class Mode{
 	/**
 	 * returns the length bits for the version breakpoints 1-9, 10-26 and 27-40
 	 *
-	 * @param {Number<int>} $mode
-	 * @param {Number<int>} $version
+	 * @param {number|int} $mode
+	 * @param {number|int} $version
 	 *
-	 * @returns {Number<int>}
+	 * @returns {number|int}
 	 * @throws QRCodeException
 	 */
 	static getLengthBitsForVersion($mode, $version){
@@ -60,7 +60,7 @@ export default class Mode{
 	/**
 	 * returns the array of length bits for the given mode
 	 *
-	 * @param {Number<int>} $mode
+	 * @param {number|int} $mode
 	 */
 	static getLengthBitsForMode($mode){
 

@@ -15,7 +15,7 @@ export default class QRDataModeInterface{
 	 *
 	 * @inheritDoc
 	 *
-	 * @returns {Number<int>}
+	 * @returns {number|int}
 	 * @abstract
 	 */
 	getDataMode(){}
@@ -23,7 +23,7 @@ export default class QRDataModeInterface{
 	/**
 	 * retruns the length in bits of the data string
 	 *
-	 * @returns {Number<int>}
+	 * @returns {number|int}
 	 * @abstract
 	 */
 	getLengthInBits(){}
@@ -34,7 +34,7 @@ export default class QRDataModeInterface{
 	 * @see QRData::writeBitBuffer()
 	 *
 	 * @param {BitBuffer} $bitBuffer
-	 * @param {Number<int>} $versionNumber
+	 * @param {number|int} $versionNumber
 	 *
 	 * @returns {void}
 	 * @abstract
@@ -44,9 +44,9 @@ export default class QRDataModeInterface{
 	/**
 	 * checks if the given string qualifies for the encoder module
 	 *
-	 * @param {String} $string
+	 * @param {string} $string
 	 *
-	 * @returns {Boolean}
+	 * @returns {boolean}
 	 * @abstract
 	 */
 	static validateString($string){}
@@ -55,7 +55,7 @@ export default class QRDataModeInterface{
 	 * same as validateString, but instanced mode because JS is dumb
 	 *
 	 * @param $string
-	 * @returns {Boolean}
+	 * @returns {boolean}
 	 */
 	validateStringI($string){}
 

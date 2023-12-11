@@ -47,7 +47,7 @@ export default class QRMarkupSVG extends QRMarkup{
 	/**
 	 * @inheritDoc
 	 *
-	 * @returns {Number<int>[]}
+	 * @returns {number[]|int[]}
 	 */
 	getOutputDimensions(){
 		return [this.moduleCount, this.moduleCount];
@@ -59,7 +59,7 @@ export default class QRMarkupSVG extends QRMarkup{
 	 * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox
 	 * @see https://css-tricks.com/scale-svg/#article-header-id-3
 	 *
-	 * @returns {String}
+	 * @returns {string}
 	 */
 	getViewBox(){
 		let [$width, $height] = this.getOutputDimensions();
@@ -70,7 +70,7 @@ export default class QRMarkupSVG extends QRMarkup{
 	/**
 	 * returns the <svg> header with the given options parsed
 	 *
-	 * @returns {String}
+	 * @returns {string}
 	 */
 	header(){
 		return `<?xml version="1.0" encoding="UTF-8"?>${this.options.eol}<svg xmlns="http://www.w3.org/2000/svg" class="qr-svg ${this.options.cssClass}" viewBox="${this.getViewBox()}" preserveAspectRatio="${this.options.svgPreserveAspectRatio}">${this.options.eol}`;
@@ -81,7 +81,7 @@ export default class QRMarkupSVG extends QRMarkup{
 	 *
 	 * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Element/path
 	 *
-	 * @returns {String}
+	 * @returns {string}
 	 */
 	paths(){
 		let $paths = this.collectModules(($x, $y, $M_TYPE) => this.module($x, $y, $M_TYPE));
@@ -136,11 +136,11 @@ export default class QRMarkupSVG extends QRMarkup{
 	 *
 	 * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d
 	 *
-	 * @param {Number<int>} $x
-	 * @param {Number<int>} $y
-	 * @param {Number<int>} $M_TYPE
+	 * @param {number|int} $x
+	 * @param {number|int} $y
+	 * @param {number|int} $M_TYPE
 	 *
-	 * @returns {String}
+	 * @returns {string}
 	 */
 	module($x, $y, $M_TYPE){
 

@@ -17,7 +17,7 @@ export default class QRDataModeAbstract extends QRDataModeInterface{
 	/**
 	 * the current data mode: Num, Alphanum, Kanji, Byte
 	 *
-	 * @type {Number<int>}
+	 * @type {number|int}
 	 * @abstract
 	 */
 	datamode;
@@ -25,14 +25,14 @@ export default class QRDataModeAbstract extends QRDataModeInterface{
 	/**
 	 * The data to write
 	 *
-	 * @type {String}
+	 * @type {string}
 	 */
 	data;
 
 	/**
 	 * QRDataModeAbstract constructor.
 	 *
-	 * @param {String} $data
+	 * @param {string} $data
 	 *
 	 * @throws {QRCodeDataException}
 	 */
@@ -49,7 +49,7 @@ export default class QRDataModeAbstract extends QRDataModeInterface{
 	/**
 	 * returns the character count of the $data string
 	 *
-	 * @returns {Number<int>}
+	 * @returns {number|int}
 	 * @protected
 	 */
 	getCharCount(){
@@ -61,16 +61,16 @@ export default class QRDataModeAbstract extends QRDataModeInterface{
 	 *
 	 * @inheritDoc
 	 *
-	 * @returns {Number<int>}
+	 * @returns {number|int}
 	 */
 	getDataMode(){
 		return this.datamode;
 	}
 
 	/**
-	 * @param {Number<int>} $versionNumber
+	 * @param {number|int} $versionNumber
 	 *
-	 * @returns {Number<int>}
+	 * @returns {number|int}
 	 * @protected
 	 */
 	getLengthBitsForVersion($versionNumber){

@@ -13,7 +13,7 @@ export default class QROutputInterface{
 	/**
 	 * generates the output, optionally dumps it to a file, and returns it
 	 *
-	 * @param {String|null} $file
+	 * @param {string|null} $file
 	 * @return mixed
 	 * @abstract
 	 */

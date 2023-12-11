@@ -8,7 +8,7 @@
 export default class PHPJS{
 
 	/**
-	 * @param {Number<int>} length
+	 * @param {number|int} length
 	 * @param {*} mixedVal
 	 * @returns {Array}
 	 */
@@ -48,7 +48,7 @@ export default class PHPJS{
 	 *
 	 * @param {*} mixed_var
 	 * @param {number|null} base
-	 * @returns {Number<int>}
+	 * @returns {number|int}
 	 */
 	static intval(mixed_var, base = null){
 		let tmp;
@@ -104,8 +104,8 @@ export default class PHPJS{
 	/**
 	 * @link https://locutus.io/php/strings/ord
 	 *
-	 * @param {String} string
-	 * @returns {Number<int>}
+	 * @param {string} string
+	 * @returns {number|int}
 	 */
 	static ord(string){
 		let str = string + '';

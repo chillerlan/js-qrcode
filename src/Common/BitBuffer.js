@@ -15,21 +15,21 @@ export default class BitBuffer{
 	/**
 	 * The buffer content
 	 *
-	 * @type {Number<int>[]}
+	 * @type {number[]|int[]}
 	 */
 	buffer = [];
 
 	/**
 	 * Length of the content (bits)
 	 *
-	 * @type {Number<int>}
+	 * @type {number|int}
 	 */
 	length = 0;
 
 	/**
 	 * BitBuffer constructor.
 	 *
-	 * @param {Number<int>[]|null} $bytes
+	 * @param {number[]|int[]|null} $bytes
 	 */
 	constructor($bytes = null){
 		this.buffer = $bytes || [];
@@ -39,8 +39,8 @@ export default class BitBuffer{
 	/**
 	 * appends a sequence of bits
 	 *
-	 * @param {Number<int>} $bits
-	 * @param {Number<int>} $length
+	 * @param {number|int} $bits
+	 * @param {number|int} $length
 	 *
 	 * @returns {BitBuffer}
 	 */
@@ -56,7 +56,7 @@ export default class BitBuffer{
 	/**
 	 * appends a single bit
 	 *
-	 * @param {Boolean} $bit
+	 * @param {boolean} $bit
 	 *
 	 * @returns {BitBuffer}
 	 */
@@ -79,7 +79,7 @@ export default class BitBuffer{
 	/**
 	 * returns the current buffer length
 	 *
-	 * @returns {Number<int>}
+	 * @returns {number|int}
 	 */
 	getLength(){
 		return this.length;
@@ -88,7 +88,7 @@ export default class BitBuffer{
 	/**
 	 * returns the buffer content
 	 *
-	 * @returns {Number<int>[]}
+	 * @returns {number[]|int[]}
 	 */
 	getBuffer(){
 		return this.buffer;

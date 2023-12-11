@@ -60,7 +60,7 @@ export default class QRData{
 	/**
 	 * Max bits for the current ECC mode
 	 *
-	 * @type {Number<int>[]}
+	 * @type {number[]|int[]}
 	 * @private
 	 */
 	maxBitsForEcc;
@@ -118,7 +118,7 @@ export default class QRData{
 	/**
 	 * estimates the total length of the several mode segments in order to guess the minimum version
 	 *
-	 * @returns {Number<int>}
+	 * @returns {number|int}
 	 * @throws {QRCodeDataException}
 	 * @private
 	 */

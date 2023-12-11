@@ -23,7 +23,7 @@ const ECC_H = 0b10; // 30%.
  * from MaskPattern
  */
 
-/** @type {Number<int>} */
+/** @type {number|int} */
 const MASK_PATTERN_AUTO = -1;
 
 const PATTERN_000 = 0b000;
@@ -36,7 +36,7 @@ const PATTERN_110 = 0b110;
 const PATTERN_111 = 0b111;
 
 /**
- * @type {Number<int>[]}
+ * @type {number[]|int[]}
  * @private
  */
 const PATTERNS = [
@@ -71,7 +71,7 @@ const MODES = [
  * from Version
  */
 
-/** @type {Number<int>} */
+/** @type {number|int} */
 const VERSION_AUTO = -1;
 
 /**
@@ -82,71 +82,71 @@ const VERSION_AUTO = -1;
  * special values
  */
 
-/** @type {Number<int>} */
+/** @type {number|int} */
 const IS_DARK            = 0b100000000000;
-/** @type {Number<int>} */
+/** @type {number|int} */
 const M_NULL             = 0b000000000000;
-/** @type {Number<int>} */
+/** @type {number|int} */
 const M_LOGO             = 0b001000000000;
-/** @type {Number<int>} */
+/** @type {number|int} */
 const M_LOGO_DARK        = 0b101000000000;
 
 /*
  * light values
  */
 
-/** @type {Number<int>} */
+/** @type {number|int} */
 const M_DATA             = 0b000000000010;
-/** @type {Number<int>} */
+/** @type {number|int} */
 const M_FINDER           = 0b000000000100;
-/** @type {Number<int>} */
+/** @type {number|int} */
 const M_SEPARATOR        = 0b000000001000;
-/** @type {Number<int>} */
+/** @type {number|int} */
 const M_ALIGNMENT        = 0b000000010000;
-/** @type {Number<int>} */
+/** @type {number|int} */
 const M_TIMING           = 0b000000100000;
-/** @type {Number<int>} */
+/** @type {number|int} */
 const M_FORMAT           = 0b000001000000;
-/** @type {Number<int>} */
+/** @type {number|int} */
 const M_VERSION          = 0b000010000000;
-/** @type {Number<int>} */
+/** @type {number|int} */
 const M_QUIETZONE        = 0b000100000000;
 
 /*
  * dark values
  */
 
-/** @type {Number<int>} */
+/** @type {number|int} */
 const M_DARKMODULE       = 0b100000000001;
-/** @type {Number<int>} */
+/** @type {number|int} */
 const M_DATA_DARK        = 0b100000000010;
-/** @type {Number<int>} */
+/** @type {number|int} */
 const M_FINDER_DARK      = 0b100000000100;
-/** @type {Number<int>} */
+/** @type {number|int} */
 const M_ALIGNMENT_DARK   = 0b100000010000;
-/** @type {Number<int>} */
+/** @type {number|int} */
 const M_TIMING_DARK      = 0b100000100000;
-/** @type {Number<int>} */
+/** @type {number|int} */
 const M_FORMAT_DARK      = 0b100001000000;
-/** @type {Number<int>} */
+/** @type {number|int} */
 const M_VERSION_DARK     = 0b100010000000;
-/** @type {Number<int>} */
+/** @type {number|int} */
 const M_FINDER_DOT       = 0b110000000000;
 
 /*
  * values used for reversed reflectance
  */
 
-/** @type {Number<int>} */
+/** @type {number|int} */
 const M_DARKMODULE_LIGHT = 0b000000000001;
-/** @type {Number<int>} */
+/** @type {number|int} */
 const M_FINDER_DOT_LIGHT = 0b010000000000;
-/** @type {Number<int>} */
+/** @type {number|int} */
 const M_SEPARATOR_DARK   = 0b100000001000;
-/** @type {Number<int>} */
+/** @type {number|int} */
 const M_QUIETZONE_DARK   = 0b100100000000;
 
-/** @type {Number<int>[]} */
+/** @type {number[]|int[]} */
 const MATRIX_NEIGHBOUR_FLAGS = [
 	0b00000001,
 	0b00000010,
@@ -163,7 +163,7 @@ const MATRIX_NEIGHBOUR_FLAGS = [
  *
  * @see QRMatrix::checkNeighbours()
  *
- * @type {Number<int>[][]}
+ * @type {number[][]|int[][]}
  * @protected
  */
 const MATRIX_NEIGHBOURS = PHPJS.array_combine(MATRIX_NEIGHBOUR_FLAGS, [
@@ -198,7 +198,7 @@ const OUTPUT_MODES = [
 ];
 
 /**
- * @type {Number<int>[]}
+ * @type {number[]|int[]}
  * @internal
  */
 const MODULE_VALUES_KEYS = [

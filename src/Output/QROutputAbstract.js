@@ -19,7 +19,7 @@ export default class QROutputAbstract extends QROutputInterface{
 	 * the current size of the QR matrix
 	 *
 	 * @see QRMatrix.size()
-	 * @type {Number<int>}
+	 * @type {number|int}
 	 * @protected
 	 */
 	moduleCount;
@@ -28,14 +28,14 @@ export default class QROutputAbstract extends QROutputInterface{
 	 * the current scaling for a QR pixel
 	 *
 	 * @see QROptions.$scale
-	 * @type {Number<int>}
+	 * @type {number|int}
 	 * @protected
 	 */
 	scale;
 
 	/**
 	 * the side length of the QR image (modules * scale)
-	 * @type {Number<int>}
+	 * @type {number|int}
 	 * @protected
 	 */
 	length;
@@ -93,7 +93,7 @@ export default class QROutputAbstract extends QROutputInterface{
 	 * Determines whether the given value is valid
 	 *
 	 * @param {*|null} $value
-	 * @returns {Boolean}
+	 * @returns {boolean}
 	 * @abstract
 	 * @protected
 	 */
@@ -112,7 +112,7 @@ export default class QROutputAbstract extends QROutputInterface{
 	/**
 	 * Returns a defualt value for either dark or light modules (return value depends on the output module)
 	 *
-	 * @param {Boolean} $isDark
+	 * @param {boolean} $isDark
 	 * @returna {*}
 	 * @abstract
 	 * @protected
@@ -156,9 +156,10 @@ export default class QROutputAbstract extends QROutputInterface{
 	/**
 	 * Returns a base64 data URI for the given string and mime type
 	 *
-	 * @param {String} $data
-	 * @param {String} $mime
-	 * @returna {String}
+	 * @param {string} $data
+	 * @param {string} $mime
+	 * @returna {string}
+	 * @throws {QRCodeOutputException}
 	 * @protected
 	 */
 	base64encode($data, $mime){
@@ -185,8 +186,8 @@ export default class QROutputAbstract extends QROutputInterface{
 	 * @see file_put_contents()
 	 * @see QROptions.cachefile
 	 *
-	 * @param {String} $data
-	 * @param {String} $file
+	 * @param {string} $data
+	 * @param {string} $file
 	 * @returns {void}
 	 * @throws QRCodeOutputException
 	 * @protected

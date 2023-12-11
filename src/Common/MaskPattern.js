@@ -22,7 +22,7 @@ export default class MaskPattern{
 	/**
 	 * The current mask pattern value (0-7)
 	 *
-	 * @type {Number<int>}
+	 * @type {number|int}
 	 * @private
 	 */
 	maskPattern;
@@ -30,7 +30,7 @@ export default class MaskPattern{
 	/**
 	 * MaskPattern constructor.
 	 *
-	 * @param {Number<int>} $maskPattern
+	 * @param {number|int} $maskPattern
 	 *
 	 * @throws QRCodeException
 	 */
@@ -47,7 +47,7 @@ export default class MaskPattern{
 	/**
 	 * Returns the current mask pattern
 	 *
-	 * @returns {Number<int>}
+	 * @returns {number|int}
 	 */
 	getPattern(){
 		return this.maskPattern;
@@ -114,10 +114,10 @@ export default class MaskPattern{
 	 * give penalty to them. Example: 00000 or 11111.
 	 *
 	 * @param {QRMatrix} $matrix
-	 * @param {Number<int>} $height
-	 * @param {Number<int>} $width
+	 * @param {number|int} $height
+	 * @param {number|int} $width
 	 *
-	 * @returns {Number<int>}
+	 * @returns {number|int}
 	 */
 	static testRule1($matrix, $height, $width){
 		return MaskPattern.applyRule1($matrix, $height, $width, true) + MaskPattern.applyRule1($matrix, $height, $width, false);
@@ -125,11 +125,11 @@ export default class MaskPattern{
 
 	/**
 	 * @param {QRMatrix} $matrix
-	 * @param {Number<int>} $height
-	 * @param {Number<int>} $width
-	 * @param {Boolean} $isHorizontal
+	 * @param {number|int} $height
+	 * @param {number|int} $width
+	 * @param {boolean} $isHorizontal
 	 *
-	 * @returns {Number<int>}
+	 * @returns {number|int}
 	 * @private
 	 */
 	static applyRule1($matrix, $height, $width, $isHorizontal){
@@ -172,10 +172,10 @@ export default class MaskPattern{
 	 * penalty proportional to (M-1)x(N-1), because this is the number of 2x2 blocks inside such a block.
 	 *
 	 * @param {QRMatrix} $matrix
-	 * @param {Number<int>} $height
-	 * @param {Number<int>} $width
+	 * @param {number|int} $height
+	 * @param {number|int} $width
 	 *
-	 * @returns {Number<int>}
+	 * @returns {number|int}
 	 */
 	static testRule2($matrix, $height, $width){
 		let $penalty = 0;
@@ -213,10 +213,10 @@ export default class MaskPattern{
 	 * find patterns like 000010111010000, we give penalty once.
 	 *
 	 * @param {QRMatrix} $matrix
-	 * @param {Number<int>} $height
-	 * @param {Number<int>} $width
+	 * @param {number|int} $height
+	 * @param {number|int} $width
 	 *
-	 * @returns {Number<int>}
+	 * @returns {number|int}
 	 */
 	static testRule3($matrix, $height, $width){
 		let $penalties = 0;
@@ -266,12 +266,12 @@ export default class MaskPattern{
 
 	/**
 	 * @param {QRMatrix} $matrix
-	 * @param {Number<int>} $width
-	 * @param {Number<int>} $y
-	 * @param {Number<int>} $from
-	 * @param {Number<int>} $to
+	 * @param {number|int} $width
+	 * @param {number|int} $y
+	 * @param {number|int} $from
+	 * @param {number|int} $to
 	 *
-	 * @returns {Boolean}
+	 * @returns {boolean}
 	 * @private
 	 */
 	static isWhiteHorizontal($matrix, $width, $y, $from, $to){
@@ -291,12 +291,12 @@ export default class MaskPattern{
 
 	/**
 	 * @param {QRMatrix} $matrix
-	 * @param {Number<int>} $height
-	 * @param {Number<int>} $x
-	 * @param {Number<int>} $from
-	 * @param {Number<int>} $to
+	 * @param {number|int} $height
+	 * @param {number|int} $x
+	 * @param {number|int} $from
+	 * @param {number|int} $to
 	 *
-	 * @returns {Boolean}
+	 * @returns {boolean}
 	 * @private
 	 */
 	static isWhiteVertical($matrix, $height, $x, $from, $to){
@@ -319,10 +319,10 @@ export default class MaskPattern{
 	 * penalty if the ratio is far from 50%. It gives 10 penalty for 5% distance.
 	 *
 	 * @param {QRMatrix} $matrix
-	 * @param {Number<int>} $height
-	 * @param {Number<int>} $width
+	 * @param {number|int} $height
+	 * @param {number|int} $width
 	 *
-	 * @returns {Number<int>}
+	 * @returns {number|int}
 	 */
 	static testRule4($matrix, $height, $width){
 		let $darkCells  = 0;

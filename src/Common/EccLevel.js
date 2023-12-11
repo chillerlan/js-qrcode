@@ -14,7 +14,7 @@ const ECC_LEVELS = [ECC_L, ECC_M, ECC_Q, ECC_H];
 /**
  * ISO/IEC 18004:2000 Tables 7-11 - Number of symbol characters and input data capacity for versions 1 to 40
  *
- * @type {Number<int>[][]}
+ * @type {number[][]|int[][]}
  *
  * @private
  */
@@ -68,7 +68,7 @@ const MAX_BITS = [
  *
  * ECC level -> mask pattern
  *
- * @type {Number<int>[][]}
+ * @type {number[][]|int[][]}
  *
  * @private
  */
@@ -129,13 +129,13 @@ export default class EccLevel{
 	 * Q: 0b11
 	 * H: 0b10
 	 *
-	 * @type {Number<int>}
+	 * @type {number|int}
 	 * @private
 	 */
 	eccLevel;
 
 	/**
-	 * @param {Number<int>} $eccLevel containing the two bits encoding a QR Code's error correction level
+	 * @param {number|int} $eccLevel containing the two bits encoding a QR Code's error correction level
 	 *
 	 * @throws QRCodeException
 	 */
@@ -151,7 +151,7 @@ export default class EccLevel{
 	/**
 	 * returns the string representation of the current ECC level
 	 *
-	 * @returns {String}
+	 * @returns {string}
 	 */
 	toString(){
 		return PHPJS.array_combine(ECC_LEVELS, ['L', 'M', 'Q', 'H'])[this.eccLevel];
@@ -160,7 +160,7 @@ export default class EccLevel{
 	/**
 	 * returns the current ECC level
 	 *
-	 * @returns {Number<int>}
+	 * @returns {number|int}
 	 */
 	getLevel(){
 		return this.eccLevel;
@@ -184,14 +184,14 @@ export default class EccLevel{
 	 *
 	 * @param {MaskPattern} $maskPattern
 	 *
-	 * @returns {Number<int>}
+	 * @returns {number|int}
 	 */
 	getformatPattern($maskPattern){
 		return FORMAT_PATTERN[this.getOrdinal()][$maskPattern.getPattern()];
 	}
 
 	/**
-	 * @returns {Number<int>[]} an array with the max bit lengths for version 1-40 and the current ECC level
+	 * @returns {number[]|int[]} an array with the max bit lengths for version 1-40 and the current ECC level
 	 */
 	getMaxBits(){
 		let $v = [];

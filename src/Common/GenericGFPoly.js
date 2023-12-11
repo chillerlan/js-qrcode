@@ -22,15 +22,15 @@ import GF256 from './GF256.js';
 export default class GenericGFPoly{
 
 	/**
-	 * @type {Number<int>[]}
+	 * @type {number[]|int[]}
 	 * @private
 	 */
 	coefficients = [];
 
 	/**
-	 * @param {Number<int>[]}    $coefficients array coefficients as ints representing elements of GF(size), arranged
+	 * @param {number[]|int[]}    $coefficients array coefficients as ints representing elements of GF(size), arranged
 	 *                                 from most significant (highest-power term) coefficient to least significant
-	 * @param {Number<int>|null} $degree
+	 * @param {number|int|null} $degree
 	 *
 	 * @throws QRCodeException if argument is null or empty, or if leading coefficient is 0 and this
 	 *                                            is not a constant polynomial (that is, it is not the monomial "0")
@@ -68,30 +68,30 @@ export default class GenericGFPoly{
 	}
 
 	/**
-	 * @param {Number<int>} $degree
+	 * @param {number|int} $degree
 	 *
-	 * @returns {Number<int>} $coefficient of x^degree term in this polynomial
+	 * @returns {number|int} $coefficient of x^degree term in this polynomial
 	 */
 	getCoefficient($degree){
 		return this.coefficients[this.coefficients.length - 1 - $degree];
 	}
 
 	/**
-	 * @returns {Number<int>[]}
+	 * @returns {number[]|int[]}
 	 */
 	getCoefficients(){
 		return this.coefficients;
 	}
 
 	/**
-	 * @returns {Number<int>} $degree of this polynomial
+	 * @returns {number|int} $degree of this polynomial
 	 */
 	getDegree(){
 		return this.coefficients.length - 1;
 	}
 
 	/**
-	 * @returns {Boolean} true if this polynomial is the monomial "0"
+	 * @returns {boolean} true if this polynomial is the monomial "0"
 	 */
 	isZero(){
 		return this.coefficients[0] === 0;

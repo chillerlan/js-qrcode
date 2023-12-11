@@ -23,7 +23,7 @@ export default class ReedSolomonEncoder{
 	interleavedData;
 
 	/**
-	 * @type {Number<int>}
+	 * @type {number|int}
 	 * @private
 	 */
 	interleavedDataIndex;
@@ -87,7 +87,7 @@ export default class ReedSolomonEncoder{
 
 	/**
 	 * @param {Array} $dataBytes
-	 * @param {Number<int>} $ecByteCount
+	 * @param {number|int} $ecByteCount
 	 *
 	 * @returns {Object<{}>}
 	 * @private
@@ -118,8 +118,8 @@ export default class ReedSolomonEncoder{
 
 	/**
 	 * @param {Object<{}>} $byteArray
-	 * @param {Number<int>} $maxBytes
-	 * @param {Number<int>} $numRsBlocks
+	 * @param {number|int} $maxBytes
+	 * @param {number|int} $numRsBlocks
 	 *
 	 * @returns {void}
 	 * @private
