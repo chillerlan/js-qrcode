@@ -17,10 +17,6 @@
 			"homepage": "https://github.com/kazuhikoarase/qrcode-generator"
 		},
 		{
-			"name":"ZXing Authors",
-			"homepage": "https://github.com/zxing/zxing"
-		},
-		{
 			"name": "Smiley",
 			"email": "smiley@chillerlan.net",
 			"homepage": "https://github.com/codemasher"
@@ -30,8 +26,11 @@
 		{
 			"name": "Contributors",
 			"homepage":"https://github.com/chillerlan/js-qrcode/graphs/contributors"
+		},
+		{
+			"name":"ZXing Authors",
+			"homepage": "https://github.com/zxing/zxing"
 		}
-
 	],
 	"bugs": {
 		"url": "https://github.com/chillerlan/js-qrcode/issues"
