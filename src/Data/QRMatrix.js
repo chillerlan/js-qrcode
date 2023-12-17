@@ -303,6 +303,17 @@ export default class QRMatrix{
 	}
 
 	/**
+	 * Checks whether the given $M_TYPE is a dark value
+	 *
+	 * @param {number|int} $M_TYPE
+	 *
+	 * @returns {boolean}
+	 */
+	isDark($M_TYPE){
+		return ($M_TYPE & IS_DARK) === IS_DARK;
+	}
+
+	/**
 	 * Checks the status neighbouring modules of the given module at ($x, $y) and returns a bitmask with the results.
 	 *
 	 * The 8 flags of the bitmask represent the status of each of the neighbouring fields,
@@ -570,6 +581,30 @@ export default class QRMatrix{
 		// set the new values
 		this.moduleCount = $newSize;
 		this._matrix     = $newMatrix;
+
+		return this;
+	}
+
+	/**
+	 * Inverts the values of the whole matrix
+	 *
+	 * ISO/IEC 18004:2015 Section 6.2 - Reflectance reversal
+	 *
+	 * @returns {QRMatrix}
+	 */
+	invert(){
+
+		for(let $y = 0; $y < this.moduleCount; $y++){
+			for(let $x = 0; $x < this.moduleCount; $x++){
+
+				// skip null fields
+				if(this.get($x, $y) === M_NULL){
+					continue;
+				}
+
+				this.flip($x, $y);
+			}
+		}
 
 		return this;
 	}
