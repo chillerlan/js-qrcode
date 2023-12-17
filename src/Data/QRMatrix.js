@@ -276,15 +276,15 @@ export default class QRMatrix{
 	 *
 	 * @returns {boolean}
 	 */
-	checkTypeNotIn($x, $y, $M_TYPES){
+	checkTypeIn($x, $y, $M_TYPES){
 
 		for(let $M_TYPE of $M_TYPES){
 			if(this.checkType($x, $y, $M_TYPE)){
-				return false;
+				return true;
 			}
 		}
 
-		return true;
+		return false;
 	}
 
 	/**

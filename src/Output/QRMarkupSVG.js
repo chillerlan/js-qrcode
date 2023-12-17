@@ -148,7 +148,7 @@ export default class QRMarkupSVG extends QRMarkup{
 			return '';
 		}
 
-		if(this.options.drawCircularModules && this.matrix.checkTypeNotIn($x, $y, this.options.keepAsSquare)){
+		if(this.options.drawCircularModules && !this.matrix.checkTypeIn($x, $y, this.options.keepAsSquare)){
 			// some values come with the usual JS float fun and i won't do shit about it
 			let r  = parseFloat(this.options.circleRadius);
 			let d  = (r * 2);

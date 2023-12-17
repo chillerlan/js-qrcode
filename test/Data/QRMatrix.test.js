@@ -176,7 +176,7 @@ suite('QRMatrixTest', function(){
 					for(let $py in $alignmentPattern){
 						for(let $px in $alignmentPattern){
 							// skip finder pattern
-							if($matrix.checkTypeNotIn($px, $py, [M_FINDER, M_FINDER_DOT])){
+							if(!$matrix.checkTypeIn($px, $py, [M_FINDER, M_FINDER_DOT])){
 								assert.strictEqual($matrix.get($px, $py), M_ALIGNMENT_DARK);
 							}
 						}
@@ -203,7 +203,7 @@ suite('QRMatrixTest', function(){
 
 					for(let $i = 7; $i < $size - 7; $i++){
 						// skip alignment pattern
-						if($i % 2 === 0 && $matrix.checkTypeNotIn(6, $i, [M_ALIGNMENT])){
+						if($i % 2 === 0 && !$matrix.checkTypeIn(6, $i, [M_ALIGNMENT])){
 							assert.strictEqual($matrix.get(6, $i), M_TIMING_DARK);
 							assert.strictEqual($matrix.get($i, 6), M_TIMING_DARK);
 						}

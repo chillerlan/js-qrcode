@@ -116,7 +116,7 @@ export default class QRCanvas extends QROutputAbstract{
 
 		this._context.fillStyle = this.moduleValues[$M_TYPE];
 
-		if(this.options.drawCircularModules && this.matrix.checkTypeNotIn($x, $y, this.options.keepAsSquare)){
+		if(this.options.drawCircularModules && !this.matrix.checkTypeIn($x, $y, this.options.keepAsSquare)){
 			this._context.beginPath();
 
 			this._context.arc(

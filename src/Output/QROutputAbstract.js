@@ -223,7 +223,7 @@ export default class QROutputAbstract extends QROutputInterface{
 			for(let $M_TYPE of $row){
 				let $M_TYPE_LAYER = $M_TYPE;
 
-				if(this.options.connectPaths && this.matrix.checkTypeNotIn($x, $y, this.options.excludeFromConnect)){
+				if(this.options.connectPaths && !this.matrix.checkTypeIn($x, $y, this.options.excludeFromConnect)){
 					// to connect paths we'll redeclare the $M_TYPE_LAYER to data only
 					$M_TYPE_LAYER = M_DATA;
 
