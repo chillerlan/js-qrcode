@@ -13,6 +13,7 @@ import {
 	M_LOGO, M_NULL, M_QUIETZONE, M_SEPARATOR, M_TIMING, M_VERSION, IS_DARK,
 	ECC_H, MATRIX_NEIGHBOURS,
 } from '../Common/constants.js';
+import MaskPattern from '../Common/MaskPattern.js';
 
 
 /**
@@ -122,14 +123,7 @@ export default class QRMatrix{
 		let $matrix = [];
 
 		for(let $y in this._matrix){
-			let $row = this._matrix[$y];
-			$matrix[$y] = [];
-
-			for(let $x in $row){
-				let $val = $row[$x];
-
-				$matrix[$y][$x] = ($val & IS_DARK) === IS_DARK;
-			}
+			$matrix[$y] = this._matrix[$y].map(this.isDark);
 		}
 
 		return $matrix;
@@ -250,8 +244,8 @@ export default class QRMatrix{
 	}
 
 	/**
-	 * checks whether the module at ($x, $y) is not in the given array of $M_TYPES,
-	 * returns true if no matches are found, otherwise false.
+	 * Checks whether the module at ($x, $y) is in the given array of $M_TYPES,
+	 * returns true if a match is found, otherwise false.
 	 *
 	 * @param {number|int} $x
 	 * @param {number|int} $y
@@ -297,22 +291,24 @@ export default class QRMatrix{
 	 *
 	 * @param {number|int} $x
 	 * @param {number|int} $y
-	 * @param {number|int|null} $M_TYPE_VALUE
+	 * @param {number|int|null} $M_TYPE
 	 *
 	 * @returns {number|int}
 	 */
-	checkNeighbours($x, $y, $M_TYPE_VALUE = null){
+	checkNeighbours($x, $y, $M_TYPE = null){
 		let $bits = 0;
 
 		for(let $bit in MATRIX_NEIGHBOURS){
-			let $coord = MATRIX_NEIGHBOURS[$bit];
+			let [$ix, $iy] = MATRIX_NEIGHBOURS[$bit];
+			$ix += $x;
+			$iy += $y;
 
 			// check if the field is the same type
-			if($M_TYPE_VALUE !== null && (this.get($x + $coord[0], $y + $coord[1]) | IS_DARK) !== ($M_TYPE_VALUE | IS_DARK)){
+			if($M_TYPE !== null && !this.checkType($ix, $iy, $M_TYPE)){
 				continue;
 			}
 
-			if(this.checkType($x + $coord[0], $y + $coord[1], IS_DARK)){
+			if(this.checkType($ix, $iy, IS_DARK)){
 				$bits |= $bit;
 			}
 
@@ -541,6 +537,11 @@ export default class QRMatrix{
 	 */
 	setQuietZone($quietZoneSize){
 
+		// early exit if there's nothing to add
+		if($quietZoneSize < 1){
+			return this;
+		}
+
 		if(this._matrix[this.moduleCount - 1][this.moduleCount - 1] === M_NULL){
 			throw new QRCodeDataException('use only after writing data');
 		}
@@ -565,10 +566,14 @@ export default class QRMatrix{
 
 	/**
 	 * Clears a space of $width * $height in order to add a logo or text.
+	 * If no $height is given, the space will be assumed a square of $width.
 	 *
-	 * Additionally, the logo space can be positioned within the QR Code - respecting the main functional patterns -
-	 * using $startX and $startY. If either of these are null, the logo space will be centered in that direction.
+	 * Additionally, the logo space can be positioned within the QR Code using $startX and $startY.
+	 * If either of these are null, the logo space will be centered in that direction.
 	 * ECC level "H" (30%) is required.
+	 *
+	 * The coordinates of $startX and $startY do not include the quiet zone:
+	 * [0, 0] is always the top left module of the top left finder pattern, negative values go into the quiet zone top and left.
 	 *
 	 * Please note that adding a logo space minimizes the error correction capacity of the QR Code and
 	 * created images may become unreadable, especially when printed with a chance to receive damage.
@@ -588,22 +593,23 @@ export default class QRMatrix{
 	 * @throws {QRCodeDataException}
 	 */
 	setLogoSpace($width, $height, $startX = null, $startY = null){
+		$height ??= $width;
 
-		// for logos we operate in ECC H (30%) only
-		if(this._eccLevel.getLevel() !== ECC_H){
-			throw new QRCodeDataException('ECC level "H" required to add logo space');
-		}
-
-		// if width and height happen to be exactly 0 (default value), just return - nothing to do
+		// if width and height happen to be negative or 0 (default value), just return - nothing to do
 		if($width === 0 || $height === 0){
 			return this;
 		}
 
+		// for logos, we operate in ECC H (30%) only
+		if(this._eccLevel.getLevel() !== ECC_H){
+			throw new QRCodeDataException('ECC level "H" required to add logo space');
+		}
+
 		// this.moduleCount includes the quiet zone (if created), we need the QR size here
-		let $length = this._version.getDimension();
+		let $dimension = this._version.getDimension();
 
 		// throw if the size is negative or exceeds the qrcode size
-		if($width < 0 || $height < 0 || $width > $length || $height > $length){
+		if($width < 0 || $height < 0 || $width > $dimension || $height > $dimension){
 			throw new QRCodeDataException('invalid logo dimensions');
 		}
 
@@ -617,32 +623,28 @@ export default class QRMatrix{
 		}
 
 		// throw if the logo space exceeds the maximum error correction capacity
-		if($width * $height > Math.floor($length * $length * 0.2)){
+		if($width * $height > Math.floor($dimension * $dimension * 0.25)){
 			throw new QRCodeDataException('logo space exceeds the maximum error correction capacity');
 		}
 
-		// quiet zone size
-		let $qz = (this.moduleCount - $length) / 2;
-		// skip quiet zone and the first 9 rows/columns (finder-, mode-, version- and timing patterns)
-		let $start = $qz + 9;
-		// skip quiet zone
-		let $end = this.moduleCount - $qz;
+		let $quietzone = ((this.moduleCount - $dimension) / 2);
+		let $end       = (this.moduleCount - $quietzone);
 
 		// determine start coordinates
-		$startX = ($startX !== null ? $startX : ($length - $width) / 2) + $qz;
-		$startY = ($startY !== null ? $startY : ($length - $height) / 2) + $qz;
+		$startX ??= (($dimension - $width) / 2);
+		$startY ??= (($dimension - $height) / 2);
+		let $endX = ($quietzone + $startX + $width);
+		let $endY = ($quietzone + $startY + $height);
 
 		// clear the space
-		for(let $y = 0; $y < this.moduleCount; $y++){
-			for(let $x = 0; $x < this.moduleCount; $x++){
+		for(let $y = ($quietzone + $startY); $y < $endY; $y++){
+			for(let $x = ($quietzone + $startX); $x < $endX; $x++){
 				// out of bounds, skip
-				if($x < $start || $y < $start || $x >= $end || $y >= $end){
+				if($x < $quietzone || $y < $quietzone ||$x >= $end || $y >= $end){
 					continue;
 				}
-				// a match
-				if($x >= $startX && $x < ($startX + $width) && $y >= $startY && $y < ($startY + $height)){
-					this.set($x, $y, false, M_LOGO);
-				}
+
+				this.set($x, $y, false, M_LOGO);
 			}
 		}
 
@@ -671,19 +673,25 @@ export default class QRMatrix{
 			}
 
 			for(let $count = 0; $count < this.moduleCount; $count++){
-				let $y = $direction ? this.moduleCount - 1 - $count : $count;
+				let $y = $count;
+
+				if($direction){
+					$y = (this.moduleCount - 1 - $count);
+				}
 
 				for(let $col = 0; $col < 2; $col++){
 					let $x = $i - $col;
 
 					// skip functional patterns
-					if(this.get($x, $y) !== M_NULL){
+					if(this._matrix[$y][$x] !== M_NULL){
 						continue;
 					}
 
-					let $v = $iByte < $byteCount && (($data[$iByte] >> $iBit--) & 1) === 1;
+					this._matrix[$y][$x] = M_DATA;
 
-					this.set($x, $y, $v, M_DATA);
+					if($iByte < $byteCount && (($data[$iByte] >> $iBit--) & 1) === 1){
+						this._matrix[$y][$x] |= IS_DARK;
+					}
 
 					if($iBit === -1){
 						$iByte++;

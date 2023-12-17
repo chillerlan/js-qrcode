@@ -160,14 +160,18 @@ export default class QRCode{
 	 * ISO/IEC 18004:2000 8.3.6 - Mixing modes
 	 * ISO/IEC 18004:2000 Annex H - Optimisation of bit stream length
 	 *
-	 * @protected
+	 * @returns {QRCode}
 	 */
 	addSegment($segment){
 		this.dataSegments.push($segment);
+
+		return this;
 	}
 
 	/**
 	 * Clears the data segments array
+	 *
+	 * @returns {QRCode}
 	 */
 	clearSegments(){
 		this.dataSegments = [];
@@ -179,6 +183,8 @@ export default class QRCode{
 	 * Adds a numeric data segment
 	 *
 	 * ISO/IEC 18004:2000 8.3.2 - Numeric Mode
+	 *
+	 * @returns {QRCode}
 	 */
 	addNumericSegment($data){
 		this.addSegment(new Numeric($data));
@@ -190,6 +196,8 @@ export default class QRCode{
 	 * Adds an alphanumeric data segment
 	 *
 	 * ISO/IEC 18004:2000 8.3.3 - Alphanumeric Mode
+	 *
+	 * @returns {QRCode}
 	 */
 	addAlphaNumSegment($data){
 		this.addSegment(new AlphaNum($data));
@@ -201,6 +209,8 @@ export default class QRCode{
 	 * Adds a Kanji data segment
 	 *
 	 * ISO/IEC 18004:2000 8.3.5 - Kanji Mode
+	 *
+	 * @returns {QRCode}
 	 */
 //	addKanjiSegment($data){
 //		this.addSegment(new Kanji($data));
@@ -212,6 +222,8 @@ export default class QRCode{
 	 * Adds an 8-bit byte data segment
 	 *
 	 * ISO/IEC 18004:2000 8.3.4 - 8-bit Byte Mode
+	 *
+	 * @returns {QRCode}
 	 */
 	addByteSegment($data){
 		this.addSegment(new Byte($data));

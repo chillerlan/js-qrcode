@@ -266,7 +266,7 @@ export default class Version{
 	 * @returns {number|int|null}
 	 */
 	getVersionPattern(){
-		return VERSION_PATTERN[this.version] || null;
+		return VERSION_PATTERN[this.version] ?? null;
 	}
 
 	/**

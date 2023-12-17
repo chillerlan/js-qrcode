@@ -225,7 +225,7 @@ export default class QROptions{
 	 *   - HTML, IMAGICK: #ABCDEF, cssname, rgb(), rgba()...
 	 *   - IMAGE: [63, 127, 255] // R, G, B
 	 *
-	 * @type {{}|null}
+	 * @type {Object.<number, *>|null}
 	 */
 	moduleValues = null;
 
@@ -296,7 +296,7 @@ export default class QROptions{
 	canvasElement = null;
 
 	/**
-	 * canvas image type for bas64/file output
+	 * canvas image mime type for bas64/file output
 	 *
 	 * the value may be one of the following (depends on browser/engine):
 	 *
@@ -304,6 +304,8 @@ export default class QROptions{
 	 * - jpeg
 	 * - bmp
 	 * - webp
+	 *
+	 * the "image/" is prepended internally
 	 *
 	 * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL
 	 *

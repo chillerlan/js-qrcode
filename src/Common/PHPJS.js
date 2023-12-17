@@ -30,11 +30,11 @@ export default class PHPJS{
 	 *
 	 * @link https://stackoverflow.com/a/46256973
 	 *
-	 * @param {Function} accessor Function that returns our value
+	 * @param {Function} $accessor Function that returns our value
 	 */
-	static isset(accessor){
+	static isset($accessor){
 		try{
-			return typeof accessor() !== 'undefined';
+			return typeof $accessor() !== 'undefined';
 		}
 		catch(e){
 			return false;
@@ -44,23 +44,23 @@ export default class PHPJS{
 	/**
 	 * @link  http://locutus.io/php/var/intval/
 	 *
-	 * @param {*} mixed_var
-	 * @param {number|null} base
+	 * @param {*} $var
+	 * @param {number|null} $base
 	 * @returns {number|int}
 	 */
-	static intval(mixed_var, base = null){
+	static intval($var, $base = null){
 		let tmp;
-		let type = typeof(mixed_var);
+		let type = typeof($var);
 
 		if(type === 'boolean'){
-			return +mixed_var;
+			return +$var;
 		}
 		else if(type === 'string'){
-			tmp = parseInt(mixed_var, base || 10);
+			tmp = parseInt($var, $base || 10);
 			return (isNaN(tmp) || !isFinite(tmp)) ? 0 : tmp;
 		}
-		else if(type === 'number' && isFinite(mixed_var)){
-			return mixed_var|0;
+		else if(type === 'number' && isFinite($var)){
+			return $var|0;
 		}
 		else{
 			return 0;
@@ -102,19 +102,19 @@ export default class PHPJS{
 	/**
 	 * @link https://locutus.io/php/strings/ord
 	 *
-	 * @param {string} string
+	 * @param {string} $string
 	 * @returns {number|int}
 	 */
-	static ord(string){
-		let str = string + '';
-		let code = str.charCodeAt(0);
+	static ord($string){
+		$string += ''; // make sure we have a string
+		let code = $string.charCodeAt(0);
 
 		if(code >= 0xD800 && code <= 0xDBFF){
 			// High surrogate (could change last hex to 0xDB7F to treat
 			// high private surrogates as single characters)
 			let hi = code;
 
-			if(str.length === 1){
+			if($string.length === 1){
 				// This is just a high surrogate with no following low surrogate,
 				// so we return its value;
 				return code;
@@ -122,7 +122,7 @@ export default class PHPJS{
 				// but someone may want to know
 			}
 
-			return ((hi - 0xD800) * 0x400) + (str.charCodeAt(1) - 0xDC00) + 0x10000;
+			return ((hi - 0xD800) * 0x400) + ($string.charCodeAt(1) - 0xDC00) + 0x10000;
 		}
 
 		if(code >= 0xDC00 && code <= 0xDFFF){

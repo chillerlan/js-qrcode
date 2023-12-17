@@ -42,8 +42,6 @@ import QRMatrix from './Data/QRMatrix.js';
 // Output
 import QRCanvas from './Output/QRCanvas.js';
 import QRCodeOutputException from './Output/QRCodeOutputException.js';
-import QRMarkup from './Output/QRMarkup.js';
-import QRMarkupHTML from './Output/QRMarkupHTML.js';
 import QRMarkupSVG from './Output/QRMarkupSVG.js';
 import QROutputAbstract from './Output/QROutputAbstract.js';
 import QROutputInterface from './Output/QROutputInterface.js';

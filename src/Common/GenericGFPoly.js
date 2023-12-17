@@ -36,7 +36,7 @@ export default class GenericGFPoly{
 	 *                                            is not a constant polynomial (that is, it is not the monomial "0")
 	 */
 	constructor($coefficients, $degree = null){
-		$degree = $degree || 0;
+		$degree ??= 0;
 
 		if(!$coefficients || !$coefficients.length){
 			throw new QRCodeException('arg $coefficients is empty');
