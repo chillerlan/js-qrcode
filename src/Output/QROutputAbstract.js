@@ -8,6 +8,7 @@
 import QROutputInterface from './QROutputInterface.js';
 import PHPJS from '../Common/PHPJS.js';
 import {IS_DARK, M_DATA, DEFAULT_MODULE_VALUES} from '../Common/constants.js';
+import QRCodeOutputException from './QRCodeOutputException.js';
 
 /**
  * common output abstract
@@ -25,6 +26,13 @@ export default class QROutputAbstract extends QROutputInterface{
 	moduleCount;
 
 	/**
+	 * an (optional) array of color values for the several QR matrix parts
+	 * @type {Object.<number, *>}
+	 * @protected
+	 */
+	moduleValues = {};
+
+	/**
 	 * the current scaling for a QR pixel
 	 *
 	 * @see QROptions.$scale
@@ -39,13 +47,6 @@ export default class QROutputAbstract extends QROutputInterface{
 	 * @protected
 	 */
 	length;
-
-	/**
-	 * an (optional) array of color values for the several QR matrix parts
-	 * @type {Object<{}>}
-	 * @protected
-	 */
-	moduleValues = {};
 
 	/**
 	 * the (filled) data matrix object
@@ -90,9 +91,44 @@ export default class QROutputAbstract extends QROutputInterface{
 	}
 
 	/**
+	 * Returns a 2 element array with the current output width and height
+	 *
+	 * The type and units of the values depend on the output class. The default value is the current module count * scale.
+	 *
+	 * @returna {array}
+	 * @protected
+	 */
+	getOutputDimensions(){
+		return [this.length, this.length];
+	}
+
+	/**
+	 * Sets the initial module values
+	 *
+	 * @returns {void}
+	 * @protected
+	 */
+	setModuleValues(){
+		let $M_TYPE;
+
+		for($M_TYPE in DEFAULT_MODULE_VALUES){
+			this.moduleValues[$M_TYPE] = this.getDefaultModuleValue(DEFAULT_MODULE_VALUES[$M_TYPE]);
+		}
+
+		for($M_TYPE in this.options.moduleValues){
+			let $value = this.options.moduleValues[$M_TYPE];
+
+			if(this.moduleValueIsValid($value)){
+				this.moduleValues[$M_TYPE] = this.prepareModuleValue($value);
+			}
+		}
+
+	}
+
+	/**
 	 * Determines whether the given value is valid
 	 *
-	 * @param {*|null} $value
+	 * @param {*} $value
 	 * @returns {boolean}
 	 * @abstract
 	 * @protected
@@ -107,7 +143,7 @@ export default class QROutputAbstract extends QROutputInterface{
 	 * @abstract
 	 * @protected
 	 */
-	getModuleValue($value){}
+	prepareModuleValue($value){}
 
 	/**
 	 * Returns a defualt value for either dark or light modules (return value depends on the output module)
@@ -120,37 +156,32 @@ export default class QROutputAbstract extends QROutputInterface{
 	getDefaultModuleValue($isDark){}
 
 	/**
-	 * Sets the initial module values
+	 * Returns the prepared value for the given $M_TYPE
 	 *
-	 * @returns {void}
+	 * @throws {QRCodeOutputException} if $moduleValues[$M_TYPE] doesn't exist
+	 * @param {number|int} $M_TYPE
+	 * @returna {*}
 	 * @protected
 	 */
-	setModuleValues(){
+	getModuleValue($M_TYPE){
 
-		for(let $M_TYPE in DEFAULT_MODULE_VALUES){
-			let $value = null;
-
-			if(PHPJS.isset(() => this.options.moduleValues[$M_TYPE])){
-				$value = this.options.moduleValues[$M_TYPE];
-			}
-
-			this.moduleValues[$M_TYPE] = this.moduleValueIsValid($value)
-				? this.getModuleValue($value)
-				: this.getDefaultModuleValue(DEFAULT_MODULE_VALUES[$M_TYPE]);
+		if(!PHPJS.isset(() => this.moduleValues[$M_TYPE])){
+			throw new QRCodeOutputException(`$M_TYPE "${$M_TYPE.toString(2).padStart(12, '0')}" not found in module values map`);
 		}
 
+		return this.moduleValues[$M_TYPE];
 	}
 
 	/**
-	 * Returns a 2 element array with the current output width and height
+	 * Returns the prepared module value at the given coordinate [$x, $y] (convenience)
 	 *
-	 * The type and units of the values depend on the output class. The default value is the current module count * scale.
-	 *
-	 * @returna {array}
+	 * @param {number|int} $x
+	 * @param {number|int} $y
+	 * @returna {*}
 	 * @protected
 	 */
-	getOutputDimensions(){
-		return [this.length, this.length];
+	getModuleValueAt($x, $y){
+		return this.getModuleValue(this.matrix.get($x, $y));
 	}
 
 	/**
@@ -162,22 +193,14 @@ export default class QROutputAbstract extends QROutputInterface{
 	 * @throws {QRCodeOutputException}
 	 * @protected
 	 */
-	base64encode($data, $mime){
-		return 'data:' + $mime + ';base64,' + btoa($data);
-	}
+	toBase64DataURI($data, $mime){
+		$mime = ($mime ?? this.mimeType).trim();
 
-	/**
-	 *
-	 * @see https://stackoverflow.com/a/35385518
-	 *
-	 * @param {String} $html
-	 * @returns {ChildNode}
-	 */
-	toHtmlElement($html){
-		let template       = document.createElement('template');
-		template.innerHTML = $html.trim();
+		if($mime === ''){
+			throw new QRCodeOutputException('invalid mime type given');
+		}
 
-		return template.content.firstChild;
+		return `data:${$mime};base64,${btoa($data)}`;
 	}
 
 	/**
@@ -193,6 +216,11 @@ export default class QROutputAbstract extends QROutputInterface{
 	 * @protected
 	 */
 	saveToFile($data, $file){
+
+		if($file === null){
+			return;
+		}
+
 		// @todo
 	}
 

@@ -148,6 +148,34 @@ export default class QROptions{
 	svgPreserveAspectRatio = 'xMidYMid';
 
 	/**
+	 * Whether to add an XML header line or not, e.g. to embed the SVG directly in HTML
+	 *
+	 * `<?xml version="1.0" encoding="UTF-8"?>`
+	 *
+	 * @type {boolean}
+	 */
+	svgAddXmlHeader = false;
+
+	/**
+	 * Whether to use the SVG `fill` attributes
+	 *
+	 * If set to `true` (default), the `fill` attribute will be set with the module value for the `<path>` element's `$M_TYPE`.
+	 * When set to `false`, the module values map will be ignored and the QR Code may be styled via CSS.
+	 *
+	 * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/fill
+	 *
+	 * @type {boolean}
+	 */
+	svgUseFillAttributes = true;
+
+	/**
+	 * Whether to return matrix values in JSON as booleans or `$M_TYPE` integers
+	 *
+	 * @type {boolean}
+	 */
+	jsonAsBooleans = false;
+
+	/**
 	 * whether to connect the paths for the several module types to avoid weird glitches when using gradients etc.
 	 *
 	 * @see https://github.com/chillerlan/php-qrcode/issues/57
@@ -199,7 +227,7 @@ export default class QROptions{
 	 *
 	 * @type {boolean}
 	 */
-	imageBase64 = false;
+	outputBase64 = true;
 
 	/**
 	 * toggle background transparency
@@ -273,7 +301,7 @@ export default class QROptions{
 	 *
 	 * @type {boolean}
 	 */
-	returnMarkupAsHtmlElement = false;
+	returnAsDomElement = true;
 
 	/**
 	 * background color
@@ -312,7 +340,7 @@ export default class QROptions{
 	 * @type {string}
 	 * @protected
 	 */
-	_canvasImageType = 'png';
+	_canvasMimeType = 'image/png';
 
 	/**
 	 * canvas image quality
@@ -345,7 +373,7 @@ export default class QROptions{
 	 * @protected
 	 */
 	__workaround__ = [
-		'canvasImageType',
+		'canvasMimeType',
 		'circleRadius',
 		'eccLevel',
 		'logoSpaceHeight',
@@ -660,22 +688,22 @@ export default class QROptions{
 	 * @returns {void}
 	 * @protected
 	 */
-	_set_canvasImageType($canvasImageType){
+	_set_canvasMimeType($canvasImageType){
 		$canvasImageType = $canvasImageType.toLowerCase();
 
 		if(!['bmp', 'jpeg', 'png', 'webp'].includes($canvasImageType)){
 			throw new QRCodeException(`Invalid canvas image type: ${$canvasImageType}`);
 		}
 
-		this._canvasImageType = $canvasImageType;
+		this._canvasMimeType = `image/${$canvasImageType}`;
 	}
 
-	set canvasImageType($canvasImageType){ // eslint-disable-line no-dupe-class-members
-		this._set_canvasImageType($canvasImageType);
+	set canvasMimeType($canvasImageType){ // eslint-disable-line no-dupe-class-members
+		this._set_canvasMimeType($canvasImageType);
 	}
 
-	get canvasImageType(){ // eslint-disable-line no-dupe-class-members
-		return this._canvasImageType;
+	get canvasMimeType(){ // eslint-disable-line no-dupe-class-members
+		return this._canvasMimeType;
 	}
 
 }

@@ -51,12 +51,13 @@
 		version            : 5,
 		scale              : 20,
 		moduleValues       : mv,
+		// optionally provide a canvas element
 		canvasElement      : document.getElementById('qrcode-canvas'),
-		// the image type to output as base64 URI
-		canvasImageType    : 'webp',
+		// the image type to output
+		canvasImageType    : 'png',
 		// toggle drawing of light modules
 		drawLightModules   : false,
-		// draw the modules as circles isntead of squares
+		// draw the modules as circles instead of squares
 		drawCircularModules: true,
 		circleRadius       : 0.4,
 		// keep modules of these types as square
@@ -73,10 +74,12 @@
 		markupDark         : '#424242',
 		markupLight        : '#eeeeee',
 		// toggle base64 data URI output, if false, the canvas element will be returned
-		imageBase64        : false,
+		outputBase64       : false,
 	});
 
-	(new qrc.QRCode(options)).render('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
+	let canvas = (new qrc.QRCode(options)).render('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
+
+//	console.log(canvas);
 </script>
 </body>
 </html>

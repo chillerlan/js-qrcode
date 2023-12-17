@@ -6,30 +6,16 @@
  */
 
 import QROutputAbstract from './QROutputAbstract.js';
-import {OUTPUT_STRING_JSON, OUTPUT_STRING_TEXT} from '../Common/constants.js';
 
 /**
  * Converts the matrix data into string types
  */
-export default class QRString extends QROutputAbstract{
+export default class QRStringText extends QROutputAbstract{
 
 	/**
 	 * @inheritDoc
 	 */
-	dump($file){
-		let $data;
-
-		switch(this.options.outputType){
-			case OUTPUT_STRING_TEXT:
-				$data = this.text();
-				break;
-			case OUTPUT_STRING_JSON:
-			default:
-				$data = this.json();
-		}
-
-		return $data;
-	}
+	mimeType = 'text/plain';
 
 	/**
 	 * @inheritDoc
@@ -41,7 +27,7 @@ export default class QRString extends QROutputAbstract{
 	/**
 	 * @inheritDoc
 	 */
-	getModuleValue($value){
+	prepareModuleValue($value){
 		return $value;
 	}
 
@@ -53,16 +39,9 @@ export default class QRString extends QROutputAbstract{
 	}
 
 	/**
-	 * JSON output
+	 * @inheritDoc
 	 */
-	json(){
-		return JSON.stringify(this.matrix.matrix());
-	}
-
-	/**
-	 * string output
-	 */
-	text(){
+	dump($file){
 		let $str = [];
 
 		for(let $y = 0; $y < this.moduleCount; $y++){
@@ -75,6 +54,23 @@ export default class QRString extends QROutputAbstract{
 			$str.push($row.join(''));
 		}
 
-		return $str.join(this.options.eol);
+		let $data = $str.join(this.options.eol);
+
+		this.saveToFile($data, $file);
+
+		return $data;
+	}
+
+	/**
+	 *
+	 * @param {string} $str
+	 * @param {number|int} $color
+	 * @param {boolean} $background
+	 * @returns {string}
+	 */
+	static ansi8($str, $color, $background = null){
+		$color = Math.max(0, Math.min($color, 255));
+
+		return `\x1b[${($background === true ? 48 : 38)};5;${$color}m${$str}\x1b[0m`;
 	}
 }

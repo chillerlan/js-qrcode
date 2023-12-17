@@ -15,6 +15,11 @@ import QRCodeOutputException from './QRCodeOutputException.js';
 export default class QRCanvas extends QROutputAbstract{
 
 	/**
+	 * @inheritDoc
+	 */
+	mimeType = 'image/png';
+
+	/**
 	 * @type {HTMLCanvasElement}
 	 * @private
 	 */
@@ -31,13 +36,37 @@ export default class QRCanvas extends QROutputAbstract{
 	 * @inheritDoc
 	 */
 	moduleValueIsValid($value){
-		return typeof $value === 'string' && $value.trim().length > 0;
+
+		if(typeof $value !== 'string'){
+			return false;
+		}
+
+		$value = $value.trim();
+
+		// hex notation
+		// #rgb(a)
+		// #rrggbb(aa)
+		if($value.match(/^#([\da-f]{3}){1,2}$|^#([\da-f]{4}){1,2}$/i)){
+			return true;
+		}
+
+		// css: hsla/rgba(...values)
+		if($value.match(/^(hsla?|rgba?)\([\d .,%\/]+\)$/i)){
+			return true;
+		}
+
+		// predefined css color
+		if($value.match(/^[a-z]+$/i)){
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	getModuleValue($value){
+	prepareModuleValue($value){
 		return $value.trim();
 	}
 
@@ -49,37 +78,51 @@ export default class QRCanvas extends QROutputAbstract{
 	}
 
 	/**
+	 * @param {string} $data (ignored)
+	 * @param {string} $mime (ignored)
+	 * @returns {string}
+	 * @protected
+	 */
+	toBase64DataURI($data, $mime){
+		$mime = this.options.canvasMimeType.trim();
+
+		if($mime === ''){
+			$mime = this.mimeType;
+		}
+
+		return this._canvas.toDataURL($mime, this.options.canvasImageQuality)
+	}
+
+	/**
 	 * @inheritDoc
 	 *
 	 * @returns {HTMLCanvasElement|string|*}
 	 * @throws {QRCodeOutputException}
 	 */
 	dump($file = null){
-		this._canvas  = this.options.canvasElement;
+		this._canvas = (this.options.canvasElement || document.createElement('canvas'));
 
 		// @todo: test if instance check also works with nodejs canvas modules etc.
-		// otherwise check for this._canvas.getContext
-		if(!this._canvas || !(this._canvas instanceof HTMLCanvasElement)){
+		if(!this._canvas || !(this._canvas instanceof HTMLCanvasElement) || (typeof this._canvas.getContext !== 'function')){
 			throw new QRCodeOutputException('invalid canvas element');
 		}
 
-		$file           = $file || this.options.cachefile;
-		let $saveToFile = $file !== null;
-		let data        = null;
-
 		this._drawImage();
 
-		if($saveToFile){
-			data = this._canvasToBase64();
-
-			this.saveToFile(atob(data.substring(data.indexOf(',') + 1)), $file);
+		if(this.options.returnAsDomElement){
+			return this._canvas;
 		}
 
-		if(this.options.imageBase64){
-			return data || this._canvasToBase64();
+		let base64DataURI = this.toBase64DataURI();
+		let rawImage      = atob(base64DataURI.split(',')[1]);
+
+		this.saveToFile(rawImage, $file);
+
+		if(this.options.outputBase64){
+			return base64DataURI;
 		}
 
-		return this._canvas;
+		return rawImage;
 	}
 
 	/**
@@ -98,7 +141,7 @@ export default class QRCanvas extends QROutputAbstract{
 
 		for(let $y = 0; $y < this.moduleCount; $y++){
 			for(let $x = 0; $x < this.moduleCount; $x++){
-				this._setPixel($x, $y, this.matrix.get($x, $y))
+				this._module($x, $y, this.matrix.get($x, $y))
 			}
 		}
 
@@ -108,13 +151,13 @@ export default class QRCanvas extends QROutputAbstract{
 	 * @returns {void}
 	 * @private
 	 */
-	_setPixel($x, $y, $M_TYPE){
+	_module($x, $y, $M_TYPE){
 
 		if(!this.options.drawLightModules && !this.matrix.check($x, $y)){
 			return;
 		}
 
-		this._context.fillStyle = this.moduleValues[$M_TYPE];
+		this._context.fillStyle = this.getModuleValue($M_TYPE);
 
 		if(this.options.drawCircularModules && !this.matrix.checkTypeIn($x, $y, this.options.keepAsSquare)){
 			this._context.beginPath();
@@ -128,19 +171,11 @@ export default class QRCanvas extends QROutputAbstract{
 			)
 
 			this._context.fill();
-		}
-		else{
-			this._context.fillRect($x * this.scale, $y * this.scale, this.scale, this.scale);
+
+			return;
 		}
 
-	}
-
-	/**
-	 * @returns {String}
-	 * @private
-	 */
-	_canvasToBase64(){
-		return this._canvas.toDataURL(`image/${this.options.canvasImageType}`, this.options.canvasImageQuality)
+		this._context.fillRect($x * this.scale, $y * this.scale, this.scale, this.scale);
 	}
 
 }

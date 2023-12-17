@@ -28,16 +28,18 @@
 		outputInterface     : qrc.QRMarkupSVG,
 		version             : 7,
 		// toggle base64 data URI
-		imageBase64: true,
+		returnAsDomElement  : false,
+		svgUseFillAttributes: false,
+		outputBase64        : true,
 		// if set to false, the light modules won't be rendered
-		drawLightModules: true,
+		drawLightModules    : false,
 		// draw the modules as circles isntead of squares
-		drawCircularModules: true,
-		circleRadius: 0.4,
+		drawCircularModules : true,
+		circleRadius        : 0.4,
 		// connect paths
-		connectPaths: true,
+		connectPaths        : false,
 		// keep modules of these types as square
-		keepAsSquare:[
+		keepAsSquare        : [
 			qrc.M_FINDER_DARK,
 			qrc.M_FINDER_DOT,
 			qrc.M_ALIGNMENT_DARK,
@@ -69,11 +71,13 @@
 	document.getElementById('qrcode-container-img').appendChild(img);
 
 
-	// embed directly via <svg>
-	options.imageBase64 = false;
+	// embed directly via <svg> DOM element (the base64 option will be ignored in that case)
+	options.returnAsDomElement = true;
 	options.svgDefs = '';
 
-	document.getElementById('qrcode-container-svg').innerHTML = (new qrc.QRCode(options)).render(data);
+	let qrcodeElement = (new qrc.QRCode(options)).render(data);
+
+	document.getElementById('qrcode-container-svg').appendChild(qrcodeElement);
 </script>
 </body>
 </html>

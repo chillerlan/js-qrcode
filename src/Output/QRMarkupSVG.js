@@ -5,8 +5,8 @@
  * @license      MIT
  */
 
-import QRMarkup from './QRMarkup.js';
-import {IS_DARK} from '../Common/constants.js';
+import QROutputAbstract from './QROutputAbstract.js';
+import {LAYERNAMES} from '../Common/constants.js';
 
 /**
  * SVG output
@@ -16,12 +16,110 @@ import {IS_DARK} from '../Common/constants.js';
  * @see https://www.sarasoueidan.com/demos/interactive-svg-coordinate-system/
  * @see http://apex.infogridpacific.com/SVG/svg-tutorial-contents.html
  */
-export default class QRMarkupSVG extends QRMarkup{
+export default class QRMarkupSVG extends QROutputAbstract{
 
 	/**
 	 * @inheritDoc
 	 */
-	createMarkup($saveToFile){
+	mimeType = 'image/svg+xml';
+
+	/**
+	 * @inheritDoc
+	 */
+	moduleValueIsValid($value){
+
+		if(typeof $value !== 'string'){
+			return false;
+		}
+
+		$value = $value.trim();
+
+		// hex notation
+		// #rgb(a)
+		// #rrggbb(aa)
+		if($value.match(/^#([\da-f]{3}){1,2}$|^#([\da-f]{4}){1,2}$/i)){
+			return true;
+		}
+
+		// css: hsla/rgba(...values)
+		if($value.match(/^(hsla?|rgba?)\([\d .,%\/]+\)$/i)){
+			return true;
+		}
+
+		// url(...)
+		if($value.match(/^url\([-\/#a-z\d]+\)$/i)){
+			return true;
+		}
+
+		// predefined css color
+		if($value.match(/^[a-z]+$/i)){
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	prepareModuleValue($value){
+		return $value.replace(/(<([^>]+)>)/gi, '').replace(/([ '"\r\n\t]+)/g, '');
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	getDefaultModuleValue($isDark){
+		return $isDark ? '#000' : '#fff';
+	}
+
+	/**
+	 * @inheritDoc
+	 *
+	 * @returns {number[]|int[]}
+	 */
+	getOutputDimensions(){
+		return [this.moduleCount, this.moduleCount];
+	}
+
+	/**
+	 * @protected
+	 */
+	getCssClass($M_TYPE){
+		return [
+			`qr-${LAYERNAMES[$M_TYPE] ?? $M_TYPE}`,
+			this.matrix.isDark($M_TYPE) ? 'dark' : 'light',
+			this.options.cssClass,
+		].join(' ');
+	}
+
+	/**
+	 * @inheritDoc
+	 *
+	 * @returns {HTMLElement|SVGElement|ChildNode|string|*}
+	 */
+	dump($file = null){
+		let $data = this._createMarkup($file !== null);
+
+		this.saveToFile($data, $file);
+
+		if(this.options.returnAsDomElement){
+			let doc = new DOMParser().parseFromString($data.trim(), this.mimeType);
+
+			return doc.firstChild;
+		}
+
+		if(this.options.outputBase64){
+			$data = this.toBase64DataURI($data, this.mimeType);
+		}
+
+		return $data;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	_createMarkup($saveToFile){
 		let $svg = this.header();
 		let $eol = this.options.eol;
 
@@ -36,21 +134,7 @@ export default class QRMarkupSVG extends QRMarkup{
 		// close svg
 		$svg += `${$eol}</svg>${$eol}`;
 
-		// transform to data URI only when not saving to file
-		if(!$saveToFile && this.options.imageBase64){
-			$svg = this.base64encode($svg, 'image/svg+xml');
-		}
-
 		return $svg;
-	}
-
-	/**
-	 * @inheritDoc
-	 *
-	 * @returns {number[]|int[]}
-	 */
-	getOutputDimensions(){
-		return [this.moduleCount, this.moduleCount];
 	}
 
 	/**
@@ -73,7 +157,15 @@ export default class QRMarkupSVG extends QRMarkup{
 	 * @returns {string}
 	 */
 	header(){
-		return `<?xml version="1.0" encoding="UTF-8"?>${this.options.eol}<svg xmlns="http://www.w3.org/2000/svg" class="qr-svg ${this.options.cssClass}" viewBox="${this.getViewBox()}" preserveAspectRatio="${this.options.svgPreserveAspectRatio}">${this.options.eol}`;
+
+		let $header = `<svg xmlns="http://www.w3.org/2000/svg" class="qr-svg ${this.options.cssClass}" `
+			+ `viewBox="${this.getViewBox()}" preserveAspectRatio="${this.options.svgPreserveAspectRatio}">${this.options.eol}`;
+
+		if(this.options.svgAddXmlHeader){
+			$header = `<?xml version="1.0" encoding="UTF-8"?>${this.options.eol}${$header}`;
+		}
+
+		return $header;
 	}
 
 	/**
@@ -99,40 +191,39 @@ export default class QRMarkupSVG extends QRMarkup{
 
 			let $path = $chonks.join(this.options.eol);
 
-			if($path === ''){
+			if($path.trim() === ''){
 				continue;
 			}
 
-			let $type = this.moduleValues[$M_TYPE] || '';
-			let $cssClass = this.getCssClass($M_TYPE);
-
-			// ignore non-existent module values
-			let $element = $type === ''
-				? `<path class="${$cssClass}" d="${$path}"/>`
-				: `<path class="${$cssClass}" fill="${$type}" fill-opacity="${this.options.svgOpacity}" d="${$path}"/>`;
-
-			$svg.push($element);
+			$svg.push(this.path($path, $M_TYPE));
 		}
 
 		return $svg.join(this.options.eol);
 	}
 
 	/**
-	 * @inheritDoc
+	 * renders and returns a single <path> element
+	 *
+	 * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Element/path
+	 *
+	 * @param {string} $path
+	 * @param {number|int} $M_TYPE
+	 * @returns {string}
+	 * @protected
 	 */
-	getCssClass($M_TYPE){
-		return [
-			`qr-${$M_TYPE}`,
-			($M_TYPE & IS_DARK) === IS_DARK ? 'dark' : 'light',
-			this.options.cssClass,
-		].join(' ');
+	path($path, $M_TYPE){
+		let $cssClass = this.getCssClass($M_TYPE);
+
+		if(this.options.svgUseFillAttributes){
+			return `<path class="${$cssClass}" fill="${this.getModuleValue($M_TYPE)}" `
+				+ `fill-opacity="${this.options.svgOpacity}" d="${$path}"/>`;
+		}
+
+		return `<path class="${$cssClass}" d="${$path}"/>`;
 	}
 
 	/**
 	 * returns a path segment for a single module
-	 *
-	 * yes, <symbol>/<use> is better except it isn't.
-	 * @see https://github.com/chillerlan/php-qrcode/issues/127#issuecomment-1148627245
 	 *
 	 * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d
 	 *
@@ -157,6 +248,10 @@ export default class QRMarkupSVG extends QRMarkup{
 
 			if(ix < 1){
 				ix = ix.toPrecision(3);
+			}
+
+			if(iy < 1){
+				iy = iy.toPrecision(3);
 			}
 
 			return `M${ix} ${iy} a${r} ${r} 0 1 0 ${d} 0 a${r} ${r} 0 1 0 -${d} 0Z`;
