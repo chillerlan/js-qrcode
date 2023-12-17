@@ -207,6 +207,29 @@ export default class QRMatrix{
 	}
 
 	/**
+	 * Fills an area of $width * $height, from the given starting point [$startX, $startY] (top left) with $value for $M_TYPE.
+	 *
+	 * @param {number|int} $startX
+	 * @param {number|int} $startY
+	 * @param {number|int} $width
+	 * @param {number|int} $height
+	 * @param {boolean} $value
+	 * @param {number|int} $M_TYPE
+	 *
+	 * @returns {QRMatrix}
+	 */
+	setArea($startX, $startY, $width, $height, $value, $M_TYPE){
+
+		for(let $y = $startY; $y < ($startY + $height); $y++){
+			for(let $x = $startX; $x < ($startX + $width); $x++){
+				this.set($x, $y, $value, $M_TYPE);
+			}
+		}
+
+		return this;
+	}
+
+	/**
 	 * Flips the value of the module
 	 *
 	 * @param {number|int} $x
@@ -346,22 +369,11 @@ export default class QRMatrix{
 		];
 
 		for(let $c of $pos){
-			for(let $y = 0; $y < 7; $y++){
-				for(let $x = 0; $x < 7; $x++){
-					// outer (dark) 7*7 square
-					if($x === 0 || $x === 6 || $y === 0 || $y === 6){
-						this.set($c[0] + $y, $c[1] + $x, true, M_FINDER);
-					}
-					// inner (light) 5*5 square
-					else if($x === 1 || $x === 5 || $y === 1 || $y === 5){
-						this.set($c[0] + $y, $c[1] + $x, false, M_FINDER);
-					}
-					// 3*3 dot
-					else{
-						this.set($c[0] + $y, $c[1] + $x, true, M_FINDER_DOT);
-					}
-				}
-			}
+			this
+				.setArea( $c[0]     ,  $c[1]     , 7, 7, true,  M_FINDER)
+				.setArea(($c[0] + 1), ($c[1] + 1), 5, 5, false, M_FINDER)
+				.setArea(($c[0] + 2), ($c[1] + 2), 3, 3, true,  M_FINDER_DOT)
+			;
 		}
 
 		return this;
@@ -416,13 +428,11 @@ export default class QRMatrix{
 					continue;
 				}
 
-				for(let $ry = -2; $ry <= 2; $ry++){
-					for(let $rx = -2; $rx <= 2; $rx++){
-						let $v = ($ry === 0 && $rx === 0) || $ry === 2 || $ry === -2 || $rx === 2 || $rx === -2;
-
-						this.set($x + $rx, $y + $ry, $v, M_ALIGNMENT);
-					}
-				}
+				this
+					.setArea(($x - 2), ($y - 2), 5, 5, true,  M_ALIGNMENT)
+					.setArea(($x - 1), ($y - 1), 3, 3, false, M_ALIGNMENT)
+					.set($x, $y, true, M_ALIGNMENT)
+				;
 
 			}
 		}
