@@ -16,7 +16,7 @@ import {
 	ECC_L, ECC_M, ECC_Q, ECC_H,
 	MASK_PATTERN_AUTO, PATTERNS, PATTERN_000, PATTERN_001, PATTERN_010,
 	PATTERN_011, PATTERN_100, PATTERN_101, PATTERN_110, PATTERN_111,
-	MODES, MODE_NUMBER, MODE_ALPHANUM, MODE_BYTE, MODE_KANJI,
+	MODES, MODE_NUMBER, MODE_ALPHANUM, MODE_BYTE,
 	VERSION_AUTO,
 	M_NULL, M_DARKMODULE, M_DARKMODULE_LIGHT, M_DATA, M_FINDER, M_SEPARATOR, M_ALIGNMENT, M_TIMING,
 	M_FORMAT, M_VERSION, M_QUIETZONE, M_LOGO, M_FINDER_DOT, M_FINDER_DOT_LIGHT, IS_DARK,
@@ -33,7 +33,6 @@ import Version from './Common/Version.js';
 // Data
 import AlphaNum from './Data/AlphaNum.js';
 import Byte from './Data/Byte.js';
-import Kanji from './Data/Kanji.js';
 import Numeric from './Data/Numeric.js';
 import QRCodeDataException from './Data/QRCodeDataException.js';
 import QRData from './Data/QRData.js';
@@ -57,11 +56,10 @@ export {
 	EccLevel, ECC_L, ECC_M, ECC_Q, ECC_H,
 	MaskPattern, MASK_PATTERN_AUTO, PATTERNS, PATTERN_000, PATTERN_001, PATTERN_010,
 		PATTERN_011, PATTERN_100, PATTERN_101, PATTERN_110, PATTERN_111,
-	Mode, MODES, MODE_NUMBER, MODE_ALPHANUM, MODE_BYTE, MODE_KANJI,
+	Mode, MODES, MODE_NUMBER, MODE_ALPHANUM, MODE_BYTE,
 	Version, VERSION_AUTO,
 	AlphaNum,
 	Byte,
-	Kanji,
 	Numeric,
 	QRCodeDataException,
 	QRData,

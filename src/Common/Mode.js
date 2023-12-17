@@ -18,7 +18,6 @@ const MODE_LENGTH_BITS = PHPJS.array_combine(MODES, [
 	[10, 12, 14], // Numeric
 	[9, 11, 13],  // AlphaNum
 	[8, 16, 16],  // Byte
-	[8, 10, 12],  // Kanji
 ]);
 
 /**

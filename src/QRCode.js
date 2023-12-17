@@ -9,7 +9,6 @@ import QROptions from './QROptions.js';
 import MaskPattern from './Common/MaskPattern.js';
 import AlphaNum from './Data/AlphaNum.js';
 import Byte from './Data/Byte.js';
-//import Kanji from './Data/Kanji.js';
 import Numeric from './Data/Numeric.js';
 import QRData from './Data/QRData.js';
 import QRCodeOutputException from './Output/QRCodeOutputException.js';
@@ -24,17 +23,7 @@ import {
  *
  * @type {string[]}
  */
-const MODE_INTERFACES = PHPJS.array_combine([
-	MODE_NUMBER,
-	MODE_ALPHANUM,
-//	MODE_KANJI, // we ignore Kanji for now
-	MODE_BYTE,
-], [
-	Numeric,
-	AlphaNum,
-//	Kanji,
-	Byte,
-]);
+const MODE_INTERFACES = PHPJS.array_combine([MODE_NUMBER, MODE_ALPHANUM, MODE_BYTE], [Numeric, AlphaNum, Byte]);
 
 /**
  * Turns a text string into a Model 2 QR Code
@@ -235,19 +224,6 @@ export default class QRCode{
 
 		return this;
 	}
-
-	/**
-	 * Adds a Kanji data segment
-	 *
-	 * ISO/IEC 18004:2000 8.3.5 - Kanji Mode
-	 *
-	 * @returns {QRCode}
-	 */
-//	addKanjiSegment($data){
-//		this.addSegment(new Kanji($data));
-//
-//		return this;
-//	}
 
 	/**
 	 * Adds an 8-bit byte data segment

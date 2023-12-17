@@ -58,13 +58,11 @@ const PATTERNS = [
 const MODE_NUMBER   = 0b0001;
 const MODE_ALPHANUM = 0b0010;
 const MODE_BYTE     = 0b0100;
-const MODE_KANJI    = 0b1000;
 
 const MODES = [
 	MODE_NUMBER,
 	MODE_ALPHANUM,
 	MODE_BYTE,
-	MODE_KANJI,
 ];
 
 /**
