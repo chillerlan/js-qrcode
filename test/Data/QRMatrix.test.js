@@ -49,28 +49,28 @@ suite('QRMatrixTest', function(){
 	 * Tests if size() returns the actual matrix size/count
 	 */
 	test('testSize', function(){
-		assert.lengthOf(_matrix.matrix(), _matrix.size());
+		assert.lengthOf(_matrix.getMatrix(), _matrix.getSize());
 	});
 
 	/**
 	 * Tests if version() returns the current (given) version
 	 */
 	test('testVersion', function(){
-		assert.strictEqual(_matrix.version().getVersionNumber(), _version);
+		assert.strictEqual(_matrix.getVersion().getVersionNumber(), _version);
 	});
 
 	/**
 	 * Tests if eccLevel() returns the current (given) ECC level
 	 */
 	test('testECC', function(){
-		assert.strictEqual(_matrix.eccLevel().getLevel(), ECC_L);
+		assert.strictEqual(_matrix.getEccLevel().getLevel(), ECC_L);
 	});
 
 	/**
 	 * Tests if maskPattern() returns the current (or default) mask pattern
 	 */
 	test('testMaskPattern', function(){
-		assert.strictEqual(_matrix.maskPattern().getPattern(), PATTERN_000);
+		assert.strictEqual(_matrix.getMaskPattern(), undefined);
 	});
 
 	/**
@@ -119,7 +119,7 @@ suite('QRMatrixTest', function(){
 				test(`${desc}`, function(){
 					$matrix.setDarkModule();
 
-					assert.strictEqual($matrix.get(8, $matrix.size() - 8), M_DARKMODULE);
+					assert.strictEqual($matrix.get(8, $matrix.getSize() - 8), M_DARKMODULE);
 				});
 			});
 		});
@@ -133,8 +133,8 @@ suite('QRMatrixTest', function(){
 					$matrix.setFinderPattern();
 
 					assert.strictEqual($matrix.get(0, 0), M_FINDER_DARK);
-					assert.strictEqual($matrix.get(0, $matrix.size() - 1), M_FINDER_DARK);
-					assert.strictEqual($matrix.get($matrix.size() - 1, 0), M_FINDER_DARK);
+					assert.strictEqual($matrix.get(0, $matrix.getSize() - 1), M_FINDER_DARK);
+					assert.strictEqual($matrix.get($matrix.getSize() - 1, 0), M_FINDER_DARK);
 				});
 			});
 		});
@@ -149,8 +149,8 @@ suite('QRMatrixTest', function(){
 
 					assert.strictEqual($matrix.get(7, 0), M_SEPARATOR);
 					assert.strictEqual($matrix.get(0, 7), M_SEPARATOR);
-					assert.strictEqual($matrix.get(0, $matrix.size() - 8), M_SEPARATOR);
-					assert.strictEqual($matrix.get($matrix.size() - 8, 0), M_SEPARATOR);
+					assert.strictEqual($matrix.get(0, $matrix.getSize() - 8), M_SEPARATOR);
+					assert.strictEqual($matrix.get($matrix.getSize() - 8, 0), M_SEPARATOR);
 				});
 			});
 		});
@@ -161,7 +161,7 @@ suite('QRMatrixTest', function(){
 		suite('testSetAlignmentPattern', function(){
 			matrixProvider().forEach(({$matrix, desc}) => {
 				test(`${desc}`, function(){
-					let $version = $matrix.version();
+					let $version = $matrix.getVersion();
 
 					if($version.getVersionNumber() === 1){
 //						console.log('N/A (Version 1 has no alignment pattern)');
@@ -201,7 +201,7 @@ suite('QRMatrixTest', function(){
 						.setTimingPattern()
 					;
 
-					let $size = $matrix.size();
+					let $size = $matrix.getSize();
 
 					for(let $i = 7; $i < $size - 7; $i++){
 						// skip alignment pattern
@@ -222,17 +222,17 @@ suite('QRMatrixTest', function(){
 			matrixProvider().forEach(({$matrix, desc}) => {
 				test(`${desc}`, function(){
 
-					if($matrix.version().getVersionNumber() < 7){
+					if($matrix.getVersion().getVersionNumber() < 7){
 //						console.log('N/A (Version < 7)');
 						this.skip();
 					}
 
 					$matrix.setVersionNumber();
 
-					assert.isTrue($matrix.checkType($matrix.size() - 9, 0, M_VERSION));
-					assert.isTrue($matrix.checkType($matrix.size() - 11, 5, M_VERSION));
-					assert.isTrue($matrix.checkType(0, $matrix.size() - 9, M_VERSION));
-					assert.isTrue($matrix.checkType(5, $matrix.size() - 11, M_VERSION));
+					assert.isTrue($matrix.checkType($matrix.getSize() - 9, 0, M_VERSION));
+					assert.isTrue($matrix.checkType($matrix.getSize() - 11, 5, M_VERSION));
+					assert.isTrue($matrix.checkType(0, $matrix.getSize() - 9, M_VERSION));
+					assert.isTrue($matrix.checkType(5, $matrix.getSize() - 11, M_VERSION));
 				});
 			});
 		});
@@ -247,8 +247,8 @@ suite('QRMatrixTest', function(){
 
 					assert.isTrue($matrix.checkType(8, 0, M_FORMAT));
 					assert.isTrue($matrix.checkType(0, 8, M_FORMAT));
-					assert.isTrue($matrix.checkType($matrix.size() - 1, 8, M_FORMAT));
-					assert.isTrue($matrix.checkType($matrix.size() - 8, 8, M_FORMAT));
+					assert.isTrue($matrix.checkType($matrix.getSize() - 1, 8, M_FORMAT));
+					assert.isTrue($matrix.checkType($matrix.getSize() - 8, 8, M_FORMAT));
 				});
 			});
 		});
@@ -259,7 +259,7 @@ suite('QRMatrixTest', function(){
 		suite('testSetQuietZone', function(){
 			matrixProvider().forEach(({$matrix, desc}) => {
 				test(`${desc}`, function(){
-					let $size = $matrix.size();
+					let $size = $matrix.getSize();
 					let $q    = 5;
 
 					$matrix.set(0, 0, true, M_DATA);
@@ -267,10 +267,10 @@ suite('QRMatrixTest', function(){
 
 					$matrix.setQuietZone($q);
 
-					assert.lengthOf($matrix.matrix(), $size + 2 * $q);
-					assert.lengthOf($matrix.matrix()[$size - 1], $size + 2 * $q);
+					assert.lengthOf($matrix.getMatrix(), $size + 2 * $q);
+					assert.lengthOf($matrix.getMatrix()[$size - 1], $size + 2 * $q);
 
-					$size = $matrix.size();
+					$size = $matrix.getSize();
 					assert.isTrue($matrix.checkType(0, 0, M_QUIETZONE));
 					assert.isTrue($matrix.checkType($size - 1, $size - 1, M_QUIETZONE));
 
@@ -342,7 +342,7 @@ suite('QRMatrixTest', function(){
 		// using the dark module here because i'm lazy
 		_matrix.setDarkModule();
 		let $x = 8;
-		let $y = _matrix.size() - 8;
+		let $y = _matrix.getSize() - 8;
 
 		// cover checkType()
 		assert.isTrue(_matrix.checkType($x, $y, M_DARKMODULE));

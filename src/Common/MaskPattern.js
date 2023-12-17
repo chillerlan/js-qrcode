@@ -99,7 +99,6 @@ export default class MaskPattern{
 			let $penalty = 0;
 
 			for(let $level = 1; $level <= 4; $level++){
-				let $size = $matrix.size();
 				$penalty += this['testRule' + $level]($matrix, $size, $size);
 			}
 

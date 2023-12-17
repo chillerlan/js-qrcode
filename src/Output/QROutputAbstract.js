@@ -18,7 +18,7 @@ export default class QROutputAbstract extends QROutputInterface{
 	/**
 	 * the current size of the QR matrix
 	 *
-	 * @see QRMatrix.size()
+	 * @see QRMatrix.getSize()
 	 * @type {number|int}
 	 * @protected
 	 */
@@ -84,7 +84,7 @@ export default class QROutputAbstract extends QROutputInterface{
 	 * @protected
 	 */
 	setMatrixDimensions(){
-		this.moduleCount = this.matrix.size();
+		this.moduleCount = this.matrix.getSize();
 		this.scale       = this.options.scale;
 		this.length      = this.moduleCount * this.scale;
 	}
@@ -213,7 +213,7 @@ export default class QROutputAbstract extends QROutputInterface{
 	 */
 	collectModules($transform){
 		let $paths = {};
-		let $matrix = this.matrix.matrix();
+		let $matrix = this.matrix.getMatrix();
 		let $y = 0;
 
 		// collect the modules for each type

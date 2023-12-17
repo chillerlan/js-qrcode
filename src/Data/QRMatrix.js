@@ -115,7 +115,7 @@ export default class QRMatrix{
 	 *
 	 * @returns {number[][]|int[][]|boolean[][]}
 	 */
-	matrix($boolean = false){
+	getMatrix($boolean = false){
 
 		if(!$boolean){
 			return this._matrix;
@@ -138,29 +138,29 @@ export default class QRMatrix{
 	}
 
 	/**
-	 * Returns the current version number
+	 * Returns the current version instance
 	 *
 	 * @returns {Version}
 	 */
-	version(){
+	getVersion(){
 		return this._version;
 	}
 
 	/**
-	 * Returns the current ECC level
+	 * Returns the current ECC level instance
 	 *
 	 * @returns {EccLevel}
 	 */
-	eccLevel(){
+	getEccLevel(){
 		return this._eccLevel;
 	}
 
 	/**
-	 * Returns the current mask pattern
+	 * Returns the current mask pattern instance
 	 *
 	 * @returns {MaskPattern}
 	 */
-	maskPattern(){
+	getMaskPattern(){
 		return this._maskPattern;
 	}
 
@@ -171,7 +171,7 @@ export default class QRMatrix{
 	 *
 	 * @returns {number|int}
 	 */
-	size(){
+	getSize(){
 		return this.moduleCount;
 	}
 
