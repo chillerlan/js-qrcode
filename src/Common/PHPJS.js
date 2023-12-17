@@ -8,19 +8,17 @@
 export default class PHPJS{
 
 	/**
-	 * @param {number|int} length
-	 * @param {*} mixedVal
+	 * not an exact implementation, we're ignoring the $start_index parameter, which is always 0 here
+	 *
+	 * @param {number|int} $count
+	 * @param {*} $value
 	 * @returns {Array}
 	 */
-	static fill_array(length, mixedVal){
-		let valIsObject = (typeof mixedVal === 'object');
-		let arr         = [];
+	static array_fill($count, $value){
+		let arr = [];
 
-		for(let key = 0; key < length; key++){
-			arr[key] = valIsObject
-				// abuse JSON to create a true clone of the value
-				? JSON.parse(JSON.stringify(mixedVal))
-				: mixedVal;
+		for(let key = 0; key < $count; key++){
+			arr[key] = structuredClone($value);;
 		}
 
 		return arr;

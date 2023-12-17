@@ -88,7 +88,7 @@ export default class QRMatrix{
 	 * @protected
 	 */
 	createMatrix($size, $value){
-		return PHPJS.fill_array($size, PHPJS.fill_array($size, $value));
+		return PHPJS.array_fill($size, PHPJS.array_fill($size, $value));
 	}
 
 	/**

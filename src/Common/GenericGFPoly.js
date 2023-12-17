@@ -59,7 +59,7 @@ export default class GenericGFPoly{
 			this.coefficients = [0];
 		}
 		else{
-			this.coefficients = PHPJS.fill_array($coefficientsLength - $firstNonZero + $degree, 0);
+			this.coefficients = PHPJS.array_fill($coefficientsLength - $firstNonZero + $degree, 0);
 
 			for(let $i = 0; $i < $coefficientsLength - $firstNonZero; $i++){
 				this.coefficients[$i] = $coefficients[$i + $firstNonZero];
@@ -108,7 +108,7 @@ export default class GenericGFPoly{
 			return new GenericGFPoly([0]);
 		}
 
-		let $product = PHPJS.fill_array(this.coefficients.length + $other.coefficients.length - 1, 0);
+		let $product = PHPJS.array_fill(this.coefficients.length + $other.coefficients.length - 1, 0);
 
 		for(let $i = 0; $i < this.coefficients.length; $i++){
 			for(let $j = 0; $j < $other.coefficients.length; $j++){

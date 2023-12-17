@@ -16,21 +16,21 @@ import {assert} from 'chai';
 suite('PHPJSTest', function(){
 
 	test('testFillArray', function(){
-		assert.sameOrderedMembers(PHPJS.fill_array(3, 1), [1, 1, 1]);
-		assert.sameOrderedMembers(PHPJS.fill_array(3, null), [null, null, null]);
-		assert.sameOrderedMembers(PHPJS.fill_array(3, undefined), [undefined, undefined, undefined]);
+		assert.sameOrderedMembers(PHPJS.array_fill(3, 1), [1, 1, 1]);
+		assert.sameOrderedMembers(PHPJS.array_fill(3, null), [null, null, null]);
+		assert.sameOrderedMembers(PHPJS.array_fill(3, undefined), [undefined, undefined, undefined]);
 
 		// special case: object cloning
 
 		let $valObj    = {val: 1};
-		let $arr1      = PHPJS.fill_array(3, $valObj);
+		let $arr1      = PHPJS.array_fill(3, $valObj);
 		// without proper cloning this would change the values of each copy of $val in $arr
 		$valObj['val'] = 2;
 
 		assert.sameDeepMembers($arr1, [{val: 1}, {val: 1}, {val: 1}]);
 
 		let $valArr = [1];
-		let $arr2   = PHPJS.fill_array(3, $valArr);
+		let $arr2   = PHPJS.array_fill(3, $valArr);
 		$valArr[0]  = 2;
 
 		assert.sameDeepMembers($arr2, [[1], [1], [1]]);

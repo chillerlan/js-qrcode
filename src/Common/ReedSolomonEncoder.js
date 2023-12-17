@@ -45,10 +45,10 @@ export default class ReedSolomonEncoder{
 		let $b1              = $rsblockData[1][0][1];
 		let $l2              = $rsblockData[1][1][0];
 		let $b2              = $rsblockData[1][1][1];
-		let $rsBlocks        = PHPJS.fill_array($l1, [$numEccCodewords + $b1, $b1]);
+		let $rsBlocks        = PHPJS.array_fill($l1, [$numEccCodewords + $b1, $b1]);
 
 		if($l2 > 0){
-			$rsBlocks = $rsBlocks.concat(PHPJS.fill_array($l2, [$numEccCodewords + $b2, $b2]));
+			$rsBlocks = $rsBlocks.concat(PHPJS.array_fill($l2, [$numEccCodewords + $b2, $b2]));
 		}
 
 		let $bitBufferData  = $bitBuffer.getBuffer();
@@ -75,7 +75,7 @@ export default class ReedSolomonEncoder{
 			$dataByteOffset += $dataByteCount;
 		}
 
-		this.interleavedData      = PHPJS.fill_array($version.getTotalCodewords(), 0);
+		this.interleavedData      = PHPJS.array_fill($version.getTotalCodewords(), 0);
 		this.interleavedDataIndex = 0;
 		let $numRsBlocks          = $l1 + $l2;
 
@@ -105,7 +105,7 @@ export default class ReedSolomonEncoder{
 			.getCoefficients()
 		;
 
-		let $ecBytes = PHPJS.fill_array($rsPolyDegree, 0);
+		let $ecBytes = PHPJS.array_fill($rsPolyDegree, 0);
 		let $count   = $modCoefficients.length - $rsPolyDegree;
 
 		for(let $i = 0; $i < $ecBytes.length; $i++){
