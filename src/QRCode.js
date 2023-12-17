@@ -100,6 +100,17 @@ export default class QRCode{
 	}
 
 	/**
+	 * Renders a QR Code for the given QRMatrix and QROptions, saves $file optionally
+	 *
+	 * @param {QRMatrix} $matrix
+	 * @param {string|null} $file
+	 * @returns {*}
+	 */
+	renderMatrix($matrix, $file = null){
+		return this.initOutputInterface($matrix).dump($file ?? this.options.cachefile);
+	}
+
+	/**
 	 * Returns a QRMatrix object for the given $data and current QROptions
 	 *
 	 * @returns {QRMatrix}
@@ -114,11 +125,31 @@ export default class QRCode{
 
 		$matrix.setFormatInfo($maskPattern).mask($maskPattern);
 
-		// add matrix modifications after mask pattern evaluation and before handing over to output
+		return this.addMatrixModifications($matrix);
+	}
+
+	/**
+	 * add matrix modifications after mask pattern evaluation and before handing over to output
+	 *
+	 * @param {QRMatrix} $matrix
+	 * @returns {QRMatrix}
+	 * @protected
+	 */
+	addMatrixModifications($matrix){
+
 		if(this.options.addLogoSpace){
+			let $logoSpaceWidth  = this.options.logoSpaceWidth;
+			let $logoSpaceHeight = this.options.logoSpaceHeight;
+
+			// check whether one of the dimensions was omitted
+			if($logoSpaceWidth === null || $logoSpaceHeight === null){
+				$logoSpaceWidth  = ($logoSpaceWidth ?? $logoSpaceHeight ?? 0);
+				$logoSpaceHeight = null;
+			}
+
 			$matrix.setLogoSpace(
-				this.options.logoSpaceWidth,
-				this.options.logoSpaceHeight,
+				$logoSpaceWidth,
+				$logoSpaceHeight,
 				this.options.logoSpaceStartX,
 				this.options.logoSpaceStartY
 			);
