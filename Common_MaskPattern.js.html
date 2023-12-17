@@ -38,6 +38,17 @@ import PHPJS from './PHPJS.js';
 import QRCodeException from '../QRCodeException.js';
 import {PATTERNS} from './constants.js';
 
+/*
+ * Penalty scores
+ *
+ * ISO/IEC 18004:2000 Section 8.8.1 - Table 24
+ */
+const PENALTY_N1 = 3;
+const PENALTY_N2 = 3;
+const PENALTY_N3 = 40;
+const PENALTY_N4 = 10;
+
+
 /**
  * ISO/IEC 18004:2000 Section 8.8.1
  * ISO/IEC 18004:2000 Section 8.8.2 - Evaluation of masking results
@@ -50,7 +61,7 @@ export default class MaskPattern{
 	/**
 	 * The current mask pattern value (0-7)
 	 *
-	 * @type {int}
+	 * @type {number|int}
 	 * @private
 	 */
 	maskPattern;
@@ -58,15 +69,15 @@ export default class MaskPattern{
 	/**
 	 * MaskPattern constructor.
 	 *
-	 * @param {int} $maskPattern
+	 * @param {number|int} $maskPattern
 	 *
-	 * @throws \chillerlan\QRCode\QRCodeException
+	 * @throws QRCodeException
 	 */
 	constructor($maskPattern){
 		$maskPattern = PHPJS.intval($maskPattern);
 
 		if((0b111 &amp; $maskPattern) !== $maskPattern){
-			throw new QRCodeException('invalid mask pattern');
+			throw new QRCodeException(`invalid mask pattern: "${$maskPattern}"`);
 		}
 
 		this.maskPattern = $maskPattern;
@@ -75,7 +86,7 @@ export default class MaskPattern{
 	/**
 	 * Returns the current mask pattern
 	 *
-	 * @returns {int}
+	 * @returns {number|int}
 	 */
 	getPattern(){
 		return this.maskPattern;
@@ -84,18 +95,13 @@ export default class MaskPattern{
 	/**
 	 * Returns a closure that applies the mask for the chosen mask pattern.
 	 *
-	 * Encapsulates data masks for the data bits in a QR code, per ISO 18004:2006 6.8. Implementations
-	 * of this class can un-mask a raw BitMatrix. For simplicity, they will unmask the entire BitMatrix,
-	 * including areas used for finder patterns, timing patterns, etc. These areas should be unused
-	 * after the point they are unmasked anyway.
-	 *
 	 * Note that the diagram in section 6.8.1 is misleading since it indicates that i is column position
 	 * and j is row position. In fact, as the text says, i is row position and j is column position.
 	 *
 	 * @see https://www.thonky.com/qr-code-tutorial/mask-patterns
 	 * @see https://github.com/zxing/zxing/blob/e9e2bd280bcaeabd59d0f955798384fe6c018a6c/core/src/main/java/com/google/zxing/qrcode/decoder/DataMask.java#L32-L117
 	 *
-	 * @returns {function}
+	 * @returns {Function}
 	 */
 	getMask(){
 		// $x = column (width), $y = row (height)
@@ -114,20 +120,20 @@ export default class MaskPattern{
 	/**
 	 * Evaluates the matrix of the given data interface and returns a new mask pattern instance for the best result
 	 *
-	 * @param {QRData} $dataInterface
+	 * @param {QRMatrix} $QRMatrix
 	 *
 	 * @returns {MaskPattern}
 	 */
-	static getBestPattern($dataInterface){
+	static getBestPattern($QRMatrix){
 		let $penalties = [];
+		let $size      = $QRMatrix.getSize();
 
-		for(let $i = 0; $i &lt; 8; $i++){
-			let $pattern = PATTERNS[$i];
-			let $matrix  = $dataInterface.writeMatrix(new MaskPattern($pattern));
+		for(let $pattern of PATTERNS){
+			let $mp      = new MaskPattern($pattern);
+			let $matrix  = PHPJS.clone($QRMatrix).setFormatInfo($mp).mask($mp).getMatrix(true);
 			let $penalty = 0;
 
 			for(let $level = 1; $level &lt;= 4; $level++){
-				let $size = $matrix.size();
 				$penalty += this['testRule' + $level]($matrix, $size, $size);
 			}
 
@@ -141,54 +147,57 @@ export default class MaskPattern{
 	 * Apply mask penalty rule 1 and return the penalty. Find repetitive cells with the same color and
 	 * give penalty to them. Example: 00000 or 11111.
 	 *
-	 * @param {QRMatrix} $matrix
-	 * @param {int} $height
-	 * @param {int} $width
+	 * @param {Array} $matrix
+	 * @param {number|int} $height
+	 * @param {number|int} $width
 	 *
-	 * @returns {int}
+	 * @returns {number|int}
 	 */
 	static testRule1($matrix, $height, $width){
-		return MaskPattern.applyRule1($matrix, $height, $width, true) + MaskPattern.applyRule1($matrix, $height, $width, false);
+		let $penalty = 0;
+
+		// horizontal
+		for(let $y = 0; $y &lt; $height; $y++){
+			$penalty += MaskPattern.applyRule1($matrix[$y]);
+		}
+
+		// vertical
+		for(let $x = 0; $x &lt; $width; $x++){
+			$penalty += MaskPattern.applyRule1($matrix.map(y => y[$x]));
+		}
+
+		return $penalty;
 	}
 
 	/**
-	 * @param {QRMatrix} $matrix
-	 * @param {int} $height
-	 * @param {int} $width
-	 * @param {boolean} $isHorizontal
+	 * @param {Array} $rc
 	 *
-	 * @returns {int}
+	 * @returns {number|int}
 	 * @private
 	 */
-	static applyRule1($matrix, $height, $width, $isHorizontal){
-		let $penalty = 0;
-		let $yLimit  = $isHorizontal ? $height : $width;
-		let $xLimit  = $isHorizontal ? $width : $height;
+	static applyRule1($rc){
+		let $penalty         = 0;
+		let $numSameBitCells = 0;
+		let $prevBit         = null;
 
-		for(let $y = 0; $y &lt; $yLimit; $y++){
-			let $numSameBitCells = 0;
-			let $prevBit         = null;
+		for(let $val of $rc){
 
-			for(let $x = 0; $x &lt; $xLimit; $x++){
-				// noinspection JSSuspiciousNameCombination
-				let $bit = $isHorizontal ? $matrix.check($x, $y) : $matrix.check($y, $x);
-
-				if($bit === $prevBit){
-					$numSameBitCells++;
-				}
-				else{
-
-					if($numSameBitCells >= 5){
-						$penalty += 3 + ($numSameBitCells - 5);
-					}
-
-					$numSameBitCells = 1;  // Include the cell itself.
-					$prevBit = $bit;
-				}
+			if($val === $prevBit){
+				$numSameBitCells++;
 			}
-			if($numSameBitCells >= 5){
-				$penalty += 3 + ($numSameBitCells - 5);
+			else{
+
+				if($numSameBitCells >= 5){
+					$penalty += (PENALTY_N1 + $numSameBitCells - 5);
+				}
+
+				$numSameBitCells = 1;  // Include the cell itself.
+				$prevBit         = $val;
 			}
+		}
+
+		if($numSameBitCells >= 5){
+			$penalty += (PENALTY_N1 + $numSameBitCells - 5);
 		}
 
 		return $penalty;
@@ -199,11 +208,11 @@ export default class MaskPattern{
 	 * penalty to them. This is actually equivalent to the spec's rule, which is to find MxN blocks and give a
 	 * penalty proportional to (M-1)x(N-1), because this is the number of 2x2 blocks inside such a block.
 	 *
-	 * @param {QRMatrix} $matrix
-	 * @param {int} $height
-	 * @param {int} $width
+	 * @param {Array} $matrix
+	 * @param {number|int} $height
+	 * @param {number|int} $width
 	 *
-	 * @returns {int}
+	 * @returns {number|int}
 	 */
 	static testRule2($matrix, $height, $width){
 		let $penalty = 0;
@@ -220,19 +229,19 @@ export default class MaskPattern{
 					break;
 				}
 
-				let $val = $matrix.check($x, $y);
+				let $val = $matrix[$y][$x];
 
 				if(
-					$val === $matrix.check($x + 1, $y)
-					&amp;&amp; $val === $matrix.check($x, $y + 1)
-					&amp;&amp; $val === $matrix.check($x + 1, $y + 1)
+					$val === $matrix[$y][$x + 1]
+					&amp;&amp; $val === $matrix[$y + 1][$x]
+					&amp;&amp; $val === $matrix[$y + 1][$x + 1]
 				){
 					$penalty++;
 				}
 			}
 		}
 
-		return 3 * $penalty;
+		return PENALTY_N2 * $penalty;
 	}
 
 	/**
@@ -240,11 +249,11 @@ export default class MaskPattern{
 	 * starting with black, or 4:1:1:3:1:1 starting with white, and give penalty to them.  If we
 	 * find patterns like 000010111010000, we give penalty once.
 	 *
-	 * @param {QRMatrix} $matrix
-	 * @param {int} $height
-	 * @param {int} $width
+	 * @param {Array} $matrix
+	 * @param {number|int} $height
+	 * @param {number|int} $width
 	 *
-	 * @returns {int}
+	 * @returns {number|int}
 	 */
 	static testRule3($matrix, $height, $width){
 		let $penalties = 0;
@@ -254,13 +263,13 @@ export default class MaskPattern{
 
 				if(
 					$x + 6 &lt; $width
-					&amp;&amp;  $matrix.check($x, $y)
-					&amp;&amp; !$matrix.check($x + 1, $y)
-					&amp;&amp;  $matrix.check($x + 2, $y)
-					&amp;&amp;  $matrix.check($x + 3, $y)
-					&amp;&amp;  $matrix.check($x + 4, $y)
-					&amp;&amp; !$matrix.check($x + 5, $y)
-					&amp;&amp;  $matrix.check($x + 6, $y)
+					&amp;&amp;  $matrix[$y][$x] === true
+					&amp;&amp; !$matrix[$y][($x + 1)]
+					&amp;&amp;  $matrix[$y][($x + 2)]
+					&amp;&amp;  $matrix[$y][($x + 3)]
+					&amp;&amp;  $matrix[$y][($x + 4)]
+					&amp;&amp; !$matrix[$y][($x + 5)]
+					&amp;&amp;  $matrix[$y][($x + 6)]
 					&amp;&amp; (
 						MaskPattern.isWhiteHorizontal($matrix, $width, $y, $x - 4, $x)
 						|| MaskPattern.isWhiteHorizontal($matrix, $width, $y, $x + 7, $x + 11)
@@ -271,13 +280,13 @@ export default class MaskPattern{
 
 				if(
 					$y + 6 &lt; $height
-					&amp;&amp;  $matrix.check($x, $y)
-					&amp;&amp; !$matrix.check($x, $y + 1)
-					&amp;&amp;  $matrix.check($x, $y + 2)
-					&amp;&amp;  $matrix.check($x, $y + 3)
-					&amp;&amp;  $matrix.check($x, $y + 4)
-					&amp;&amp; !$matrix.check($x, $y + 5)
-					&amp;&amp;  $matrix.check($x, $y + 6)
+					&amp;&amp;  $matrix[$y][$x] === true
+					&amp;&amp; !$matrix[($y + 1)][$x]
+					&amp;&amp;  $matrix[($y + 2)][$x]
+					&amp;&amp;  $matrix[($y + 3)][$x]
+					&amp;&amp;  $matrix[($y + 4)][$x]
+					&amp;&amp; !$matrix[($y + 5)][$x]
+					&amp;&amp;  $matrix[($y + 6)][$x]
 					&amp;&amp; (
 						MaskPattern.isWhiteVertical($matrix, $height, $x, $y - 4, $y)
 						|| MaskPattern.isWhiteVertical($matrix, $height, $x, $y + 7, $y + 11)
@@ -289,15 +298,15 @@ export default class MaskPattern{
 			}
 		}
 
-		return $penalties * 40;
+		return $penalties * PENALTY_N3;
 	}
 
 	/**
-	 * @param {QRMatrix} $matrix
-	 * @param {int} $width
-	 * @param {int} $y
-	 * @param {int} $from
-	 * @param {int} $to
+	 * @param {Array} $matrix
+	 * @param {number|int} $width
+	 * @param {number|int} $y
+	 * @param {number|int} $from
+	 * @param {number|int} $to
 	 *
 	 * @returns {boolean}
 	 * @private
@@ -309,7 +318,7 @@ export default class MaskPattern{
 		}
 
 		for(let $x = $from; $x &lt; $to; $x++){
-			if($matrix.check($x, $y)){
+			if($matrix[$y][$x] === true){
 				return false;
 			}
 		}
@@ -318,11 +327,11 @@ export default class MaskPattern{
 	}
 
 	/**
-	 * @param {QRMatrix} $matrix
-	 * @param {int} $height
-	 * @param {int} $x
-	 * @param {int} $from
-	 * @param {int} $to
+	 * @param {Array} $matrix
+	 * @param {number|int} $height
+	 * @param {number|int} $x
+	 * @param {number|int} $from
+	 * @param {number|int} $to
 	 *
 	 * @returns {boolean}
 	 * @private
@@ -334,7 +343,7 @@ export default class MaskPattern{
 		}
 
 		for(let $y = $from; $y &lt; $to; $y++){
-			if($matrix.check($x, $y)){
+			if($matrix[$y][$x] === true){
 				return false;
 			}
 		}
@@ -346,25 +355,25 @@ export default class MaskPattern{
 	 * Apply mask penalty rule 4 and return the penalty. Calculate the ratio of dark cells and give
 	 * penalty if the ratio is far from 50%. It gives 10 penalty for 5% distance.
 	 *
-	 * @param {QRMatrix} $matrix
-	 * @param {int} $height
-	 * @param {int} $width
+	 * @param {Array} $matrix
+	 * @param {number|int} $height
+	 * @param {number|int} $width
 	 *
-	 * @returns {int}
+	 * @returns {number|int}
 	 */
 	static testRule4($matrix, $height, $width){
 		let $darkCells  = 0;
 		let $totalCells = $height * $width;
 
-		for(let $y = 0; $y &lt; $height; $y++){
-			for(let $x = 0; $x &lt; $width; $x++){
-				if($matrix.check($x, $y)){
+		for(let $row of $matrix){
+			for(let $val of $row){
+				if($val === true){
 					$darkCells++;
 				}
 			}
 		}
 
-		return PHPJS.intval((Math.abs($darkCells * 2 - $totalCells) * 10 / $totalCells)) * 10;
+		return PHPJS.intval((Math.abs($darkCells * 2 - $totalCells) * 10 / $totalCells)) * PENALTY_N4;
 	}
 
 }
@@ -378,13 +387,13 @@ export default class MaskPattern{
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="module.exports.html">exports</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_set_canvasImageType">_set_canvasImageType</a></li><li><a href="global.html#_set_circleRadius">_set_circleRadius</a></li><li><a href="global.html#_set_eccLevel">_set_eccLevel</a></li><li><a href="global.html#_set_logoSpaceHeight">_set_logoSpaceHeight</a></li><li><a href="global.html#_set_logoSpaceStartX">_set_logoSpaceStartX</a></li><li><a href="global.html#_set_logoSpaceStartY">_set_logoSpaceStartY</a></li><li><a href="global.html#_set_logoSpaceWidth">_set_logoSpaceWidth</a></li><li><a href="global.html#_set_maskPattern">_set_maskPattern</a></li><li><a href="global.html#_set_quietzoneSize">_set_quietzoneSize</a></li><li><a href="global.html#_set_version">_set_version</a></li><li><a href="global.html#_set_versionMax">_set_versionMax</a></li><li><a href="global.html#_set_versionMin">_set_versionMin</a></li><li><a href="global.html#addAlphaNumSegment">addAlphaNumSegment</a></li><li><a href="global.html#addByteSegment">addByteSegment</a></li><li><a href="global.html#addNumericSegment">addNumericSegment</a></li><li><a href="global.html#addSegment">addSegment</a></li><li><a href="global.html#array_combine">array_combine</a></li><li><a href="global.html#base64encode">base64encode</a></li><li><a href="global.html#CHAR_TO_ORD">CHAR_TO_ORD</a></li><li><a href="global.html#check">check</a></li><li><a href="global.html#checkNeighbours">checkNeighbours</a></li><li><a href="global.html#checkType">checkType</a></li><li><a href="global.html#checkTypeNotIn">checkTypeNotIn</a></li><li><a href="global.html#clampLogoSpaceValue">clampLogoSpaceValue</a></li><li><a href="global.html#clear">clear</a></li><li><a href="global.html#clearSegments">clearSegments</a></li><li><a href="global.html#collectModules">collectModules</a></li><li><a href="global.html#createMarkup">createMarkup</a></li><li><a href="global.html#createMatrix">createMatrix</a></li><li><a href="global.html#dump">dump</a></li><li><a href="global.html#ECC_L">ECC_L</a></li><li><a href="global.html#eccLevel">eccLevel</a></li><li><a href="global.html#exp">exp</a></li><li><a href="global.html#fill_array">fill_array</a></li><li><a href="global.html#flip">flip</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#getAlignmentPattern">getAlignmentPattern</a></li><li><a href="global.html#getBestPattern">getBestPattern</a></li><li><a href="global.html#getBuffer">getBuffer</a></li><li><a href="global.html#getCharCount">getCharCount</a></li><li><a href="global.html#getCoefficient">getCoefficient</a></li><li><a href="global.html#getCoefficients">getCoefficients</a></li><li><a href="global.html#getCssClass">getCssClass</a></li><li><a href="global.html#getDataMode">getDataMode</a></li><li><a href="global.html#getDefaultModuleValue">getDefaultModuleValue</a></li><li><a href="global.html#getDegree">getDegree</a></li><li><a href="global.html#getDimension">getDimension</a></li><li><a href="global.html#getformatPattern">getformatPattern</a></li><li><a href="global.html#getLength">getLength</a></li><li><a href="global.html#getLengthBitsForMode">getLengthBitsForMode</a></li><li><a href="global.html#getLengthBitsForVersion">getLengthBitsForVersion</a></li><li><a href="global.html#getLengthInBits">getLengthInBits</a></li><li><a href="global.html#getLevel">getLevel</a></li><li><a href="global.html#getMask">getMask</a></li><li><a href="global.html#getMatrix">getMatrix</a></li><li><a href="global.html#getMaxBits">getMaxBits</a></li><li><a href="global.html#getModuleValue">getModuleValue</a></li><li><a href="global.html#getOrdinal">getOrdinal</a></li><li><a href="global.html#getPattern">getPattern</a></li><li><a href="global.html#getRSBlocks">getRSBlocks</a></li><li><a href="global.html#getTotalCodewords">getTotalCodewords</a></li><li><a href="global.html#getVersionNumber">getVersionNumber</a></li><li><a href="global.html#getVersionPattern">getVersionPattern</a></li><li><a href="global.html#header">header</a></li><li><a href="global.html#initCustomOutputInterface">initCustomOutputInterface</a></li><li><a href="global.html#initFunctionalPatterns">initFunctionalPatterns</a></li><li><a href="global.html#initOutputInterface">initOutputInterface</a></li><li><a href="global.html#interleaveEcBytes">interleaveEcBytes</a></li><li><a href="global.html#intval">intval</a></li><li><a href="global.html#IS_DARK">IS_DARK</a></li><li><a href="global.html#isset">isset</a></li><li><a href="global.html#isZero">isZero</a></li><li><a href="global.html#json">json</a></li><li><a href="global.html#log">log</a></li><li><a href="global.html#M_ALIGNMENT">M_ALIGNMENT</a></li><li><a href="global.html#M_DARKMODULE">M_DARKMODULE</a></li><li><a href="global.html#M_DATA">M_DATA</a></li><li><a href="global.html#M_FINDER">M_FINDER</a></li><li><a href="global.html#M_FINDER_DOT">M_FINDER_DOT</a></li><li><a href="global.html#M_FORMAT">M_FORMAT</a></li><li><a href="global.html#M_LOGO">M_LOGO</a></li><li><a href="global.html#M_NULL">M_NULL</a></li><li><a href="global.html#M_QUIETZONE">M_QUIETZONE</a></li><li><a href="global.html#M_SEPARATOR">M_SEPARATOR</a></li><li><a href="global.html#M_TEST">M_TEST</a></li><li><a href="global.html#M_TIMING">M_TIMING</a></li><li><a href="global.html#M_VERSION">M_VERSION</a></li><li><a href="global.html#mask">mask</a></li><li><a href="global.html#MASK_PATTERN_AUTO">MASK_PATTERN_AUTO</a></li><li><a href="global.html#maskPattern">maskPattern</a></li><li><a href="global.html#matrix">matrix</a></li><li><a href="global.html#MATRIX_NEIGHBOUR_FLAGS">MATRIX_NEIGHBOUR_FLAGS</a></li><li><a href="global.html#MATRIX_NEIGHBOURS">MATRIX_NEIGHBOURS</a></li><li><a href="global.html#mod">mod</a></li><li><a href="global.html#MODE_INTERFACES">MODE_INTERFACES</a></li><li><a href="global.html#MODE_LENGTH_BITS">MODE_LENGTH_BITS</a></li><li><a href="global.html#MODE_NUMBER">MODE_NUMBER</a></li><li><a href="global.html#module">module</a></li><li><a href="global.html#MODULE_VALUES_KEYS">MODULE_VALUES_KEYS</a></li><li><a href="global.html#moduleValueIsValid">moduleValueIsValid</a></li><li><a href="global.html#multiply">multiply</a></li><li><a href="global.html#ord">ord</a></li><li><a href="global.html#OUTPUT_CUSTOM">OUTPUT_CUSTOM</a></li><li><a href="global.html#OUTPUT_MODE_INTERFACES">OUTPUT_MODE_INTERFACES</a></li><li><a href="global.html#paths">paths</a></li><li><a href="global.html#put">put</a></li><li><a href="global.html#putBit">putBit</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#saveToFile">saveToFile</a></li><li><a href="global.html#set">set</a></li><li><a href="global.html#setAlignmentPattern">setAlignmentPattern</a></li><li><a href="global.html#setDarkModule">setDarkModule</a></li><li><a href="global.html#setData">setData</a></li><li><a href="global.html#setFinderPattern">setFinderPattern</a></li><li><a href="global.html#setFormatInfo">setFormatInfo</a></li><li><a href="global.html#setLogoSpace">setLogoSpace</a></li><li><a href="global.html#setMatrixDimensions">setMatrixDimensions</a></li><li><a href="global.html#setMinMaxVersion">setMinMaxVersion</a></li><li><a href="global.html#setModuleValues">setModuleValues</a></li><li><a href="global.html#setQuietZone">setQuietZone</a></li><li><a href="global.html#setSeparators">setSeparators</a></li><li><a href="global.html#setTimingPattern">setTimingPattern</a></li><li><a href="global.html#setVersionNumber">setVersionNumber</a></li><li><a href="global.html#size">size</a></li><li><a href="global.html#testRule1">testRule1</a></li><li><a href="global.html#testRule2">testRule2</a></li><li><a href="global.html#testRule3">testRule3</a></li><li><a href="global.html#testRule4">testRule4</a></li><li><a href="global.html#text">text</a></li><li><a href="global.html#toHtmlElement">toHtmlElement</a></li><li><a href="global.html#toString">toString</a></li><li><a href="global.html#TOTAL_CODEWORDS">TOTAL_CODEWORDS</a></li><li><a href="global.html#validateString">validateString</a></li><li><a href="global.html#validateStringI">validateStringI</a></li><li><a href="global.html#version">version</a></li><li><a href="global.html#VERSION_AUTO">VERSION_AUTO</a></li><li><a href="global.html#write">write</a></li><li><a href="global.html#writeCodewords">writeCodewords</a></li><li><a href="global.html#writeMatrix">writeMatrix</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="module.exports.html">exports</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CHAR_TO_ORD">CHAR_TO_ORD</a></li><li><a href="global.html#ECC_L">ECC_L</a></li><li><a href="global.html#IS_DARK">IS_DARK</a></li><li><a href="global.html#MASK_PATTERN_AUTO">MASK_PATTERN_AUTO</a></li><li><a href="global.html#MATRIX_NEIGHBOURS">MATRIX_NEIGHBOURS</a></li><li><a href="global.html#MATRIX_NEIGHBOUR_FLAGS">MATRIX_NEIGHBOUR_FLAGS</a></li><li><a href="global.html#MODE_INTERFACES">MODE_INTERFACES</a></li><li><a href="global.html#MODE_LENGTH_BITS">MODE_LENGTH_BITS</a></li><li><a href="global.html#MODE_NUMBER">MODE_NUMBER</a></li><li><a href="global.html#MODULE_VALUES_KEYS">MODULE_VALUES_KEYS</a></li><li><a href="global.html#M_ALIGNMENT">M_ALIGNMENT</a></li><li><a href="global.html#M_ALIGNMENT_DARK">M_ALIGNMENT_DARK</a></li><li><a href="global.html#M_DARKMODULE">M_DARKMODULE</a></li><li><a href="global.html#M_DARKMODULE_LIGHT">M_DARKMODULE_LIGHT</a></li><li><a href="global.html#M_DATA">M_DATA</a></li><li><a href="global.html#M_DATA_DARK">M_DATA_DARK</a></li><li><a href="global.html#M_FINDER">M_FINDER</a></li><li><a href="global.html#M_FINDER_DARK">M_FINDER_DARK</a></li><li><a href="global.html#M_FINDER_DOT">M_FINDER_DOT</a></li><li><a href="global.html#M_FINDER_DOT_LIGHT">M_FINDER_DOT_LIGHT</a></li><li><a href="global.html#M_FORMAT">M_FORMAT</a></li><li><a href="global.html#M_FORMAT_DARK">M_FORMAT_DARK</a></li><li><a href="global.html#M_LOGO">M_LOGO</a></li><li><a href="global.html#M_LOGO_DARK">M_LOGO_DARK</a></li><li><a href="global.html#M_NULL">M_NULL</a></li><li><a href="global.html#M_QUIETZONE">M_QUIETZONE</a></li><li><a href="global.html#M_QUIETZONE_DARK">M_QUIETZONE_DARK</a></li><li><a href="global.html#M_SEPARATOR">M_SEPARATOR</a></li><li><a href="global.html#M_SEPARATOR_DARK">M_SEPARATOR_DARK</a></li><li><a href="global.html#M_TIMING">M_TIMING</a></li><li><a href="global.html#M_TIMING_DARK">M_TIMING_DARK</a></li><li><a href="global.html#M_VERSION">M_VERSION</a></li><li><a href="global.html#M_VERSION_DARK">M_VERSION_DARK</a></li><li><a href="global.html#TOTAL_CODEWORDS">TOTAL_CODEWORDS</a></li><li><a href="global.html#VERSION_AUTO">VERSION_AUTO</a></li><li><a href="global.html#_createMarkup">_createMarkup</a></li><li><a href="global.html#_fromIterable">_fromIterable</a></li><li><a href="global.html#_set_canvasMimeType">_set_canvasMimeType</a></li><li><a href="global.html#_set_circleRadius">_set_circleRadius</a></li><li><a href="global.html#_set_eccLevel">_set_eccLevel</a></li><li><a href="global.html#_set_logoSpaceHeight">_set_logoSpaceHeight</a></li><li><a href="global.html#_set_logoSpaceStartX">_set_logoSpaceStartX</a></li><li><a href="global.html#_set_logoSpaceStartY">_set_logoSpaceStartY</a></li><li><a href="global.html#_set_logoSpaceWidth">_set_logoSpaceWidth</a></li><li><a href="global.html#_set_maskPattern">_set_maskPattern</a></li><li><a href="global.html#_set_quietzoneSize">_set_quietzoneSize</a></li><li><a href="global.html#_set_version">_set_version</a></li><li><a href="global.html#_set_versionMax">_set_versionMax</a></li><li><a href="global.html#_set_versionMin">_set_versionMin</a></li><li><a href="global.html#addAlphaNumSegment">addAlphaNumSegment</a></li><li><a href="global.html#addByteSegment">addByteSegment</a></li><li><a href="global.html#addMatrixModifications">addMatrixModifications</a></li><li><a href="global.html#addNumericSegment">addNumericSegment</a></li><li><a href="global.html#addSegment">addSegment</a></li><li><a href="global.html#ansi8">ansi8</a></li><li><a href="global.html#array_combine">array_combine</a></li><li><a href="global.html#array_fill">array_fill</a></li><li><a href="global.html#check">check</a></li><li><a href="global.html#checkNeighbours">checkNeighbours</a></li><li><a href="global.html#checkType">checkType</a></li><li><a href="global.html#checkTypeIn">checkTypeIn</a></li><li><a href="global.html#clampLogoSpaceValue">clampLogoSpaceValue</a></li><li><a href="global.html#clear">clear</a></li><li><a href="global.html#clearSegments">clearSegments</a></li><li><a href="global.html#clone">clone</a></li><li><a href="global.html#collectModules">collectModules</a></li><li><a href="global.html#createMatrix">createMatrix</a></li><li><a href="global.html#dump">dump</a></li><li><a href="global.html#exp">exp</a></li><li><a href="global.html#flip">flip</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#getAlignmentPattern">getAlignmentPattern</a></li><li><a href="global.html#getBestPattern">getBestPattern</a></li><li><a href="global.html#getBuffer">getBuffer</a></li><li><a href="global.html#getCharCount">getCharCount</a></li><li><a href="global.html#getCoefficient">getCoefficient</a></li><li><a href="global.html#getCoefficients">getCoefficients</a></li><li><a href="global.html#getCssClass">getCssClass</a></li><li><a href="global.html#getDataMode">getDataMode</a></li><li><a href="global.html#getDefaultModuleValue">getDefaultModuleValue</a></li><li><a href="global.html#getDegree">getDegree</a></li><li><a href="global.html#getDimension">getDimension</a></li><li><a href="global.html#getEccLevel">getEccLevel</a></li><li><a href="global.html#getLength">getLength</a></li><li><a href="global.html#getLengthBitsForMode">getLengthBitsForMode</a></li><li><a href="global.html#getLengthBitsForVersion">getLengthBitsForVersion</a></li><li><a href="global.html#getLengthInBits">getLengthInBits</a></li><li><a href="global.html#getLevel">getLevel</a></li><li><a href="global.html#getMask">getMask</a></li><li><a href="global.html#getMaskPattern">getMaskPattern</a></li><li><a href="global.html#getMatrix">getMatrix</a></li><li><a href="global.html#getMaxBits">getMaxBits</a></li><li><a href="global.html#getModuleValue">getModuleValue</a></li><li><a href="global.html#getModuleValueAt">getModuleValueAt</a></li><li><a href="global.html#getOrdinal">getOrdinal</a></li><li><a href="global.html#getOutputDimensions">getOutputDimensions</a></li><li><a href="global.html#getPattern">getPattern</a></li><li><a href="global.html#getQRMatrix">getQRMatrix</a></li><li><a href="global.html#getRSBlocks">getRSBlocks</a></li><li><a href="global.html#getSize">getSize</a></li><li><a href="global.html#getTotalCodewords">getTotalCodewords</a></li><li><a href="global.html#getVersion">getVersion</a></li><li><a href="global.html#getVersionNumber">getVersionNumber</a></li><li><a href="global.html#getVersionPattern">getVersionPattern</a></li><li><a href="global.html#getViewBox">getViewBox</a></li><li><a href="global.html#getformatPattern">getformatPattern</a></li><li><a href="global.html#header">header</a></li><li><a href="global.html#initFunctionalPatterns">initFunctionalPatterns</a></li><li><a href="global.html#initOutputInterface">initOutputInterface</a></li><li><a href="global.html#interleaveEcBytes">interleaveEcBytes</a></li><li><a href="global.html#intval">intval</a></li><li><a href="global.html#invert">invert</a></li><li><a href="global.html#isDark">isDark</a></li><li><a href="global.html#isZero">isZero</a></li><li><a href="global.html#isset">isset</a></li><li><a href="global.html#log">log</a></li><li><a href="global.html#mask">mask</a></li><li><a href="global.html#mod">mod</a></li><li><a href="global.html#module">module</a></li><li><a href="global.html#moduleValueIsValid">moduleValueIsValid</a></li><li><a href="global.html#multiply">multiply</a></li><li><a href="global.html#ord">ord</a></li><li><a href="global.html#path">path</a></li><li><a href="global.html#paths">paths</a></li><li><a href="global.html#prepareModuleValue">prepareModuleValue</a></li><li><a href="global.html#put">put</a></li><li><a href="global.html#putBit">putBit</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#renderMatrix">renderMatrix</a></li><li><a href="global.html#saveToFile">saveToFile</a></li><li><a href="global.html#set">set</a></li><li><a href="global.html#setAlignmentPattern">setAlignmentPattern</a></li><li><a href="global.html#setArea">setArea</a></li><li><a href="global.html#setDarkModule">setDarkModule</a></li><li><a href="global.html#setData">setData</a></li><li><a href="global.html#setFinderPattern">setFinderPattern</a></li><li><a href="global.html#setFormatInfo">setFormatInfo</a></li><li><a href="global.html#setLogoSpace">setLogoSpace</a></li><li><a href="global.html#setMatrixDimensions">setMatrixDimensions</a></li><li><a href="global.html#setMinMaxVersion">setMinMaxVersion</a></li><li><a href="global.html#setModuleValues">setModuleValues</a></li><li><a href="global.html#setQuietZone">setQuietZone</a></li><li><a href="global.html#setSeparators">setSeparators</a></li><li><a href="global.html#setTimingPattern">setTimingPattern</a></li><li><a href="global.html#setVersionNumber">setVersionNumber</a></li><li><a href="global.html#testRule1">testRule1</a></li><li><a href="global.html#testRule2">testRule2</a></li><li><a href="global.html#testRule3">testRule3</a></li><li><a href="global.html#testRule4">testRule4</a></li><li><a href="global.html#toBase64DataURI">toBase64DataURI</a></li><li><a href="global.html#toString">toString</a></li><li><a href="global.html#validateString">validateString</a></li><li><a href="global.html#validateStringI">validateStringI</a></li><li><a href="global.html#write">write</a></li><li><a href="global.html#writeCodewords">writeCodewords</a></li><li><a href="global.html#writeMatrix">writeMatrix</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.11</a> on Tue Aug 09 2022 18:43:15 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Dec 17 2023 07:41:33 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>

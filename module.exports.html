@@ -104,13 +104,86 @@
 
         
             
-<h4 class="name" id="_canvasImageType"><span class="type-signature">(protected) </span>_canvasImageType<span class="type-signature"> :string</span></h4>
+<h4 class="name" id="__workaround__"><span class="type-signature">(protected) </span>__workaround__<span class="type-signature"></span></h4>
 
 
 
 
 <div class="description">
-    canvas image type for bas64/file output
+    because javascript is dumb, and we can't call getters and setters directly we have to this silly workaround.
+if your inherited options class uses magic getters and setters, add the relevant property names to this array
+and call _fromIterable() afterwards:
+
+    constructor($options = null){
+        super();
+        this.__workaround__.push('myMagicProp');
+        this._fromIterable($options)
+    }
+
+
+    let o = new MyExtendedOptions({myMagicProp: 'foo', ...});
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line375">line 375</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="_canvasMimeType"><span class="type-signature">(protected) </span>_canvasMimeType<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    canvas image mime type for bas64/file output
 
 the value may be one of the following (depends on browser/engine):
 
@@ -118,6 +191,8 @@ the value may be one of the following (depends on browser/engine):
 - jpeg
 - bmp
 - webp
+
+the "image/" is prepended internally
 </div>
 
 
@@ -165,7 +240,7 @@ the value may be one of the following (depends on browser/engine):
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line382">line 382</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line343">line 343</a>
     </li></ul></dd>
     
 
@@ -190,7 +265,7 @@ the value may be one of the following (depends on browser/engine):
 
         
             
-<h4 class="name" id="_circleRadius"><span class="type-signature">(protected) </span>_circleRadius<span class="type-signature"> :float</span></h4>
+<h4 class="name" id="_circleRadius"><span class="type-signature">(protected) </span>_circleRadius<span class="type-signature"> :number|float</span></h4>
 
 
 
@@ -205,6 +280,9 @@ the value may be one of the following (depends on browser/engine):
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">float</span>
 
 
@@ -244,7 +322,7 @@ the value may be one of the following (depends on browser/engine):
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line229">line 229</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line216">line 216</a>
     </li></ul></dd>
     
 
@@ -316,7 +394,7 @@ the value may be one of the following (depends on browser/engine):
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Data_QRMatrix.js.html">Data/QRMatrix.js</a>, <a href="Data_QRMatrix.js.html#line40">line 40</a>
+        <a href="Data_QRMatrix.js.html">Data/QRMatrix.js</a>, <a href="Data_QRMatrix.js.html#line41">line 41</a>
     </li></ul></dd>
     
 
@@ -334,7 +412,7 @@ the value may be one of the following (depends on browser/engine):
 
         
             
-<h4 class="name" id="_eccLevel"><span class="type-signature">(protected) </span>_eccLevel<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="_eccLevel"><span class="type-signature">(protected) </span>_eccLevel<span class="type-signature"> :number|int</span></h4>
 
 
 
@@ -356,6 +434,9 @@ QRCode::ECC_X where X is:
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 
 
@@ -395,7 +476,7 @@ QRCode::ECC_X where X is:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line60">line 60</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line61">line 61</a>
     </li></ul></dd>
     
 
@@ -413,7 +494,7 @@ QRCode::ECC_X where X is:
 
         
             
-<h4 class="name" id="_logoSpaceHeight"><span class="type-signature">(protected) </span>_logoSpaceHeight<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="_logoSpaceHeight"><span class="type-signature">(protected) </span>_logoSpaceHeight<span class="type-signature"> :number|int</span></h4>
 
 
 
@@ -428,6 +509,9 @@ QRCode::ECC_X where X is:
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 
 
@@ -467,7 +551,7 @@ QRCode::ECC_X where X is:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line322">line 322</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line281">line 281</a>
     </li></ul></dd>
     
 
@@ -485,7 +569,7 @@ QRCode::ECC_X where X is:
 
         
             
-<h4 class="name" id="_logoSpaceStartX"><span class="type-signature">(protected) </span>_logoSpaceStartX<span class="type-signature"> :int|null</span></h4>
+<h4 class="name" id="_logoSpaceStartX"><span class="type-signature">(protected) </span>_logoSpaceStartX<span class="type-signature"> :number|int|null</span></h4>
 
 
 
@@ -500,6 +584,9 @@ QRCode::ECC_X where X is:
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 |
 
@@ -542,7 +629,7 @@ QRCode::ECC_X where X is:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line330">line 330</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line289">line 289</a>
     </li></ul></dd>
     
 
@@ -560,7 +647,7 @@ QRCode::ECC_X where X is:
 
         
             
-<h4 class="name" id="_logoSpaceStartY"><span class="type-signature">(protected) </span>_logoSpaceStartY<span class="type-signature"> :int|null</span></h4>
+<h4 class="name" id="_logoSpaceStartY"><span class="type-signature">(protected) </span>_logoSpaceStartY<span class="type-signature"> :number|int|null</span></h4>
 
 
 
@@ -575,6 +662,9 @@ QRCode::ECC_X where X is:
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 |
 
@@ -617,7 +707,7 @@ QRCode::ECC_X where X is:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line338">line 338</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line297">line 297</a>
     </li></ul></dd>
     
 
@@ -635,7 +725,7 @@ QRCode::ECC_X where X is:
 
         
             
-<h4 class="name" id="_logoSpaceWidth"><span class="type-signature">(protected) </span>_logoSpaceWidth<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="_logoSpaceWidth"><span class="type-signature">(protected) </span>_logoSpaceWidth<span class="type-signature"> :number|int</span></h4>
 
 
 
@@ -650,6 +740,9 @@ QRCode::ECC_X where X is:
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 
 
@@ -689,7 +782,7 @@ QRCode::ECC_X where X is:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line314">line 314</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line273">line 273</a>
     </li></ul></dd>
     
 
@@ -761,7 +854,7 @@ QRCode::ECC_X where X is:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Data_QRMatrix.js.html">Data/QRMatrix.js</a>, <a href="Data_QRMatrix.js.html#line32">line 32</a>
+        <a href="Data_QRMatrix.js.html">Data/QRMatrix.js</a>, <a href="Data_QRMatrix.js.html#line33">line 33</a>
     </li></ul></dd>
     
 
@@ -779,7 +872,7 @@ QRCode::ECC_X where X is:
 
         
             
-<h4 class="name" id="_maskPattern"><span class="type-signature">(protected) </span>_maskPattern<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="_maskPattern"><span class="type-signature">(protected) </span>_maskPattern<span class="type-signature"> :number|int</span></h4>
 
 
 
@@ -796,6 +889,9 @@ QRCode::ECC_X where X is:
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 
 
@@ -835,7 +931,7 @@ QRCode::ECC_X where X is:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line70">line 70</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line71">line 71</a>
     </li></ul></dd>
     
 
@@ -853,7 +949,7 @@ QRCode::ECC_X where X is:
 
         
             
-<h4 class="name" id="_matrix"><span class="type-signature">(protected) </span>_matrix<span class="type-signature"> :Array</span></h4>
+<h4 class="name" id="_matrix"><span class="type-signature">(protected) </span>_matrix<span class="type-signature"> :Array.&lt;Array.&lt;number>>|Array.&lt;Array.&lt;int>></span></h4>
 
 
 
@@ -868,7 +964,10 @@ QRCode::ECC_X where X is:
     <ul>
         <li>
             
-<span class="param-type">Array</span>
+<span class="param-type">Array.&lt;Array.&lt;number>></span>
+|
+
+<span class="param-type">Array.&lt;Array.&lt;int>></span>
 
 
         </li>
@@ -907,7 +1006,7 @@ QRCode::ECC_X where X is:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Data_QRMatrix.js.html">Data/QRMatrix.js</a>, <a href="Data_QRMatrix.js.html#line56">line 56</a>
+        <a href="Data_QRMatrix.js.html">Data/QRMatrix.js</a>, <a href="Data_QRMatrix.js.html#line57">line 57</a>
     </li></ul></dd>
     
 
@@ -925,7 +1024,7 @@ QRCode::ECC_X where X is:
 
         
             
-<h4 class="name" id="_quietzoneSize"><span class="type-signature">(protected) </span>_quietzoneSize<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="_quietzoneSize"><span class="type-signature">(protected) </span>_quietzoneSize<span class="type-signature"> :number|int</span></h4>
 
 
 
@@ -942,6 +1041,9 @@ internally clamped to [0 ... $moduleCount / 2], defaults to 4 modules
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 
 
@@ -981,7 +1083,7 @@ internally clamped to [0 ... $moduleCount / 2], defaults to 4 modules
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line89">line 89</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line90">line 90</a>
     </li></ul></dd>
     
 
@@ -1053,7 +1155,7 @@ internally clamped to [0 ... $moduleCount / 2], defaults to 4 modules
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Data_QRMatrix.js.html">Data/QRMatrix.js</a>, <a href="Data_QRMatrix.js.html#line48">line 48</a>
+        <a href="Data_QRMatrix.js.html">Data/QRMatrix.js</a>, <a href="Data_QRMatrix.js.html#line49">line 49</a>
     </li></ul></dd>
     
 
@@ -1071,7 +1173,7 @@ internally clamped to [0 ... $moduleCount / 2], defaults to 4 modules
 
         
             
-<h4 class="name" id="_version"><span class="type-signature">(protected) </span>_version<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="_version"><span class="type-signature">(protected) </span>_version<span class="type-signature"> :number|int</span></h4>
 
 
 
@@ -1088,6 +1190,9 @@ internally clamped to [0 ... $moduleCount / 2], defaults to 4 modules
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 
 
@@ -1127,7 +1232,7 @@ internally clamped to [0 ... $moduleCount / 2], defaults to 4 modules
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line27">line 27</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line28">line 28</a>
     </li></ul></dd>
     
 
@@ -1145,7 +1250,7 @@ internally clamped to [0 ... $moduleCount / 2], defaults to 4 modules
 
         
             
-<h4 class="name" id="_versionMax"><span class="type-signature">(protected) </span>_versionMax<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="_versionMax"><span class="type-signature">(protected) </span>_versionMax<span class="type-signature"> :number|int</span></h4>
 
 
 
@@ -1160,6 +1265,9 @@ internally clamped to [0 ... $moduleCount / 2], defaults to 4 modules
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 
 
@@ -1199,7 +1307,7 @@ internally clamped to [0 ... $moduleCount / 2], defaults to 4 modules
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line45">line 45</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line46">line 46</a>
     </li></ul></dd>
     
 
@@ -1217,7 +1325,7 @@ internally clamped to [0 ... $moduleCount / 2], defaults to 4 modules
 
         
             
-<h4 class="name" id="_versionMin"><span class="type-signature">(protected) </span>_versionMin<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="_versionMin"><span class="type-signature">(protected) </span>_versionMin<span class="type-signature"> :number|int</span></h4>
 
 
 
@@ -1234,6 +1342,9 @@ if $version = QRCode.VERSION_AUTO
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 
 
@@ -1273,7 +1384,7 @@ if $version = QRCode.VERSION_AUTO
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line37">line 37</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line38">line 38</a>
     </li></ul></dd>
     
 
@@ -1345,7 +1456,7 @@ if $version = QRCode.VERSION_AUTO
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line306">line 306</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line265">line 265</a>
     </li></ul></dd>
     
 
@@ -1417,7 +1528,7 @@ if $version = QRCode.VERSION_AUTO
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line79">line 79</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line80">line 80</a>
     </li></ul></dd>
     
 
@@ -1503,7 +1614,7 @@ supported in:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line356">line 356</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line315">line 315</a>
     </li></ul></dd>
     
 
@@ -1521,7 +1632,7 @@ supported in:
 
         
             
-<h4 class="name" id="buffer"><span class="type-signature"></span>buffer<span class="type-signature"> :Array</span></h4>
+<h4 class="name" id="buffer"><span class="type-signature"></span>buffer<span class="type-signature"> :Array.&lt;number>|Array.&lt;int></span></h4>
 
 
 
@@ -1536,7 +1647,10 @@ supported in:
     <ul>
         <li>
             
-<span class="param-type">Array</span>
+<span class="param-type">Array.&lt;number></span>
+|
+
+<span class="param-type">Array.&lt;int></span>
 
 
         </li>
@@ -1575,7 +1689,7 @@ supported in:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Common_BitBuffer.js.html">Common/BitBuffer.js</a>, <a href="Common_BitBuffer.js.html#line21">line 21</a>
+        <a href="Common_BitBuffer.js.html">Common/BitBuffer.js</a>, <a href="Common_BitBuffer.js.html#line20">line 20</a>
     </li></ul></dd>
     
 
@@ -1650,7 +1764,7 @@ supported in:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line115">line 115</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line104">line 104</a>
     </li></ul></dd>
     
 
@@ -1722,7 +1836,7 @@ supported in:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line365">line 365</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line324">line 324</a>
     </li></ul></dd>
     
 
@@ -1747,7 +1861,7 @@ supported in:
 
         
             
-<h4 class="name" id="canvasImageQuality"><span class="type-signature"></span>canvasImageQuality<span class="type-signature"> :number</span></h4>
+<h4 class="name" id="canvasImageQuality"><span class="type-signature"></span>canvasImageQuality<span class="type-signature"> :number|float</span></h4>
 
 
 
@@ -1755,7 +1869,7 @@ supported in:
 <div class="description">
     canvas image quality
 
- "A Number between 0 and 1 indicating the image quality to be used when creating images
+ "A number between 0 and 1 indicating the image quality to be used when creating images
   using file formats that support lossy compression (such as image/jpeg or image/webp).
   A user agent will use its default quality value if this option is not specified,
   or if the number is outside the allowed range."
@@ -1768,6 +1882,9 @@ supported in:
         <li>
             
 <span class="param-type">number</span>
+|
+
+<span class="param-type">float</span>
 
 
         </li>
@@ -1806,7 +1923,7 @@ supported in:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line396">line 396</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line357">line 357</a>
     </li></ul></dd>
     
 
@@ -1885,7 +2002,7 @@ supported in:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line198">line 198</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line185">line 185</a>
     </li></ul></dd>
     
 
@@ -1964,7 +2081,7 @@ supported in:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line136">line 136</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line125">line 125</a>
     </li></ul></dd>
     
 
@@ -2037,6 +2154,74 @@ supported in:
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
         <a href="Data_QRDataModeAbstract.js.html">Data/QRDataModeAbstract.js</a>, <a href="Data_QRDataModeAbstract.js.html#line30">line 30</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="dataSegments"><span class="type-signature">(protected) </span>dataSegments<span class="type-signature"> :Array</span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Array</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="QRCode.js.html">QRCode.js</a>, <a href="QRCode.js.html#line51">line 51</a>
     </li></ul></dd>
     
 
@@ -2210,64 +2395,6 @@ supported in:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Data_Kanji.js.html">Data/Kanji.js</a>, <a href="Data_Kanji.js.html#line16">line 16</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="datamode"><span class="type-signature"></span>datamode<span class="type-signature"></span></h4>
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
         <a href="Data_Numeric.js.html">Data/Numeric.js</a>, <a href="Data_Numeric.js.html#line25">line 25</a>
     </li></ul></dd>
     
@@ -2286,7 +2413,7 @@ supported in:
 
         
             
-<h4 class="name" id="datamode"><span class="type-signature">(abstract) </span>datamode<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="datamode"><span class="type-signature">(abstract) </span>datamode<span class="type-signature"> :number|int</span></h4>
 
 
 
@@ -2301,6 +2428,9 @@ supported in:
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 
 
@@ -2341,74 +2471,6 @@ supported in:
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
         <a href="Data_QRDataModeAbstract.js.html">Data/QRDataModeAbstract.js</a>, <a href="Data_QRDataModeAbstract.js.html#line23">line 23</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="dataSegments"><span class="type-signature">(protected) </span>dataSegments<span class="type-signature"> :Array</span></h4>
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">Array</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QRCode.js.html">QRCode.js</a>, <a href="QRCode.js.html#line78">line 78</a>
     </li></ul></dd>
     
 
@@ -2486,7 +2548,7 @@ unexpected outcomes in combination with transparency - to avoid this, set scale 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line221">line 221</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line208">line 208</a>
     </li></ul></dd>
     
 
@@ -2567,7 +2629,7 @@ unexpected outcomes in combination with transparency - to avoid this, set scale 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line289">line 289</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line248">line 248</a>
     </li></ul></dd>
     
 
@@ -2639,7 +2701,7 @@ unexpected outcomes in combination with transparency - to avoid this, set scale 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line122">line 122</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line111">line 111</a>
     </li></ul></dd>
     
 
@@ -2657,7 +2719,7 @@ unexpected outcomes in combination with transparency - to avoid this, set scale 
 
         
             
-<h4 class="name" id="excludeFromConnect"><span class="type-signature"></span>excludeFromConnect<span class="type-signature"> :Array.&lt;int></span></h4>
+<h4 class="name" id="excludeFromConnect"><span class="type-signature"></span>excludeFromConnect<span class="type-signature"> :Array.&lt;number>|Array.&lt;int></span></h4>
 
 
 
@@ -2672,6 +2734,9 @@ unexpected outcomes in combination with transparency - to avoid this, set scale 
     <ul>
         <li>
             
+<span class="param-type">Array.&lt;number></span>
+|
+
 <span class="param-type">Array.&lt;int></span>
 
 
@@ -2711,79 +2776,7 @@ unexpected outcomes in combination with transparency - to avoid this, set scale 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line205">line 205</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="imageBase64"><span class="type-signature"></span>imageBase64<span class="type-signature"> :boolean</span></h4>
-
-
-
-
-<div class="description">
-    toggle base64 or raw image data
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">boolean</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line271">line 271</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line192">line 192</a>
     </li></ul></dd>
     
 
@@ -2857,7 +2850,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line282">line 282</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line241">line 241</a>
     </li></ul></dd>
     
 
@@ -2882,7 +2875,79 @@ if transparency is disabled, a background color should be specified to avoid une
 
         
             
-<h4 class="name" id="keepAsSquare"><span class="type-signature"></span>keepAsSquare<span class="type-signature"> :Array.&lt;int></span></h4>
+<h4 class="name" id="jsonAsBooleans"><span class="type-signature"></span>jsonAsBooleans<span class="type-signature"> :boolean</span></h4>
+
+
+
+
+<div class="description">
+    Whether to return matrix values in JSON as booleans or `$M_TYPE` integers
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">boolean</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line176">line 176</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="keepAsSquare"><span class="type-signature"></span>keepAsSquare<span class="type-signature"> :Array.&lt;number>|Array.&lt;int></span></h4>
 
 
 
@@ -2897,6 +2962,9 @@ if transparency is disabled, a background color should be specified to avoid une
     <ul>
         <li>
             
+<span class="param-type">Array.&lt;number></span>
+|
+
 <span class="param-type">Array.&lt;int></span>
 
 
@@ -2936,7 +3004,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line236">line 236</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line223">line 223</a>
     </li></ul></dd>
     
 
@@ -2954,7 +3022,7 @@ if transparency is disabled, a background color should be specified to avoid une
 
         
             
-<h4 class="name" id="length"><span class="type-signature"></span>length<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="length"><span class="type-signature"></span>length<span class="type-signature"> :number|int</span></h4>
 
 
 
@@ -2969,6 +3037,9 @@ if transparency is disabled, a background color should be specified to avoid une
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 
 
@@ -3008,7 +3079,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Common_BitBuffer.js.html">Common/BitBuffer.js</a>, <a href="Common_BitBuffer.js.html#line28">line 28</a>
+        <a href="Common_BitBuffer.js.html">Common/BitBuffer.js</a>, <a href="Common_BitBuffer.js.html#line27">line 27</a>
     </li></ul></dd>
     
 
@@ -3026,7 +3097,7 @@ if transparency is disabled, a background color should be specified to avoid une
 
         
             
-<h4 class="name" id="length"><span class="type-signature">(protected) </span>length<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="length"><span class="type-signature">(protected) </span>length<span class="type-signature"> :number|int</span></h4>
 
 
 
@@ -3041,6 +3112,9 @@ if transparency is disabled, a background color should be specified to avoid une
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 
 
@@ -3080,151 +3154,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Output_QROutputAbstract.js.html">Output/QROutputAbstract.js</a>, <a href="Output_QROutputAbstract.js.html#line41">line 41</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="markupDark"><span class="type-signature"></span>markupDark<span class="type-signature"> :string</span></h4>
-
-
-
-
-<div class="description">
-    markup substitute for dark (CSS value)
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">string</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line257">line 257</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="markupLight"><span class="type-signature"></span>markupLight<span class="type-signature"> :string</span></h4>
-
-
-
-
-<div class="description">
-    markup substitute for light (CSS value)
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">string</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line264">line 264</a>
+        <a href="Output_QROutputAbstract.js.html">Output/QROutputAbstract.js</a>, <a href="Output_QROutputAbstract.js.html#line49">line 49</a>
     </li></ul></dd>
     
 
@@ -3296,7 +3226,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Output_QROutputAbstract.js.html">Output/QROutputAbstract.js</a>, <a href="Output_QROutputAbstract.js.html#line55">line 55</a>
+        <a href="Output_QROutputAbstract.js.html">Output/QROutputAbstract.js</a>, <a href="Output_QROutputAbstract.js.html#line56">line 56</a>
     </li></ul></dd>
     
 
@@ -3314,14 +3244,126 @@ if transparency is disabled, a background color should be specified to avoid une
 
         
             
-<h4 class="name" id="moduleCount"><span class="type-signature">(protected) </span>moduleCount<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="mimeType"><span class="type-signature"></span>mimeType<span class="type-signature"></span></h4>
 
 
 
 
-<div class="description">
-    the size (side length) of the matrix, including quiet zone (if created)
-</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Output_QRCanvas.js.html">Output/QRCanvas.js</a>, <a href="Output_QRCanvas.js.html#line20">line 20</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="mimeType"><span class="type-signature"></span>mimeType<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Output_QRMarkupSVG.js.html">Output/QRMarkupSVG.js</a>, <a href="Output_QRMarkupSVG.js.html#line24">line 24</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="mimeType"><span class="type-signature">(protected) </span>mimeType<span class="type-signature"> :string</span></h4>
+
+
+
 
 
 
@@ -3329,7 +3371,7 @@ if transparency is disabled, a background color should be specified to avoid une
     <ul>
         <li>
             
-<span class="param-type">int</span>
+<span class="param-type">string</span>
 
 
         </li>
@@ -3368,79 +3410,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Data_QRMatrix.js.html">Data/QRMatrix.js</a>, <a href="Data_QRMatrix.js.html#line64">line 64</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="moduleCount"><span class="type-signature">(protected) </span>moduleCount<span class="type-signature"> :int</span></h4>
-
-
-
-
-<div class="description">
-    the current size of the QR matrix
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">int</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Output_QROutputAbstract.js.html">Output/QROutputAbstract.js</a>, <a href="Output_QROutputAbstract.js.html#line25">line 25</a>
+        <a href="Output_QROutputInterface.js.html">Output/QROutputInterface.js</a>, <a href="Output_QROutputInterface.js.html#line18">line 18</a>
     </li></ul></dd>
     
 
@@ -3450,7 +3420,7 @@ if transparency is disabled, a background color should be specified to avoid une
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>\chillerlan\QRCode\Data\QRMatrix.size()</li>
+            <li>QROutputAbstract.toBase64DataURI()</li>
         </ul>
     </dd>
     
@@ -3465,13 +3435,129 @@ if transparency is disabled, a background color should be specified to avoid une
 
         
             
-<h4 class="name" id="moduleValues"><span class="type-signature">(protected) </span>moduleValues<span class="type-signature"> :Object</span></h4>
+<h4 class="name" id="mimeType"><span class="type-signature"></span>mimeType<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Output_QRStringJSON.js.html">Output/QRStringJSON.js</a>, <a href="Output_QRStringJSON.js.html#line18">line 18</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="mimeType"><span class="type-signature"></span>mimeType<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Output_QRStringText.js.html">Output/QRStringText.js</a>, <a href="Output_QRStringText.js.html#line18">line 18</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="moduleCount"><span class="type-signature">(protected) </span>moduleCount<span class="type-signature"> :number|int</span></h4>
 
 
 
 
 <div class="description">
-    an (optional) array of color values for the several QR matrix parts
+    the size (side length) of the matrix, including quiet zone (if created)
 </div>
 
 
@@ -3480,7 +3566,10 @@ if transparency is disabled, a background color should be specified to avoid une
     <ul>
         <li>
             
-<span class="param-type">Object</span>
+<span class="param-type">number</span>
+|
+
+<span class="param-type">int</span>
 
 
         </li>
@@ -3519,7 +3608,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Output_QROutputAbstract.js.html">Output/QROutputAbstract.js</a>, <a href="Output_QROutputAbstract.js.html#line48">line 48</a>
+        <a href="Data_QRMatrix.js.html">Data/QRMatrix.js</a>, <a href="Data_QRMatrix.js.html#line65">line 65</a>
     </li></ul></dd>
     
 
@@ -3537,7 +3626,161 @@ if transparency is disabled, a background color should be specified to avoid une
 
         
             
-<h4 class="name" id="moduleValues"><span class="type-signature"></span>moduleValues<span class="type-signature"> :Object|null</span></h4>
+<h4 class="name" id="moduleCount"><span class="type-signature">(protected) </span>moduleCount<span class="type-signature"> :number|int</span></h4>
+
+
+
+
+<div class="description">
+    the current size of the QR matrix
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">number</span>
+|
+
+<span class="param-type">int</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Output_QROutputAbstract.js.html">Output/QROutputAbstract.js</a>, <a href="Output_QROutputAbstract.js.html#line26">line 26</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>QRMatrix.getSize()</li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="moduleValues"><span class="type-signature">(protected) </span>moduleValues<span class="type-signature"> :Object.&lt;number, *></span></h4>
+
+
+
+
+<div class="description">
+    an (optional) array of color values for the several QR matrix parts
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object.&lt;number, *></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Output_QROutputAbstract.js.html">Output/QROutputAbstract.js</a>, <a href="Output_QROutputAbstract.js.html#line33">line 33</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="moduleValues"><span class="type-signature"></span>moduleValues<span class="type-signature"> :Object.&lt;number, *>|null</span></h4>
 
 
 
@@ -3555,7 +3798,7 @@ if transparency is disabled, a background color should be specified to avoid une
     <ul>
         <li>
             
-<span class="param-type">Object</span>
+<span class="param-type">Object.&lt;number, *></span>
 |
 
 <span class="param-type">null</span>
@@ -3597,7 +3840,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line299">line 299</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line258">line 258</a>
     </li></ul></dd>
     
 
@@ -3665,7 +3908,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Output_QROutputAbstract.js.html">Output/QROutputAbstract.js</a>, <a href="Output_QROutputAbstract.js.html#line61">line 61</a>
+        <a href="Output_QROutputAbstract.js.html">Output/QROutputAbstract.js</a>, <a href="Output_QROutputAbstract.js.html#line62">line 62</a>
     </li></ul></dd>
     
 
@@ -3733,7 +3976,79 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QRCode.js.html">QRCode.js</a>, <a href="QRCode.js.html#line72">line 72</a>
+        <a href="QRCode.js.html">QRCode.js</a>, <a href="QRCode.js.html#line45">line 45</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="outputBase64"><span class="type-signature"></span>outputBase64<span class="type-signature"> :boolean</span></h4>
+
+
+
+
+<div class="description">
+    toggle base64 or raw image data
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">boolean</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line230">line 230</a>
     </li></ul></dd>
     
 
@@ -3808,7 +4123,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line108">line 108</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line97">line 97</a>
     </li></ul></dd>
     
 
@@ -3826,84 +4141,7 @@ if transparency is disabled, a background color should be specified to avoid une
 
         
             
-<h4 class="name" id="outputType"><span class="type-signature"></span>outputType<span class="type-signature"> :string</span></h4>
-
-
-
-
-<div class="description">
-    The output type
-
-  - QRCode::OUTPUT_MARKUP_XXXX where XXXX = HTML, SVG
-  - QRCode::OUTPUT_IMAGE_XXX where XXX = PNG, GIF, JPG
-  - QRCode::OUTPUT_STRING_XXXX where XXXX = TEXT, JSON
-  - QRCode::OUTPUT_CUSTOM
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">string</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line101">line 101</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="returnMarkupAsHtmlElement"><span class="type-signature"></span>returnMarkupAsHtmlElement<span class="type-signature"> :boolean</span></h4>
+<h4 class="name" id="returnAsDomElement"><span class="type-signature"></span>returnAsDomElement<span class="type-signature"> :boolean</span></h4>
 
 
 
@@ -3957,7 +4195,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line345">line 345</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line304">line 304</a>
     </li></ul></dd>
     
 
@@ -3975,7 +4213,7 @@ if transparency is disabled, a background color should be specified to avoid une
 
         
             
-<h4 class="name" id="scale"><span class="type-signature">(protected) </span>scale<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="scale"><span class="type-signature">(protected) </span>scale<span class="type-signature"> :number|int</span></h4>
 
 
 
@@ -3990,6 +4228,9 @@ if transparency is disabled, a background color should be specified to avoid une
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 
 
@@ -4029,7 +4270,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Output_QROutputAbstract.js.html">Output/QROutputAbstract.js</a>, <a href="Output_QROutputAbstract.js.html#line34">line 34</a>
+        <a href="Output_QROutputAbstract.js.html">Output/QROutputAbstract.js</a>, <a href="Output_QROutputAbstract.js.html#line42">line 42</a>
     </li></ul></dd>
     
 
@@ -4039,7 +4280,7 @@ if transparency is disabled, a background color should be specified to avoid une
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>\chillerlan\QRCode\QROptions.$scale</li>
+            <li>QROptions.$scale</li>
         </ul>
     </dd>
     
@@ -4054,7 +4295,7 @@ if transparency is disabled, a background color should be specified to avoid une
 
         
             
-<h4 class="name" id="scale"><span class="type-signature"></span>scale<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="scale"><span class="type-signature"></span>scale<span class="type-signature"> :number|int</span></h4>
 
 
 
@@ -4069,6 +4310,9 @@ if transparency is disabled, a background color should be specified to avoid une
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 
 
@@ -4108,7 +4352,81 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line129">line 129</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line118">line 118</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="svgAddXmlHeader"><span class="type-signature"></span>svgAddXmlHeader<span class="type-signature"> :boolean</span></h4>
+
+
+
+
+<div class="description">
+    Whether to add an XML header line or not, e.g. to embed the SVG directly in HTML
+
+`<?xml version="1.0" encoding="UTF-8"?>`
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">boolean</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line157">line 157</a>
     </li></ul></dd>
     
 
@@ -4180,7 +4498,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line152">line 152</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line141">line 141</a>
     </li></ul></dd>
     
 
@@ -4205,89 +4523,7 @@ if transparency is disabled, a background color should be specified to avoid une
 
         
             
-<h4 class="name" id="svgHeight"><span class="type-signature"></span>svgHeight<span class="type-signature"> :string|null</span></h4>
-
-
-
-
-<div class="description">
-    optional "height" attribute with the specified value (note that the value is not checked!)
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">string</span>
-|
-
-<span class="param-type">null</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line189">line 189</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/height">https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/height</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="svgOpacity"><span class="type-signature"></span>svgOpacity<span class="type-signature"> :float</span></h4>
+<h4 class="name" id="svgOpacity"><span class="type-signature"></span>svgOpacity<span class="type-signature"> :number|float</span></h4>
 
 
 
@@ -4302,6 +4538,9 @@ if transparency is disabled, a background color should be specified to avoid une
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">float</span>
 
 
@@ -4341,7 +4580,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line143">line 143</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line132">line 132</a>
     </li></ul></dd>
     
 
@@ -4409,7 +4648,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line171">line 171</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line148">line 148</a>
     </li></ul></dd>
     
 
@@ -4434,15 +4673,16 @@ if transparency is disabled, a background color should be specified to avoid une
 
         
             
-<h4 class="name" id="svgViewBoxSize"><span class="type-signature"></span>svgViewBoxSize<span class="type-signature"> :int|null</span></h4>
+<h4 class="name" id="svgUseFillAttributes"><span class="type-signature"></span>svgUseFillAttributes<span class="type-signature"> :boolean</span></h4>
 
 
 
 
 <div class="description">
-    SVG viewBox size. a single integer number which defines width/height of the viewBox attribute.
+    Whether to use the SVG `fill` attributes
 
-viewBox="0 0 x x"
+If set to `true` (default), the `fill` attribute will be set with the module value for the `<path>` element's `$M_TYPE`.
+When set to `false`, the module values map will be ignored and the QR Code may be styled via CSS.
 </div>
 
 
@@ -4451,10 +4691,7 @@ viewBox="0 0 x x"
     <ul>
         <li>
             
-<span class="param-type">int</span>
-|
-
-<span class="param-type">null</span>
+<span class="param-type">boolean</span>
 
 
         </li>
@@ -4493,7 +4730,7 @@ viewBox="0 0 x x"
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line164">line 164</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line169">line 169</a>
     </li></ul></dd>
     
 
@@ -4503,237 +4740,9 @@ viewBox="0 0 x x"
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox">https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox</a></li>
-        
-            <li><a href="https://css-tricks.com/scale-svg/#article-header-id-3">https://css-tricks.com/scale-svg/#article-header-id-3</a></li>
+            <li><a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/fill">https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/fill</a></li>
         </ul>
     </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="svgWidth"><span class="type-signature"></span>svgWidth<span class="type-signature"> :string|null</span></h4>
-
-
-
-
-<div class="description">
-    optional "width" attribute with the specified value (note that the value is not checked!)
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">string</span>
-|
-
-<span class="param-type">null</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line180">line 180</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/width">https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/width</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="textDark"><span class="type-signature"></span>textDark<span class="type-signature"> :string</span></h4>
-
-
-
-
-<div class="description">
-    string substitute for dark
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">string</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line243">line 243</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="textLight"><span class="type-signature"></span>textLight<span class="type-signature"> :string</span></h4>
-
-
-
-
-<div class="description">
-    string substitute for light
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">string</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line250">line 250</a>
-    </li></ul></dd>
-    
-
-    
-
     
 
     
@@ -4842,13 +4851,86 @@ viewBox="0 0 x x"
 
         
             
-<h4 class="name" id="_canvasImageType"><span class="type-signature">(protected) </span>_canvasImageType<span class="type-signature"> :string</span></h4>
+<h4 class="name" id="__workaround__"><span class="type-signature">(protected) </span>__workaround__<span class="type-signature"></span></h4>
 
 
 
 
 <div class="description">
-    canvas image type for bas64/file output
+    because javascript is dumb, and we can't call getters and setters directly we have to this silly workaround.
+if your inherited options class uses magic getters and setters, add the relevant property names to this array
+and call _fromIterable() afterwards:
+
+    constructor($options = null){
+        super();
+        this.__workaround__.push('myMagicProp');
+        this._fromIterable($options)
+    }
+
+
+    let o = new MyExtendedOptions({myMagicProp: 'foo', ...});
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line375">line 375</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="_canvasMimeType"><span class="type-signature">(protected) </span>_canvasMimeType<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    canvas image mime type for bas64/file output
 
 the value may be one of the following (depends on browser/engine):
 
@@ -4856,6 +4938,8 @@ the value may be one of the following (depends on browser/engine):
 - jpeg
 - bmp
 - webp
+
+the "image/" is prepended internally
 </div>
 
 
@@ -4903,7 +4987,7 @@ the value may be one of the following (depends on browser/engine):
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line382">line 382</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line343">line 343</a>
     </li></ul></dd>
     
 
@@ -4928,7 +5012,7 @@ the value may be one of the following (depends on browser/engine):
 
         
             
-<h4 class="name" id="_circleRadius"><span class="type-signature">(protected) </span>_circleRadius<span class="type-signature"> :float</span></h4>
+<h4 class="name" id="_circleRadius"><span class="type-signature">(protected) </span>_circleRadius<span class="type-signature"> :number|float</span></h4>
 
 
 
@@ -4943,6 +5027,9 @@ the value may be one of the following (depends on browser/engine):
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">float</span>
 
 
@@ -4982,7 +5069,7 @@ the value may be one of the following (depends on browser/engine):
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line229">line 229</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line216">line 216</a>
     </li></ul></dd>
     
 
@@ -5054,7 +5141,7 @@ the value may be one of the following (depends on browser/engine):
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Data_QRMatrix.js.html">Data/QRMatrix.js</a>, <a href="Data_QRMatrix.js.html#line40">line 40</a>
+        <a href="Data_QRMatrix.js.html">Data/QRMatrix.js</a>, <a href="Data_QRMatrix.js.html#line41">line 41</a>
     </li></ul></dd>
     
 
@@ -5072,7 +5159,7 @@ the value may be one of the following (depends on browser/engine):
 
         
             
-<h4 class="name" id="_eccLevel"><span class="type-signature">(protected) </span>_eccLevel<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="_eccLevel"><span class="type-signature">(protected) </span>_eccLevel<span class="type-signature"> :number|int</span></h4>
 
 
 
@@ -5094,6 +5181,9 @@ QRCode::ECC_X where X is:
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 
 
@@ -5133,7 +5223,7 @@ QRCode::ECC_X where X is:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line60">line 60</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line61">line 61</a>
     </li></ul></dd>
     
 
@@ -5151,7 +5241,7 @@ QRCode::ECC_X where X is:
 
         
             
-<h4 class="name" id="_logoSpaceHeight"><span class="type-signature">(protected) </span>_logoSpaceHeight<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="_logoSpaceHeight"><span class="type-signature">(protected) </span>_logoSpaceHeight<span class="type-signature"> :number|int</span></h4>
 
 
 
@@ -5166,6 +5256,9 @@ QRCode::ECC_X where X is:
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 
 
@@ -5205,7 +5298,7 @@ QRCode::ECC_X where X is:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line322">line 322</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line281">line 281</a>
     </li></ul></dd>
     
 
@@ -5223,7 +5316,7 @@ QRCode::ECC_X where X is:
 
         
             
-<h4 class="name" id="_logoSpaceStartX"><span class="type-signature">(protected) </span>_logoSpaceStartX<span class="type-signature"> :int|null</span></h4>
+<h4 class="name" id="_logoSpaceStartX"><span class="type-signature">(protected) </span>_logoSpaceStartX<span class="type-signature"> :number|int|null</span></h4>
 
 
 
@@ -5238,6 +5331,9 @@ QRCode::ECC_X where X is:
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 |
 
@@ -5280,7 +5376,7 @@ QRCode::ECC_X where X is:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line330">line 330</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line289">line 289</a>
     </li></ul></dd>
     
 
@@ -5298,7 +5394,7 @@ QRCode::ECC_X where X is:
 
         
             
-<h4 class="name" id="_logoSpaceStartY"><span class="type-signature">(protected) </span>_logoSpaceStartY<span class="type-signature"> :int|null</span></h4>
+<h4 class="name" id="_logoSpaceStartY"><span class="type-signature">(protected) </span>_logoSpaceStartY<span class="type-signature"> :number|int|null</span></h4>
 
 
 
@@ -5313,6 +5409,9 @@ QRCode::ECC_X where X is:
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 |
 
@@ -5355,7 +5454,7 @@ QRCode::ECC_X where X is:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line338">line 338</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line297">line 297</a>
     </li></ul></dd>
     
 
@@ -5373,7 +5472,7 @@ QRCode::ECC_X where X is:
 
         
             
-<h4 class="name" id="_logoSpaceWidth"><span class="type-signature">(protected) </span>_logoSpaceWidth<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="_logoSpaceWidth"><span class="type-signature">(protected) </span>_logoSpaceWidth<span class="type-signature"> :number|int</span></h4>
 
 
 
@@ -5388,6 +5487,9 @@ QRCode::ECC_X where X is:
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 
 
@@ -5427,7 +5529,7 @@ QRCode::ECC_X where X is:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line314">line 314</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line273">line 273</a>
     </li></ul></dd>
     
 
@@ -5499,7 +5601,7 @@ QRCode::ECC_X where X is:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Data_QRMatrix.js.html">Data/QRMatrix.js</a>, <a href="Data_QRMatrix.js.html#line32">line 32</a>
+        <a href="Data_QRMatrix.js.html">Data/QRMatrix.js</a>, <a href="Data_QRMatrix.js.html#line33">line 33</a>
     </li></ul></dd>
     
 
@@ -5517,7 +5619,7 @@ QRCode::ECC_X where X is:
 
         
             
-<h4 class="name" id="_maskPattern"><span class="type-signature">(protected) </span>_maskPattern<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="_maskPattern"><span class="type-signature">(protected) </span>_maskPattern<span class="type-signature"> :number|int</span></h4>
 
 
 
@@ -5534,6 +5636,9 @@ QRCode::ECC_X where X is:
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 
 
@@ -5573,7 +5678,7 @@ QRCode::ECC_X where X is:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line70">line 70</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line71">line 71</a>
     </li></ul></dd>
     
 
@@ -5591,7 +5696,7 @@ QRCode::ECC_X where X is:
 
         
             
-<h4 class="name" id="_matrix"><span class="type-signature">(protected) </span>_matrix<span class="type-signature"> :Array</span></h4>
+<h4 class="name" id="_matrix"><span class="type-signature">(protected) </span>_matrix<span class="type-signature"> :Array.&lt;Array.&lt;number>>|Array.&lt;Array.&lt;int>></span></h4>
 
 
 
@@ -5606,7 +5711,10 @@ QRCode::ECC_X where X is:
     <ul>
         <li>
             
-<span class="param-type">Array</span>
+<span class="param-type">Array.&lt;Array.&lt;number>></span>
+|
+
+<span class="param-type">Array.&lt;Array.&lt;int>></span>
 
 
         </li>
@@ -5645,7 +5753,7 @@ QRCode::ECC_X where X is:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Data_QRMatrix.js.html">Data/QRMatrix.js</a>, <a href="Data_QRMatrix.js.html#line56">line 56</a>
+        <a href="Data_QRMatrix.js.html">Data/QRMatrix.js</a>, <a href="Data_QRMatrix.js.html#line57">line 57</a>
     </li></ul></dd>
     
 
@@ -5663,7 +5771,7 @@ QRCode::ECC_X where X is:
 
         
             
-<h4 class="name" id="_quietzoneSize"><span class="type-signature">(protected) </span>_quietzoneSize<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="_quietzoneSize"><span class="type-signature">(protected) </span>_quietzoneSize<span class="type-signature"> :number|int</span></h4>
 
 
 
@@ -5680,6 +5788,9 @@ internally clamped to [0 ... $moduleCount / 2], defaults to 4 modules
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 
 
@@ -5719,7 +5830,7 @@ internally clamped to [0 ... $moduleCount / 2], defaults to 4 modules
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line89">line 89</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line90">line 90</a>
     </li></ul></dd>
     
 
@@ -5791,7 +5902,7 @@ internally clamped to [0 ... $moduleCount / 2], defaults to 4 modules
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Data_QRMatrix.js.html">Data/QRMatrix.js</a>, <a href="Data_QRMatrix.js.html#line48">line 48</a>
+        <a href="Data_QRMatrix.js.html">Data/QRMatrix.js</a>, <a href="Data_QRMatrix.js.html#line49">line 49</a>
     </li></ul></dd>
     
 
@@ -5809,7 +5920,7 @@ internally clamped to [0 ... $moduleCount / 2], defaults to 4 modules
 
         
             
-<h4 class="name" id="_version"><span class="type-signature">(protected) </span>_version<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="_version"><span class="type-signature">(protected) </span>_version<span class="type-signature"> :number|int</span></h4>
 
 
 
@@ -5826,6 +5937,9 @@ internally clamped to [0 ... $moduleCount / 2], defaults to 4 modules
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 
 
@@ -5865,7 +5979,7 @@ internally clamped to [0 ... $moduleCount / 2], defaults to 4 modules
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line27">line 27</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line28">line 28</a>
     </li></ul></dd>
     
 
@@ -5883,7 +5997,7 @@ internally clamped to [0 ... $moduleCount / 2], defaults to 4 modules
 
         
             
-<h4 class="name" id="_versionMax"><span class="type-signature">(protected) </span>_versionMax<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="_versionMax"><span class="type-signature">(protected) </span>_versionMax<span class="type-signature"> :number|int</span></h4>
 
 
 
@@ -5898,6 +6012,9 @@ internally clamped to [0 ... $moduleCount / 2], defaults to 4 modules
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 
 
@@ -5937,7 +6054,7 @@ internally clamped to [0 ... $moduleCount / 2], defaults to 4 modules
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line45">line 45</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line46">line 46</a>
     </li></ul></dd>
     
 
@@ -5955,7 +6072,7 @@ internally clamped to [0 ... $moduleCount / 2], defaults to 4 modules
 
         
             
-<h4 class="name" id="_versionMin"><span class="type-signature">(protected) </span>_versionMin<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="_versionMin"><span class="type-signature">(protected) </span>_versionMin<span class="type-signature"> :number|int</span></h4>
 
 
 
@@ -5972,6 +6089,9 @@ if $version = QRCode.VERSION_AUTO
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 
 
@@ -6011,7 +6131,7 @@ if $version = QRCode.VERSION_AUTO
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line37">line 37</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line38">line 38</a>
     </li></ul></dd>
     
 
@@ -6083,7 +6203,7 @@ if $version = QRCode.VERSION_AUTO
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line306">line 306</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line265">line 265</a>
     </li></ul></dd>
     
 
@@ -6155,7 +6275,7 @@ if $version = QRCode.VERSION_AUTO
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line79">line 79</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line80">line 80</a>
     </li></ul></dd>
     
 
@@ -6241,7 +6361,7 @@ supported in:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line356">line 356</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line315">line 315</a>
     </li></ul></dd>
     
 
@@ -6259,7 +6379,7 @@ supported in:
 
         
             
-<h4 class="name" id="buffer"><span class="type-signature"></span>buffer<span class="type-signature"> :Array</span></h4>
+<h4 class="name" id="buffer"><span class="type-signature"></span>buffer<span class="type-signature"> :Array.&lt;number>|Array.&lt;int></span></h4>
 
 
 
@@ -6274,7 +6394,10 @@ supported in:
     <ul>
         <li>
             
-<span class="param-type">Array</span>
+<span class="param-type">Array.&lt;number></span>
+|
+
+<span class="param-type">Array.&lt;int></span>
 
 
         </li>
@@ -6313,7 +6436,7 @@ supported in:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Common_BitBuffer.js.html">Common/BitBuffer.js</a>, <a href="Common_BitBuffer.js.html#line21">line 21</a>
+        <a href="Common_BitBuffer.js.html">Common/BitBuffer.js</a>, <a href="Common_BitBuffer.js.html#line20">line 20</a>
     </li></ul></dd>
     
 
@@ -6388,7 +6511,7 @@ supported in:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line115">line 115</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line104">line 104</a>
     </li></ul></dd>
     
 
@@ -6460,7 +6583,7 @@ supported in:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line365">line 365</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line324">line 324</a>
     </li></ul></dd>
     
 
@@ -6485,7 +6608,7 @@ supported in:
 
         
             
-<h4 class="name" id="canvasImageQuality"><span class="type-signature"></span>canvasImageQuality<span class="type-signature"> :number</span></h4>
+<h4 class="name" id="canvasImageQuality"><span class="type-signature"></span>canvasImageQuality<span class="type-signature"> :number|float</span></h4>
 
 
 
@@ -6493,7 +6616,7 @@ supported in:
 <div class="description">
     canvas image quality
 
- "A Number between 0 and 1 indicating the image quality to be used when creating images
+ "A number between 0 and 1 indicating the image quality to be used when creating images
   using file formats that support lossy compression (such as image/jpeg or image/webp).
   A user agent will use its default quality value if this option is not specified,
   or if the number is outside the allowed range."
@@ -6506,6 +6629,9 @@ supported in:
         <li>
             
 <span class="param-type">number</span>
+|
+
+<span class="param-type">float</span>
 
 
         </li>
@@ -6544,7 +6670,7 @@ supported in:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line396">line 396</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line357">line 357</a>
     </li></ul></dd>
     
 
@@ -6623,7 +6749,7 @@ supported in:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line198">line 198</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line185">line 185</a>
     </li></ul></dd>
     
 
@@ -6702,7 +6828,7 @@ supported in:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line136">line 136</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line125">line 125</a>
     </li></ul></dd>
     
 
@@ -6775,6 +6901,74 @@ supported in:
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
         <a href="Data_QRDataModeAbstract.js.html">Data/QRDataModeAbstract.js</a>, <a href="Data_QRDataModeAbstract.js.html#line30">line 30</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="dataSegments"><span class="type-signature">(protected) </span>dataSegments<span class="type-signature"> :Array</span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Array</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="QRCode.js.html">QRCode.js</a>, <a href="QRCode.js.html#line51">line 51</a>
     </li></ul></dd>
     
 
@@ -6948,64 +7142,6 @@ supported in:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Data_Kanji.js.html">Data/Kanji.js</a>, <a href="Data_Kanji.js.html#line16">line 16</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="datamode"><span class="type-signature"></span>datamode<span class="type-signature"></span></h4>
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
         <a href="Data_Numeric.js.html">Data/Numeric.js</a>, <a href="Data_Numeric.js.html#line25">line 25</a>
     </li></ul></dd>
     
@@ -7024,7 +7160,7 @@ supported in:
 
         
             
-<h4 class="name" id="datamode"><span class="type-signature">(abstract) </span>datamode<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="datamode"><span class="type-signature">(abstract) </span>datamode<span class="type-signature"> :number|int</span></h4>
 
 
 
@@ -7039,6 +7175,9 @@ supported in:
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 
 
@@ -7079,74 +7218,6 @@ supported in:
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
         <a href="Data_QRDataModeAbstract.js.html">Data/QRDataModeAbstract.js</a>, <a href="Data_QRDataModeAbstract.js.html#line23">line 23</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="dataSegments"><span class="type-signature">(protected) </span>dataSegments<span class="type-signature"> :Array</span></h4>
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">Array</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QRCode.js.html">QRCode.js</a>, <a href="QRCode.js.html#line78">line 78</a>
     </li></ul></dd>
     
 
@@ -7224,7 +7295,7 @@ unexpected outcomes in combination with transparency - to avoid this, set scale 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line221">line 221</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line208">line 208</a>
     </li></ul></dd>
     
 
@@ -7305,7 +7376,7 @@ unexpected outcomes in combination with transparency - to avoid this, set scale 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line289">line 289</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line248">line 248</a>
     </li></ul></dd>
     
 
@@ -7377,7 +7448,7 @@ unexpected outcomes in combination with transparency - to avoid this, set scale 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line122">line 122</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line111">line 111</a>
     </li></ul></dd>
     
 
@@ -7395,7 +7466,7 @@ unexpected outcomes in combination with transparency - to avoid this, set scale 
 
         
             
-<h4 class="name" id="excludeFromConnect"><span class="type-signature"></span>excludeFromConnect<span class="type-signature"> :Array.&lt;int></span></h4>
+<h4 class="name" id="excludeFromConnect"><span class="type-signature"></span>excludeFromConnect<span class="type-signature"> :Array.&lt;number>|Array.&lt;int></span></h4>
 
 
 
@@ -7410,6 +7481,9 @@ unexpected outcomes in combination with transparency - to avoid this, set scale 
     <ul>
         <li>
             
+<span class="param-type">Array.&lt;number></span>
+|
+
 <span class="param-type">Array.&lt;int></span>
 
 
@@ -7449,79 +7523,7 @@ unexpected outcomes in combination with transparency - to avoid this, set scale 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line205">line 205</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="imageBase64"><span class="type-signature"></span>imageBase64<span class="type-signature"> :boolean</span></h4>
-
-
-
-
-<div class="description">
-    toggle base64 or raw image data
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">boolean</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line271">line 271</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line192">line 192</a>
     </li></ul></dd>
     
 
@@ -7595,7 +7597,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line282">line 282</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line241">line 241</a>
     </li></ul></dd>
     
 
@@ -7620,7 +7622,79 @@ if transparency is disabled, a background color should be specified to avoid une
 
         
             
-<h4 class="name" id="keepAsSquare"><span class="type-signature"></span>keepAsSquare<span class="type-signature"> :Array.&lt;int></span></h4>
+<h4 class="name" id="jsonAsBooleans"><span class="type-signature"></span>jsonAsBooleans<span class="type-signature"> :boolean</span></h4>
+
+
+
+
+<div class="description">
+    Whether to return matrix values in JSON as booleans or `$M_TYPE` integers
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">boolean</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line176">line 176</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="keepAsSquare"><span class="type-signature"></span>keepAsSquare<span class="type-signature"> :Array.&lt;number>|Array.&lt;int></span></h4>
 
 
 
@@ -7635,6 +7709,9 @@ if transparency is disabled, a background color should be specified to avoid une
     <ul>
         <li>
             
+<span class="param-type">Array.&lt;number></span>
+|
+
 <span class="param-type">Array.&lt;int></span>
 
 
@@ -7674,7 +7751,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line236">line 236</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line223">line 223</a>
     </li></ul></dd>
     
 
@@ -7692,7 +7769,7 @@ if transparency is disabled, a background color should be specified to avoid une
 
         
             
-<h4 class="name" id="length"><span class="type-signature"></span>length<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="length"><span class="type-signature"></span>length<span class="type-signature"> :number|int</span></h4>
 
 
 
@@ -7707,6 +7784,9 @@ if transparency is disabled, a background color should be specified to avoid une
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 
 
@@ -7746,7 +7826,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Common_BitBuffer.js.html">Common/BitBuffer.js</a>, <a href="Common_BitBuffer.js.html#line28">line 28</a>
+        <a href="Common_BitBuffer.js.html">Common/BitBuffer.js</a>, <a href="Common_BitBuffer.js.html#line27">line 27</a>
     </li></ul></dd>
     
 
@@ -7764,7 +7844,7 @@ if transparency is disabled, a background color should be specified to avoid une
 
         
             
-<h4 class="name" id="length"><span class="type-signature">(protected) </span>length<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="length"><span class="type-signature">(protected) </span>length<span class="type-signature"> :number|int</span></h4>
 
 
 
@@ -7779,6 +7859,9 @@ if transparency is disabled, a background color should be specified to avoid une
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 
 
@@ -7818,151 +7901,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Output_QROutputAbstract.js.html">Output/QROutputAbstract.js</a>, <a href="Output_QROutputAbstract.js.html#line41">line 41</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="markupDark"><span class="type-signature"></span>markupDark<span class="type-signature"> :string</span></h4>
-
-
-
-
-<div class="description">
-    markup substitute for dark (CSS value)
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">string</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line257">line 257</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="markupLight"><span class="type-signature"></span>markupLight<span class="type-signature"> :string</span></h4>
-
-
-
-
-<div class="description">
-    markup substitute for light (CSS value)
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">string</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line264">line 264</a>
+        <a href="Output_QROutputAbstract.js.html">Output/QROutputAbstract.js</a>, <a href="Output_QROutputAbstract.js.html#line49">line 49</a>
     </li></ul></dd>
     
 
@@ -8034,7 +7973,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Output_QROutputAbstract.js.html">Output/QROutputAbstract.js</a>, <a href="Output_QROutputAbstract.js.html#line55">line 55</a>
+        <a href="Output_QROutputAbstract.js.html">Output/QROutputAbstract.js</a>, <a href="Output_QROutputAbstract.js.html#line56">line 56</a>
     </li></ul></dd>
     
 
@@ -8052,14 +7991,126 @@ if transparency is disabled, a background color should be specified to avoid une
 
         
             
-<h4 class="name" id="moduleCount"><span class="type-signature">(protected) </span>moduleCount<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="mimeType"><span class="type-signature"></span>mimeType<span class="type-signature"></span></h4>
 
 
 
 
-<div class="description">
-    the size (side length) of the matrix, including quiet zone (if created)
-</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Output_QRCanvas.js.html">Output/QRCanvas.js</a>, <a href="Output_QRCanvas.js.html#line20">line 20</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="mimeType"><span class="type-signature"></span>mimeType<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Output_QRMarkupSVG.js.html">Output/QRMarkupSVG.js</a>, <a href="Output_QRMarkupSVG.js.html#line24">line 24</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="mimeType"><span class="type-signature">(protected) </span>mimeType<span class="type-signature"> :string</span></h4>
+
+
+
 
 
 
@@ -8067,7 +8118,7 @@ if transparency is disabled, a background color should be specified to avoid une
     <ul>
         <li>
             
-<span class="param-type">int</span>
+<span class="param-type">string</span>
 
 
         </li>
@@ -8106,79 +8157,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Data_QRMatrix.js.html">Data/QRMatrix.js</a>, <a href="Data_QRMatrix.js.html#line64">line 64</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="moduleCount"><span class="type-signature">(protected) </span>moduleCount<span class="type-signature"> :int</span></h4>
-
-
-
-
-<div class="description">
-    the current size of the QR matrix
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">int</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Output_QROutputAbstract.js.html">Output/QROutputAbstract.js</a>, <a href="Output_QROutputAbstract.js.html#line25">line 25</a>
+        <a href="Output_QROutputInterface.js.html">Output/QROutputInterface.js</a>, <a href="Output_QROutputInterface.js.html#line18">line 18</a>
     </li></ul></dd>
     
 
@@ -8188,7 +8167,7 @@ if transparency is disabled, a background color should be specified to avoid une
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>\chillerlan\QRCode\Data\QRMatrix.size()</li>
+            <li>QROutputAbstract.toBase64DataURI()</li>
         </ul>
     </dd>
     
@@ -8203,13 +8182,129 @@ if transparency is disabled, a background color should be specified to avoid une
 
         
             
-<h4 class="name" id="moduleValues"><span class="type-signature">(protected) </span>moduleValues<span class="type-signature"> :Object</span></h4>
+<h4 class="name" id="mimeType"><span class="type-signature"></span>mimeType<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Output_QRStringJSON.js.html">Output/QRStringJSON.js</a>, <a href="Output_QRStringJSON.js.html#line18">line 18</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="mimeType"><span class="type-signature"></span>mimeType<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Output_QRStringText.js.html">Output/QRStringText.js</a>, <a href="Output_QRStringText.js.html#line18">line 18</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="moduleCount"><span class="type-signature">(protected) </span>moduleCount<span class="type-signature"> :number|int</span></h4>
 
 
 
 
 <div class="description">
-    an (optional) array of color values for the several QR matrix parts
+    the size (side length) of the matrix, including quiet zone (if created)
 </div>
 
 
@@ -8218,7 +8313,10 @@ if transparency is disabled, a background color should be specified to avoid une
     <ul>
         <li>
             
-<span class="param-type">Object</span>
+<span class="param-type">number</span>
+|
+
+<span class="param-type">int</span>
 
 
         </li>
@@ -8257,7 +8355,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Output_QROutputAbstract.js.html">Output/QROutputAbstract.js</a>, <a href="Output_QROutputAbstract.js.html#line48">line 48</a>
+        <a href="Data_QRMatrix.js.html">Data/QRMatrix.js</a>, <a href="Data_QRMatrix.js.html#line65">line 65</a>
     </li></ul></dd>
     
 
@@ -8275,7 +8373,161 @@ if transparency is disabled, a background color should be specified to avoid une
 
         
             
-<h4 class="name" id="moduleValues"><span class="type-signature"></span>moduleValues<span class="type-signature"> :Object|null</span></h4>
+<h4 class="name" id="moduleCount"><span class="type-signature">(protected) </span>moduleCount<span class="type-signature"> :number|int</span></h4>
+
+
+
+
+<div class="description">
+    the current size of the QR matrix
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">number</span>
+|
+
+<span class="param-type">int</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Output_QROutputAbstract.js.html">Output/QROutputAbstract.js</a>, <a href="Output_QROutputAbstract.js.html#line26">line 26</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>QRMatrix.getSize()</li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="moduleValues"><span class="type-signature">(protected) </span>moduleValues<span class="type-signature"> :Object.&lt;number, *></span></h4>
+
+
+
+
+<div class="description">
+    an (optional) array of color values for the several QR matrix parts
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object.&lt;number, *></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Output_QROutputAbstract.js.html">Output/QROutputAbstract.js</a>, <a href="Output_QROutputAbstract.js.html#line33">line 33</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="moduleValues"><span class="type-signature"></span>moduleValues<span class="type-signature"> :Object.&lt;number, *>|null</span></h4>
 
 
 
@@ -8293,7 +8545,7 @@ if transparency is disabled, a background color should be specified to avoid une
     <ul>
         <li>
             
-<span class="param-type">Object</span>
+<span class="param-type">Object.&lt;number, *></span>
 |
 
 <span class="param-type">null</span>
@@ -8335,7 +8587,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line299">line 299</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line258">line 258</a>
     </li></ul></dd>
     
 
@@ -8403,7 +8655,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Output_QROutputAbstract.js.html">Output/QROutputAbstract.js</a>, <a href="Output_QROutputAbstract.js.html#line61">line 61</a>
+        <a href="Output_QROutputAbstract.js.html">Output/QROutputAbstract.js</a>, <a href="Output_QROutputAbstract.js.html#line62">line 62</a>
     </li></ul></dd>
     
 
@@ -8471,7 +8723,79 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QRCode.js.html">QRCode.js</a>, <a href="QRCode.js.html#line72">line 72</a>
+        <a href="QRCode.js.html">QRCode.js</a>, <a href="QRCode.js.html#line45">line 45</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="outputBase64"><span class="type-signature"></span>outputBase64<span class="type-signature"> :boolean</span></h4>
+
+
+
+
+<div class="description">
+    toggle base64 or raw image data
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">boolean</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line230">line 230</a>
     </li></ul></dd>
     
 
@@ -8546,7 +8870,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line108">line 108</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line97">line 97</a>
     </li></ul></dd>
     
 
@@ -8564,84 +8888,7 @@ if transparency is disabled, a background color should be specified to avoid une
 
         
             
-<h4 class="name" id="outputType"><span class="type-signature"></span>outputType<span class="type-signature"> :string</span></h4>
-
-
-
-
-<div class="description">
-    The output type
-
-  - QRCode::OUTPUT_MARKUP_XXXX where XXXX = HTML, SVG
-  - QRCode::OUTPUT_IMAGE_XXX where XXX = PNG, GIF, JPG
-  - QRCode::OUTPUT_STRING_XXXX where XXXX = TEXT, JSON
-  - QRCode::OUTPUT_CUSTOM
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">string</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line101">line 101</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="returnMarkupAsHtmlElement"><span class="type-signature"></span>returnMarkupAsHtmlElement<span class="type-signature"> :boolean</span></h4>
+<h4 class="name" id="returnAsDomElement"><span class="type-signature"></span>returnAsDomElement<span class="type-signature"> :boolean</span></h4>
 
 
 
@@ -8695,7 +8942,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line345">line 345</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line304">line 304</a>
     </li></ul></dd>
     
 
@@ -8713,7 +8960,7 @@ if transparency is disabled, a background color should be specified to avoid une
 
         
             
-<h4 class="name" id="scale"><span class="type-signature">(protected) </span>scale<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="scale"><span class="type-signature">(protected) </span>scale<span class="type-signature"> :number|int</span></h4>
 
 
 
@@ -8728,6 +8975,9 @@ if transparency is disabled, a background color should be specified to avoid une
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 
 
@@ -8767,7 +9017,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Output_QROutputAbstract.js.html">Output/QROutputAbstract.js</a>, <a href="Output_QROutputAbstract.js.html#line34">line 34</a>
+        <a href="Output_QROutputAbstract.js.html">Output/QROutputAbstract.js</a>, <a href="Output_QROutputAbstract.js.html#line42">line 42</a>
     </li></ul></dd>
     
 
@@ -8777,7 +9027,7 @@ if transparency is disabled, a background color should be specified to avoid une
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>\chillerlan\QRCode\QROptions.$scale</li>
+            <li>QROptions.$scale</li>
         </ul>
     </dd>
     
@@ -8792,7 +9042,7 @@ if transparency is disabled, a background color should be specified to avoid une
 
         
             
-<h4 class="name" id="scale"><span class="type-signature"></span>scale<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="scale"><span class="type-signature"></span>scale<span class="type-signature"> :number|int</span></h4>
 
 
 
@@ -8807,6 +9057,9 @@ if transparency is disabled, a background color should be specified to avoid une
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">int</span>
 
 
@@ -8846,7 +9099,81 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line129">line 129</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line118">line 118</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="svgAddXmlHeader"><span class="type-signature"></span>svgAddXmlHeader<span class="type-signature"> :boolean</span></h4>
+
+
+
+
+<div class="description">
+    Whether to add an XML header line or not, e.g. to embed the SVG directly in HTML
+
+`<?xml version="1.0" encoding="UTF-8"?>`
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">boolean</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line157">line 157</a>
     </li></ul></dd>
     
 
@@ -8918,7 +9245,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line152">line 152</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line141">line 141</a>
     </li></ul></dd>
     
 
@@ -8943,89 +9270,7 @@ if transparency is disabled, a background color should be specified to avoid une
 
         
             
-<h4 class="name" id="svgHeight"><span class="type-signature"></span>svgHeight<span class="type-signature"> :string|null</span></h4>
-
-
-
-
-<div class="description">
-    optional "height" attribute with the specified value (note that the value is not checked!)
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">string</span>
-|
-
-<span class="param-type">null</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line189">line 189</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/height">https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/height</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="svgOpacity"><span class="type-signature"></span>svgOpacity<span class="type-signature"> :float</span></h4>
+<h4 class="name" id="svgOpacity"><span class="type-signature"></span>svgOpacity<span class="type-signature"> :number|float</span></h4>
 
 
 
@@ -9040,6 +9285,9 @@ if transparency is disabled, a background color should be specified to avoid une
     <ul>
         <li>
             
+<span class="param-type">number</span>
+|
+
 <span class="param-type">float</span>
 
 
@@ -9079,7 +9327,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line143">line 143</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line132">line 132</a>
     </li></ul></dd>
     
 
@@ -9147,7 +9395,7 @@ if transparency is disabled, a background color should be specified to avoid une
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line171">line 171</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line148">line 148</a>
     </li></ul></dd>
     
 
@@ -9172,15 +9420,16 @@ if transparency is disabled, a background color should be specified to avoid une
 
         
             
-<h4 class="name" id="svgViewBoxSize"><span class="type-signature"></span>svgViewBoxSize<span class="type-signature"> :int|null</span></h4>
+<h4 class="name" id="svgUseFillAttributes"><span class="type-signature"></span>svgUseFillAttributes<span class="type-signature"> :boolean</span></h4>
 
 
 
 
 <div class="description">
-    SVG viewBox size. a single integer number which defines width/height of the viewBox attribute.
+    Whether to use the SVG `fill` attributes
 
-viewBox="0 0 x x"
+If set to `true` (default), the `fill` attribute will be set with the module value for the `<path>` element's `$M_TYPE`.
+When set to `false`, the module values map will be ignored and the QR Code may be styled via CSS.
 </div>
 
 
@@ -9189,10 +9438,7 @@ viewBox="0 0 x x"
     <ul>
         <li>
             
-<span class="param-type">int</span>
-|
-
-<span class="param-type">null</span>
+<span class="param-type">boolean</span>
 
 
         </li>
@@ -9231,7 +9477,7 @@ viewBox="0 0 x x"
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line164">line 164</a>
+        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line169">line 169</a>
     </li></ul></dd>
     
 
@@ -9241,237 +9487,9 @@ viewBox="0 0 x x"
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox">https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox</a></li>
-        
-            <li><a href="https://css-tricks.com/scale-svg/#article-header-id-3">https://css-tricks.com/scale-svg/#article-header-id-3</a></li>
+            <li><a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/fill">https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/fill</a></li>
         </ul>
     </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="svgWidth"><span class="type-signature"></span>svgWidth<span class="type-signature"> :string|null</span></h4>
-
-
-
-
-<div class="description">
-    optional "width" attribute with the specified value (note that the value is not checked!)
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">string</span>
-|
-
-<span class="param-type">null</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line180">line 180</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/width">https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/width</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="textDark"><span class="type-signature"></span>textDark<span class="type-signature"> :string</span></h4>
-
-
-
-
-<div class="description">
-    string substitute for dark
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">string</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line243">line 243</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="textLight"><span class="type-signature"></span>textLight<span class="type-signature"> :string</span></h4>
-
-
-
-
-<div class="description">
-    string substitute for light
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">string</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QROptions.js.html">QROptions.js</a>, <a href="QROptions.js.html#line250">line 250</a>
-    </li></ul></dd>
-    
-
-    
-
     
 
     
@@ -9500,13 +9518,13 @@ viewBox="0 0 x x"
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="module.exports.html">exports</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_set_canvasImageType">_set_canvasImageType</a></li><li><a href="global.html#_set_circleRadius">_set_circleRadius</a></li><li><a href="global.html#_set_eccLevel">_set_eccLevel</a></li><li><a href="global.html#_set_logoSpaceHeight">_set_logoSpaceHeight</a></li><li><a href="global.html#_set_logoSpaceStartX">_set_logoSpaceStartX</a></li><li><a href="global.html#_set_logoSpaceStartY">_set_logoSpaceStartY</a></li><li><a href="global.html#_set_logoSpaceWidth">_set_logoSpaceWidth</a></li><li><a href="global.html#_set_maskPattern">_set_maskPattern</a></li><li><a href="global.html#_set_quietzoneSize">_set_quietzoneSize</a></li><li><a href="global.html#_set_version">_set_version</a></li><li><a href="global.html#_set_versionMax">_set_versionMax</a></li><li><a href="global.html#_set_versionMin">_set_versionMin</a></li><li><a href="global.html#addAlphaNumSegment">addAlphaNumSegment</a></li><li><a href="global.html#addByteSegment">addByteSegment</a></li><li><a href="global.html#addNumericSegment">addNumericSegment</a></li><li><a href="global.html#addSegment">addSegment</a></li><li><a href="global.html#array_combine">array_combine</a></li><li><a href="global.html#base64encode">base64encode</a></li><li><a href="global.html#CHAR_TO_ORD">CHAR_TO_ORD</a></li><li><a href="global.html#check">check</a></li><li><a href="global.html#checkNeighbours">checkNeighbours</a></li><li><a href="global.html#checkType">checkType</a></li><li><a href="global.html#checkTypeNotIn">checkTypeNotIn</a></li><li><a href="global.html#clampLogoSpaceValue">clampLogoSpaceValue</a></li><li><a href="global.html#clear">clear</a></li><li><a href="global.html#clearSegments">clearSegments</a></li><li><a href="global.html#collectModules">collectModules</a></li><li><a href="global.html#createMarkup">createMarkup</a></li><li><a href="global.html#createMatrix">createMatrix</a></li><li><a href="global.html#dump">dump</a></li><li><a href="global.html#ECC_L">ECC_L</a></li><li><a href="global.html#eccLevel">eccLevel</a></li><li><a href="global.html#exp">exp</a></li><li><a href="global.html#fill_array">fill_array</a></li><li><a href="global.html#flip">flip</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#getAlignmentPattern">getAlignmentPattern</a></li><li><a href="global.html#getBestPattern">getBestPattern</a></li><li><a href="global.html#getBuffer">getBuffer</a></li><li><a href="global.html#getCharCount">getCharCount</a></li><li><a href="global.html#getCoefficient">getCoefficient</a></li><li><a href="global.html#getCoefficients">getCoefficients</a></li><li><a href="global.html#getCssClass">getCssClass</a></li><li><a href="global.html#getDataMode">getDataMode</a></li><li><a href="global.html#getDefaultModuleValue">getDefaultModuleValue</a></li><li><a href="global.html#getDegree">getDegree</a></li><li><a href="global.html#getDimension">getDimension</a></li><li><a href="global.html#getformatPattern">getformatPattern</a></li><li><a href="global.html#getLength">getLength</a></li><li><a href="global.html#getLengthBitsForMode">getLengthBitsForMode</a></li><li><a href="global.html#getLengthBitsForVersion">getLengthBitsForVersion</a></li><li><a href="global.html#getLengthInBits">getLengthInBits</a></li><li><a href="global.html#getLevel">getLevel</a></li><li><a href="global.html#getMask">getMask</a></li><li><a href="global.html#getMatrix">getMatrix</a></li><li><a href="global.html#getMaxBits">getMaxBits</a></li><li><a href="global.html#getModuleValue">getModuleValue</a></li><li><a href="global.html#getOrdinal">getOrdinal</a></li><li><a href="global.html#getPattern">getPattern</a></li><li><a href="global.html#getRSBlocks">getRSBlocks</a></li><li><a href="global.html#getTotalCodewords">getTotalCodewords</a></li><li><a href="global.html#getVersionNumber">getVersionNumber</a></li><li><a href="global.html#getVersionPattern">getVersionPattern</a></li><li><a href="global.html#header">header</a></li><li><a href="global.html#initCustomOutputInterface">initCustomOutputInterface</a></li><li><a href="global.html#initFunctionalPatterns">initFunctionalPatterns</a></li><li><a href="global.html#initOutputInterface">initOutputInterface</a></li><li><a href="global.html#interleaveEcBytes">interleaveEcBytes</a></li><li><a href="global.html#intval">intval</a></li><li><a href="global.html#IS_DARK">IS_DARK</a></li><li><a href="global.html#isset">isset</a></li><li><a href="global.html#isZero">isZero</a></li><li><a href="global.html#json">json</a></li><li><a href="global.html#log">log</a></li><li><a href="global.html#M_ALIGNMENT">M_ALIGNMENT</a></li><li><a href="global.html#M_DARKMODULE">M_DARKMODULE</a></li><li><a href="global.html#M_DATA">M_DATA</a></li><li><a href="global.html#M_FINDER">M_FINDER</a></li><li><a href="global.html#M_FINDER_DOT">M_FINDER_DOT</a></li><li><a href="global.html#M_FORMAT">M_FORMAT</a></li><li><a href="global.html#M_LOGO">M_LOGO</a></li><li><a href="global.html#M_NULL">M_NULL</a></li><li><a href="global.html#M_QUIETZONE">M_QUIETZONE</a></li><li><a href="global.html#M_SEPARATOR">M_SEPARATOR</a></li><li><a href="global.html#M_TEST">M_TEST</a></li><li><a href="global.html#M_TIMING">M_TIMING</a></li><li><a href="global.html#M_VERSION">M_VERSION</a></li><li><a href="global.html#mask">mask</a></li><li><a href="global.html#MASK_PATTERN_AUTO">MASK_PATTERN_AUTO</a></li><li><a href="global.html#maskPattern">maskPattern</a></li><li><a href="global.html#matrix">matrix</a></li><li><a href="global.html#MATRIX_NEIGHBOUR_FLAGS">MATRIX_NEIGHBOUR_FLAGS</a></li><li><a href="global.html#MATRIX_NEIGHBOURS">MATRIX_NEIGHBOURS</a></li><li><a href="global.html#mod">mod</a></li><li><a href="global.html#MODE_INTERFACES">MODE_INTERFACES</a></li><li><a href="global.html#MODE_LENGTH_BITS">MODE_LENGTH_BITS</a></li><li><a href="global.html#MODE_NUMBER">MODE_NUMBER</a></li><li><a href="global.html#module">module</a></li><li><a href="global.html#MODULE_VALUES_KEYS">MODULE_VALUES_KEYS</a></li><li><a href="global.html#moduleValueIsValid">moduleValueIsValid</a></li><li><a href="global.html#multiply">multiply</a></li><li><a href="global.html#ord">ord</a></li><li><a href="global.html#OUTPUT_CUSTOM">OUTPUT_CUSTOM</a></li><li><a href="global.html#OUTPUT_MODE_INTERFACES">OUTPUT_MODE_INTERFACES</a></li><li><a href="global.html#paths">paths</a></li><li><a href="global.html#put">put</a></li><li><a href="global.html#putBit">putBit</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#saveToFile">saveToFile</a></li><li><a href="global.html#set">set</a></li><li><a href="global.html#setAlignmentPattern">setAlignmentPattern</a></li><li><a href="global.html#setDarkModule">setDarkModule</a></li><li><a href="global.html#setData">setData</a></li><li><a href="global.html#setFinderPattern">setFinderPattern</a></li><li><a href="global.html#setFormatInfo">setFormatInfo</a></li><li><a href="global.html#setLogoSpace">setLogoSpace</a></li><li><a href="global.html#setMatrixDimensions">setMatrixDimensions</a></li><li><a href="global.html#setMinMaxVersion">setMinMaxVersion</a></li><li><a href="global.html#setModuleValues">setModuleValues</a></li><li><a href="global.html#setQuietZone">setQuietZone</a></li><li><a href="global.html#setSeparators">setSeparators</a></li><li><a href="global.html#setTimingPattern">setTimingPattern</a></li><li><a href="global.html#setVersionNumber">setVersionNumber</a></li><li><a href="global.html#size">size</a></li><li><a href="global.html#testRule1">testRule1</a></li><li><a href="global.html#testRule2">testRule2</a></li><li><a href="global.html#testRule3">testRule3</a></li><li><a href="global.html#testRule4">testRule4</a></li><li><a href="global.html#text">text</a></li><li><a href="global.html#toHtmlElement">toHtmlElement</a></li><li><a href="global.html#toString">toString</a></li><li><a href="global.html#TOTAL_CODEWORDS">TOTAL_CODEWORDS</a></li><li><a href="global.html#validateString">validateString</a></li><li><a href="global.html#validateStringI">validateStringI</a></li><li><a href="global.html#version">version</a></li><li><a href="global.html#VERSION_AUTO">VERSION_AUTO</a></li><li><a href="global.html#write">write</a></li><li><a href="global.html#writeCodewords">writeCodewords</a></li><li><a href="global.html#writeMatrix">writeMatrix</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="module.exports.html">exports</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CHAR_TO_ORD">CHAR_TO_ORD</a></li><li><a href="global.html#ECC_L">ECC_L</a></li><li><a href="global.html#IS_DARK">IS_DARK</a></li><li><a href="global.html#MASK_PATTERN_AUTO">MASK_PATTERN_AUTO</a></li><li><a href="global.html#MATRIX_NEIGHBOURS">MATRIX_NEIGHBOURS</a></li><li><a href="global.html#MATRIX_NEIGHBOUR_FLAGS">MATRIX_NEIGHBOUR_FLAGS</a></li><li><a href="global.html#MODE_INTERFACES">MODE_INTERFACES</a></li><li><a href="global.html#MODE_LENGTH_BITS">MODE_LENGTH_BITS</a></li><li><a href="global.html#MODE_NUMBER">MODE_NUMBER</a></li><li><a href="global.html#MODULE_VALUES_KEYS">MODULE_VALUES_KEYS</a></li><li><a href="global.html#M_ALIGNMENT">M_ALIGNMENT</a></li><li><a href="global.html#M_ALIGNMENT_DARK">M_ALIGNMENT_DARK</a></li><li><a href="global.html#M_DARKMODULE">M_DARKMODULE</a></li><li><a href="global.html#M_DARKMODULE_LIGHT">M_DARKMODULE_LIGHT</a></li><li><a href="global.html#M_DATA">M_DATA</a></li><li><a href="global.html#M_DATA_DARK">M_DATA_DARK</a></li><li><a href="global.html#M_FINDER">M_FINDER</a></li><li><a href="global.html#M_FINDER_DARK">M_FINDER_DARK</a></li><li><a href="global.html#M_FINDER_DOT">M_FINDER_DOT</a></li><li><a href="global.html#M_FINDER_DOT_LIGHT">M_FINDER_DOT_LIGHT</a></li><li><a href="global.html#M_FORMAT">M_FORMAT</a></li><li><a href="global.html#M_FORMAT_DARK">M_FORMAT_DARK</a></li><li><a href="global.html#M_LOGO">M_LOGO</a></li><li><a href="global.html#M_LOGO_DARK">M_LOGO_DARK</a></li><li><a href="global.html#M_NULL">M_NULL</a></li><li><a href="global.html#M_QUIETZONE">M_QUIETZONE</a></li><li><a href="global.html#M_QUIETZONE_DARK">M_QUIETZONE_DARK</a></li><li><a href="global.html#M_SEPARATOR">M_SEPARATOR</a></li><li><a href="global.html#M_SEPARATOR_DARK">M_SEPARATOR_DARK</a></li><li><a href="global.html#M_TIMING">M_TIMING</a></li><li><a href="global.html#M_TIMING_DARK">M_TIMING_DARK</a></li><li><a href="global.html#M_VERSION">M_VERSION</a></li><li><a href="global.html#M_VERSION_DARK">M_VERSION_DARK</a></li><li><a href="global.html#TOTAL_CODEWORDS">TOTAL_CODEWORDS</a></li><li><a href="global.html#VERSION_AUTO">VERSION_AUTO</a></li><li><a href="global.html#_createMarkup">_createMarkup</a></li><li><a href="global.html#_fromIterable">_fromIterable</a></li><li><a href="global.html#_set_canvasMimeType">_set_canvasMimeType</a></li><li><a href="global.html#_set_circleRadius">_set_circleRadius</a></li><li><a href="global.html#_set_eccLevel">_set_eccLevel</a></li><li><a href="global.html#_set_logoSpaceHeight">_set_logoSpaceHeight</a></li><li><a href="global.html#_set_logoSpaceStartX">_set_logoSpaceStartX</a></li><li><a href="global.html#_set_logoSpaceStartY">_set_logoSpaceStartY</a></li><li><a href="global.html#_set_logoSpaceWidth">_set_logoSpaceWidth</a></li><li><a href="global.html#_set_maskPattern">_set_maskPattern</a></li><li><a href="global.html#_set_quietzoneSize">_set_quietzoneSize</a></li><li><a href="global.html#_set_version">_set_version</a></li><li><a href="global.html#_set_versionMax">_set_versionMax</a></li><li><a href="global.html#_set_versionMin">_set_versionMin</a></li><li><a href="global.html#addAlphaNumSegment">addAlphaNumSegment</a></li><li><a href="global.html#addByteSegment">addByteSegment</a></li><li><a href="global.html#addMatrixModifications">addMatrixModifications</a></li><li><a href="global.html#addNumericSegment">addNumericSegment</a></li><li><a href="global.html#addSegment">addSegment</a></li><li><a href="global.html#ansi8">ansi8</a></li><li><a href="global.html#array_combine">array_combine</a></li><li><a href="global.html#array_fill">array_fill</a></li><li><a href="global.html#check">check</a></li><li><a href="global.html#checkNeighbours">checkNeighbours</a></li><li><a href="global.html#checkType">checkType</a></li><li><a href="global.html#checkTypeIn">checkTypeIn</a></li><li><a href="global.html#clampLogoSpaceValue">clampLogoSpaceValue</a></li><li><a href="global.html#clear">clear</a></li><li><a href="global.html#clearSegments">clearSegments</a></li><li><a href="global.html#clone">clone</a></li><li><a href="global.html#collectModules">collectModules</a></li><li><a href="global.html#createMatrix">createMatrix</a></li><li><a href="global.html#dump">dump</a></li><li><a href="global.html#exp">exp</a></li><li><a href="global.html#flip">flip</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#getAlignmentPattern">getAlignmentPattern</a></li><li><a href="global.html#getBestPattern">getBestPattern</a></li><li><a href="global.html#getBuffer">getBuffer</a></li><li><a href="global.html#getCharCount">getCharCount</a></li><li><a href="global.html#getCoefficient">getCoefficient</a></li><li><a href="global.html#getCoefficients">getCoefficients</a></li><li><a href="global.html#getCssClass">getCssClass</a></li><li><a href="global.html#getDataMode">getDataMode</a></li><li><a href="global.html#getDefaultModuleValue">getDefaultModuleValue</a></li><li><a href="global.html#getDegree">getDegree</a></li><li><a href="global.html#getDimension">getDimension</a></li><li><a href="global.html#getEccLevel">getEccLevel</a></li><li><a href="global.html#getLength">getLength</a></li><li><a href="global.html#getLengthBitsForMode">getLengthBitsForMode</a></li><li><a href="global.html#getLengthBitsForVersion">getLengthBitsForVersion</a></li><li><a href="global.html#getLengthInBits">getLengthInBits</a></li><li><a href="global.html#getLevel">getLevel</a></li><li><a href="global.html#getMask">getMask</a></li><li><a href="global.html#getMaskPattern">getMaskPattern</a></li><li><a href="global.html#getMatrix">getMatrix</a></li><li><a href="global.html#getMaxBits">getMaxBits</a></li><li><a href="global.html#getModuleValue">getModuleValue</a></li><li><a href="global.html#getModuleValueAt">getModuleValueAt</a></li><li><a href="global.html#getOrdinal">getOrdinal</a></li><li><a href="global.html#getOutputDimensions">getOutputDimensions</a></li><li><a href="global.html#getPattern">getPattern</a></li><li><a href="global.html#getQRMatrix">getQRMatrix</a></li><li><a href="global.html#getRSBlocks">getRSBlocks</a></li><li><a href="global.html#getSize">getSize</a></li><li><a href="global.html#getTotalCodewords">getTotalCodewords</a></li><li><a href="global.html#getVersion">getVersion</a></li><li><a href="global.html#getVersionNumber">getVersionNumber</a></li><li><a href="global.html#getVersionPattern">getVersionPattern</a></li><li><a href="global.html#getViewBox">getViewBox</a></li><li><a href="global.html#getformatPattern">getformatPattern</a></li><li><a href="global.html#header">header</a></li><li><a href="global.html#initFunctionalPatterns">initFunctionalPatterns</a></li><li><a href="global.html#initOutputInterface">initOutputInterface</a></li><li><a href="global.html#interleaveEcBytes">interleaveEcBytes</a></li><li><a href="global.html#intval">intval</a></li><li><a href="global.html#invert">invert</a></li><li><a href="global.html#isDark">isDark</a></li><li><a href="global.html#isZero">isZero</a></li><li><a href="global.html#isset">isset</a></li><li><a href="global.html#log">log</a></li><li><a href="global.html#mask">mask</a></li><li><a href="global.html#mod">mod</a></li><li><a href="global.html#module">module</a></li><li><a href="global.html#moduleValueIsValid">moduleValueIsValid</a></li><li><a href="global.html#multiply">multiply</a></li><li><a href="global.html#ord">ord</a></li><li><a href="global.html#path">path</a></li><li><a href="global.html#paths">paths</a></li><li><a href="global.html#prepareModuleValue">prepareModuleValue</a></li><li><a href="global.html#put">put</a></li><li><a href="global.html#putBit">putBit</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#renderMatrix">renderMatrix</a></li><li><a href="global.html#saveToFile">saveToFile</a></li><li><a href="global.html#set">set</a></li><li><a href="global.html#setAlignmentPattern">setAlignmentPattern</a></li><li><a href="global.html#setArea">setArea</a></li><li><a href="global.html#setDarkModule">setDarkModule</a></li><li><a href="global.html#setData">setData</a></li><li><a href="global.html#setFinderPattern">setFinderPattern</a></li><li><a href="global.html#setFormatInfo">setFormatInfo</a></li><li><a href="global.html#setLogoSpace">setLogoSpace</a></li><li><a href="global.html#setMatrixDimensions">setMatrixDimensions</a></li><li><a href="global.html#setMinMaxVersion">setMinMaxVersion</a></li><li><a href="global.html#setModuleValues">setModuleValues</a></li><li><a href="global.html#setQuietZone">setQuietZone</a></li><li><a href="global.html#setSeparators">setSeparators</a></li><li><a href="global.html#setTimingPattern">setTimingPattern</a></li><li><a href="global.html#setVersionNumber">setVersionNumber</a></li><li><a href="global.html#testRule1">testRule1</a></li><li><a href="global.html#testRule2">testRule2</a></li><li><a href="global.html#testRule3">testRule3</a></li><li><a href="global.html#testRule4">testRule4</a></li><li><a href="global.html#toBase64DataURI">toBase64DataURI</a></li><li><a href="global.html#toString">toString</a></li><li><a href="global.html#validateString">validateString</a></li><li><a href="global.html#validateStringI">validateStringI</a></li><li><a href="global.html#write">write</a></li><li><a href="global.html#writeCodewords">writeCodewords</a></li><li><a href="global.html#writeMatrix">writeMatrix</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.11</a> on Tue Aug 09 2022 18:43:15 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Dec 17 2023 07:41:34 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -37,19 +37,13 @@ import QROptions from './QROptions.js';
 import MaskPattern from './Common/MaskPattern.js';
 import AlphaNum from './Data/AlphaNum.js';
 import Byte from './Data/Byte.js';
-//import Kanji from './Data/Kanji.js';
 import Numeric from './Data/Numeric.js';
-import QRCodeDataException from './Data/QRCodeDataException.js';
 import QRData from './Data/QRData.js';
 import QRCodeOutputException from './Output/QRCodeOutputException.js';
-import QROutputAbstract from './Output/QROutputAbstract.js';
+import QROutputInterface from './Output/QROutputInterface.js';
 import PHPJS from './Common/PHPJS.js';
-import QRMarkupSVG from './Output/QRMarkupSVG.js';
-import QRMarkupHTML from './Output/QRMarkupHTML.js';
-import QRString from './Output/QRString.js';
-import QRCanvas from './Output/QRCanvas.js';
 import {
-	MASK_PATTERN_AUTO, MODE_ALPHANUM, MODE_BYTE, MODE_NUMBER, OUTPUT_CUSTOM, OUTPUT_MODES
+	MASK_PATTERN_AUTO, MODE_ALPHANUM, MODE_BYTE, MODE_NUMBER
 } from './Common/constants.js';
 
 /**
@@ -57,28 +51,7 @@ import {
  *
  * @type {string[]}
  */
-const MODE_INTERFACES = PHPJS.array_combine([
-	MODE_NUMBER,
-	MODE_ALPHANUM,
-//	MODE_KANJI, // we ignore Kanji for now
-	MODE_BYTE,
-], [
-	Numeric,
-	AlphaNum,
-//	Kanji,
-	Byte,
-]);
-
-/**
- * Map of built-in output modes => modules
- */
-const OUTPUT_MODE_INTERFACES = PHPJS.array_combine(OUTPUT_MODES, [
-	QRMarkupSVG,
-	QRMarkupHTML,
-	QRString,
-	QRString,
-	QRCanvas,
-]);
+const MODE_INTERFACES = PHPJS.array_combine([MODE_NUMBER, MODE_ALPHANUM, MODE_BYTE], [Numeric, AlphaNum, Byte]);
 
 /**
  * Turns a text string into a Model 2 QR Code
@@ -140,83 +113,90 @@ export default class QRCode{
 			}
 		}
 
-		return this.initOutputInterface().dump($file);
+		return this.renderMatrix(this.getQRMatrix(), $file);
+	}
+
+	/**
+	 * Renders a QR Code for the given QRMatrix and QROptions, saves $file optionally
+	 *
+	 * @param {QRMatrix} $QRMatrix
+	 * @param {string|null} $file
+	 * @returns {*}
+	 */
+	renderMatrix($QRMatrix, $file = null){
+		return this.initOutputInterface($QRMatrix).dump($file ?? this.options.cachefile);
 	}
 
 	/**
 	 * Returns a QRMatrix object for the given $data and current QROptions
 	 *
 	 * @returns {QRMatrix}
-	 * @throws \chillerlan\QRCode\Data\QRCodeDataException
+	 * @throws {QRCodeDataException}
 	 */
-	getMatrix(){
+	getQRMatrix(){
+		let $QRMatrix = new QRData(this.options, this.dataSegments).writeMatrix();
 
-		if(!this.dataSegments.length){
-			throw new QRCodeDataException('QRCode::getMatrix() No data given.');
-		}
-
-		let $dataInterface = new QRData(this.options, this.dataSegments);
-		let $maskPattern   = this.options.maskPattern === MASK_PATTERN_AUTO
-			? MaskPattern.getBestPattern($dataInterface)
+		let $maskPattern = this.options.maskPattern === MASK_PATTERN_AUTO
+			? MaskPattern.getBestPattern($QRMatrix)
 			: new MaskPattern(this.options.maskPattern);
 
-		let $matrix = $dataInterface.writeMatrix($maskPattern);
+		$QRMatrix.setFormatInfo($maskPattern).mask($maskPattern);
 
-		// add matrix modifications after mask pattern evaluation and before handing over to output
+		return this.addMatrixModifications($QRMatrix);
+	}
+
+	/**
+	 * add matrix modifications after mask pattern evaluation and before handing over to output
+	 *
+	 * @param {QRMatrix} $QRMatrix
+	 * @returns {QRMatrix}
+	 * @protected
+	 */
+	addMatrixModifications($QRMatrix){
+
 		if(this.options.addLogoSpace){
-			$matrix.setLogoSpace(
-				this.options.logoSpaceWidth,
-				this.options.logoSpaceHeight,
+			let $logoSpaceWidth  = this.options.logoSpaceWidth;
+			let $logoSpaceHeight = this.options.logoSpaceHeight;
+
+			// check whether one of the dimensions was omitted
+			if($logoSpaceWidth === null || $logoSpaceHeight === null){
+				$logoSpaceWidth  = ($logoSpaceWidth ?? $logoSpaceHeight ?? 0);
+				$logoSpaceHeight = null;
+			}
+
+			$QRMatrix.setLogoSpace(
+				$logoSpaceWidth,
+				$logoSpaceHeight,
 				this.options.logoSpaceStartX,
 				this.options.logoSpaceStartY
 			);
 		}
 
 		if(this.options.addQuietzone){
-			$matrix.setQuietZone(this.options.quietzoneSize);
+			$QRMatrix.setQuietZone(this.options.quietzoneSize);
 		}
 
-		return $matrix;
+		return $QRMatrix;
 	}
 
 	/**
-	 * returns a fresh (built-in) QROutputInterface
+	 * initializes a fresh built-in or custom QROutputInterface
 	 *
+	 * @param {QRMatrix} $QRMatrix
 	 * @returns {QROutputAbstract}
-	 * @throws \chillerlan\QRCode\Output\QRCodeOutputException
+	 * @throws {QRCodeOutputException}
 	 * @protected
 	 */
-	initOutputInterface(){
-
-		if(this.options.outputType === OUTPUT_CUSTOM){
-			return this.initCustomOutputInterface();
-		}
-
-		let $outputInterface = OUTPUT_MODE_INTERFACES[this.options.outputType] || false;
-
-		if($outputInterface){
-			return new $outputInterface(this.options, this.getMatrix());
-		}
-
-		throw new QRCodeOutputException('invalid output type');
-	}
-
-	/**
-	 * initializes a custom output module after checking the existence of the class and if it implemnts the required interface
-	 *
-	 * @throws \chillerlan\QRCode\Output\QRCodeOutputException
-	 * @protected
-	 */
-	initCustomOutputInterface(){
+	initOutputInterface($QRMatrix){
 
 		if(typeof this.options.outputInterface !== 'function'){
-			throw new QRCodeOutputException('invalid custom output module');
+			throw new QRCodeOutputException('invalid output class');
 		}
 
-		let $outputInterface = new this.options.outputInterface(this.options, this.getMatrix());
+		let $outputInterface = new this.options.outputInterface(this.options, $QRMatrix);
 
-		if(!($outputInterface instanceof QROutputAbstract)){
-			throw new QRCodeOutputException('custom output module does not implement QROutputInterface');
+		if(!($outputInterface instanceof QROutputInterface)){
+			throw new QRCodeOutputException('output class does not implement QROutputInterface');
 		}
 
 		return $outputInterface
@@ -228,14 +208,18 @@ export default class QRCode{
 	 * ISO/IEC 18004:2000 8.3.6 - Mixing modes
 	 * ISO/IEC 18004:2000 Annex H - Optimisation of bit stream length
 	 *
-	 * @protected
+	 * @returns {QRCode}
 	 */
 	addSegment($segment){
 		this.dataSegments.push($segment);
+
+		return this;
 	}
 
 	/**
 	 * Clears the data segments array
+	 *
+	 * @returns {QRCode}
 	 */
 	clearSegments(){
 		this.dataSegments = [];
@@ -247,6 +231,8 @@ export default class QRCode{
 	 * Adds a numeric data segment
 	 *
 	 * ISO/IEC 18004:2000 8.3.2 - Numeric Mode
+	 *
+	 * @returns {QRCode}
 	 */
 	addNumericSegment($data){
 		this.addSegment(new Numeric($data));
@@ -258,6 +244,8 @@ export default class QRCode{
 	 * Adds an alphanumeric data segment
 	 *
 	 * ISO/IEC 18004:2000 8.3.3 - Alphanumeric Mode
+	 *
+	 * @returns {QRCode}
 	 */
 	addAlphaNumSegment($data){
 		this.addSegment(new AlphaNum($data));
@@ -266,20 +254,11 @@ export default class QRCode{
 	}
 
 	/**
-	 * Adds a Kanji data segment
-	 *
-	 * ISO/IEC 18004:2000 8.3.5 - Kanji Mode
-	 */
-//	addKanjiSegment($data){
-//		this.addSegment(new Kanji($data));
-//
-//		return this;
-//	}
-
-	/**
 	 * Adds an 8-bit byte data segment
 	 *
 	 * ISO/IEC 18004:2000 8.3.4 - 8-bit Byte Mode
+	 *
+	 * @returns {QRCode}
 	 */
 	addByteSegment($data){
 		this.addSegment(new Byte($data));
@@ -298,13 +277,13 @@ export default class QRCode{
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="module.exports.html">exports</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_set_canvasImageType">_set_canvasImageType</a></li><li><a href="global.html#_set_circleRadius">_set_circleRadius</a></li><li><a href="global.html#_set_eccLevel">_set_eccLevel</a></li><li><a href="global.html#_set_logoSpaceHeight">_set_logoSpaceHeight</a></li><li><a href="global.html#_set_logoSpaceStartX">_set_logoSpaceStartX</a></li><li><a href="global.html#_set_logoSpaceStartY">_set_logoSpaceStartY</a></li><li><a href="global.html#_set_logoSpaceWidth">_set_logoSpaceWidth</a></li><li><a href="global.html#_set_maskPattern">_set_maskPattern</a></li><li><a href="global.html#_set_quietzoneSize">_set_quietzoneSize</a></li><li><a href="global.html#_set_version">_set_version</a></li><li><a href="global.html#_set_versionMax">_set_versionMax</a></li><li><a href="global.html#_set_versionMin">_set_versionMin</a></li><li><a href="global.html#addAlphaNumSegment">addAlphaNumSegment</a></li><li><a href="global.html#addByteSegment">addByteSegment</a></li><li><a href="global.html#addNumericSegment">addNumericSegment</a></li><li><a href="global.html#addSegment">addSegment</a></li><li><a href="global.html#array_combine">array_combine</a></li><li><a href="global.html#base64encode">base64encode</a></li><li><a href="global.html#CHAR_TO_ORD">CHAR_TO_ORD</a></li><li><a href="global.html#check">check</a></li><li><a href="global.html#checkNeighbours">checkNeighbours</a></li><li><a href="global.html#checkType">checkType</a></li><li><a href="global.html#checkTypeNotIn">checkTypeNotIn</a></li><li><a href="global.html#clampLogoSpaceValue">clampLogoSpaceValue</a></li><li><a href="global.html#clear">clear</a></li><li><a href="global.html#clearSegments">clearSegments</a></li><li><a href="global.html#collectModules">collectModules</a></li><li><a href="global.html#createMarkup">createMarkup</a></li><li><a href="global.html#createMatrix">createMatrix</a></li><li><a href="global.html#dump">dump</a></li><li><a href="global.html#ECC_L">ECC_L</a></li><li><a href="global.html#eccLevel">eccLevel</a></li><li><a href="global.html#exp">exp</a></li><li><a href="global.html#fill_array">fill_array</a></li><li><a href="global.html#flip">flip</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#getAlignmentPattern">getAlignmentPattern</a></li><li><a href="global.html#getBestPattern">getBestPattern</a></li><li><a href="global.html#getBuffer">getBuffer</a></li><li><a href="global.html#getCharCount">getCharCount</a></li><li><a href="global.html#getCoefficient">getCoefficient</a></li><li><a href="global.html#getCoefficients">getCoefficients</a></li><li><a href="global.html#getCssClass">getCssClass</a></li><li><a href="global.html#getDataMode">getDataMode</a></li><li><a href="global.html#getDefaultModuleValue">getDefaultModuleValue</a></li><li><a href="global.html#getDegree">getDegree</a></li><li><a href="global.html#getDimension">getDimension</a></li><li><a href="global.html#getformatPattern">getformatPattern</a></li><li><a href="global.html#getLength">getLength</a></li><li><a href="global.html#getLengthBitsForMode">getLengthBitsForMode</a></li><li><a href="global.html#getLengthBitsForVersion">getLengthBitsForVersion</a></li><li><a href="global.html#getLengthInBits">getLengthInBits</a></li><li><a href="global.html#getLevel">getLevel</a></li><li><a href="global.html#getMask">getMask</a></li><li><a href="global.html#getMatrix">getMatrix</a></li><li><a href="global.html#getMaxBits">getMaxBits</a></li><li><a href="global.html#getModuleValue">getModuleValue</a></li><li><a href="global.html#getOrdinal">getOrdinal</a></li><li><a href="global.html#getPattern">getPattern</a></li><li><a href="global.html#getRSBlocks">getRSBlocks</a></li><li><a href="global.html#getTotalCodewords">getTotalCodewords</a></li><li><a href="global.html#getVersionNumber">getVersionNumber</a></li><li><a href="global.html#getVersionPattern">getVersionPattern</a></li><li><a href="global.html#header">header</a></li><li><a href="global.html#initCustomOutputInterface">initCustomOutputInterface</a></li><li><a href="global.html#initFunctionalPatterns">initFunctionalPatterns</a></li><li><a href="global.html#initOutputInterface">initOutputInterface</a></li><li><a href="global.html#interleaveEcBytes">interleaveEcBytes</a></li><li><a href="global.html#intval">intval</a></li><li><a href="global.html#IS_DARK">IS_DARK</a></li><li><a href="global.html#isset">isset</a></li><li><a href="global.html#isZero">isZero</a></li><li><a href="global.html#json">json</a></li><li><a href="global.html#log">log</a></li><li><a href="global.html#M_ALIGNMENT">M_ALIGNMENT</a></li><li><a href="global.html#M_DARKMODULE">M_DARKMODULE</a></li><li><a href="global.html#M_DATA">M_DATA</a></li><li><a href="global.html#M_FINDER">M_FINDER</a></li><li><a href="global.html#M_FINDER_DOT">M_FINDER_DOT</a></li><li><a href="global.html#M_FORMAT">M_FORMAT</a></li><li><a href="global.html#M_LOGO">M_LOGO</a></li><li><a href="global.html#M_NULL">M_NULL</a></li><li><a href="global.html#M_QUIETZONE">M_QUIETZONE</a></li><li><a href="global.html#M_SEPARATOR">M_SEPARATOR</a></li><li><a href="global.html#M_TEST">M_TEST</a></li><li><a href="global.html#M_TIMING">M_TIMING</a></li><li><a href="global.html#M_VERSION">M_VERSION</a></li><li><a href="global.html#mask">mask</a></li><li><a href="global.html#MASK_PATTERN_AUTO">MASK_PATTERN_AUTO</a></li><li><a href="global.html#maskPattern">maskPattern</a></li><li><a href="global.html#matrix">matrix</a></li><li><a href="global.html#MATRIX_NEIGHBOUR_FLAGS">MATRIX_NEIGHBOUR_FLAGS</a></li><li><a href="global.html#MATRIX_NEIGHBOURS">MATRIX_NEIGHBOURS</a></li><li><a href="global.html#mod">mod</a></li><li><a href="global.html#MODE_INTERFACES">MODE_INTERFACES</a></li><li><a href="global.html#MODE_LENGTH_BITS">MODE_LENGTH_BITS</a></li><li><a href="global.html#MODE_NUMBER">MODE_NUMBER</a></li><li><a href="global.html#module">module</a></li><li><a href="global.html#MODULE_VALUES_KEYS">MODULE_VALUES_KEYS</a></li><li><a href="global.html#moduleValueIsValid">moduleValueIsValid</a></li><li><a href="global.html#multiply">multiply</a></li><li><a href="global.html#ord">ord</a></li><li><a href="global.html#OUTPUT_CUSTOM">OUTPUT_CUSTOM</a></li><li><a href="global.html#OUTPUT_MODE_INTERFACES">OUTPUT_MODE_INTERFACES</a></li><li><a href="global.html#paths">paths</a></li><li><a href="global.html#put">put</a></li><li><a href="global.html#putBit">putBit</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#saveToFile">saveToFile</a></li><li><a href="global.html#set">set</a></li><li><a href="global.html#setAlignmentPattern">setAlignmentPattern</a></li><li><a href="global.html#setDarkModule">setDarkModule</a></li><li><a href="global.html#setData">setData</a></li><li><a href="global.html#setFinderPattern">setFinderPattern</a></li><li><a href="global.html#setFormatInfo">setFormatInfo</a></li><li><a href="global.html#setLogoSpace">setLogoSpace</a></li><li><a href="global.html#setMatrixDimensions">setMatrixDimensions</a></li><li><a href="global.html#setMinMaxVersion">setMinMaxVersion</a></li><li><a href="global.html#setModuleValues">setModuleValues</a></li><li><a href="global.html#setQuietZone">setQuietZone</a></li><li><a href="global.html#setSeparators">setSeparators</a></li><li><a href="global.html#setTimingPattern">setTimingPattern</a></li><li><a href="global.html#setVersionNumber">setVersionNumber</a></li><li><a href="global.html#size">size</a></li><li><a href="global.html#testRule1">testRule1</a></li><li><a href="global.html#testRule2">testRule2</a></li><li><a href="global.html#testRule3">testRule3</a></li><li><a href="global.html#testRule4">testRule4</a></li><li><a href="global.html#text">text</a></li><li><a href="global.html#toHtmlElement">toHtmlElement</a></li><li><a href="global.html#toString">toString</a></li><li><a href="global.html#TOTAL_CODEWORDS">TOTAL_CODEWORDS</a></li><li><a href="global.html#validateString">validateString</a></li><li><a href="global.html#validateStringI">validateStringI</a></li><li><a href="global.html#version">version</a></li><li><a href="global.html#VERSION_AUTO">VERSION_AUTO</a></li><li><a href="global.html#write">write</a></li><li><a href="global.html#writeCodewords">writeCodewords</a></li><li><a href="global.html#writeMatrix">writeMatrix</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="module.exports.html">exports</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CHAR_TO_ORD">CHAR_TO_ORD</a></li><li><a href="global.html#ECC_L">ECC_L</a></li><li><a href="global.html#IS_DARK">IS_DARK</a></li><li><a href="global.html#MASK_PATTERN_AUTO">MASK_PATTERN_AUTO</a></li><li><a href="global.html#MATRIX_NEIGHBOURS">MATRIX_NEIGHBOURS</a></li><li><a href="global.html#MATRIX_NEIGHBOUR_FLAGS">MATRIX_NEIGHBOUR_FLAGS</a></li><li><a href="global.html#MODE_INTERFACES">MODE_INTERFACES</a></li><li><a href="global.html#MODE_LENGTH_BITS">MODE_LENGTH_BITS</a></li><li><a href="global.html#MODE_NUMBER">MODE_NUMBER</a></li><li><a href="global.html#MODULE_VALUES_KEYS">MODULE_VALUES_KEYS</a></li><li><a href="global.html#M_ALIGNMENT">M_ALIGNMENT</a></li><li><a href="global.html#M_ALIGNMENT_DARK">M_ALIGNMENT_DARK</a></li><li><a href="global.html#M_DARKMODULE">M_DARKMODULE</a></li><li><a href="global.html#M_DARKMODULE_LIGHT">M_DARKMODULE_LIGHT</a></li><li><a href="global.html#M_DATA">M_DATA</a></li><li><a href="global.html#M_DATA_DARK">M_DATA_DARK</a></li><li><a href="global.html#M_FINDER">M_FINDER</a></li><li><a href="global.html#M_FINDER_DARK">M_FINDER_DARK</a></li><li><a href="global.html#M_FINDER_DOT">M_FINDER_DOT</a></li><li><a href="global.html#M_FINDER_DOT_LIGHT">M_FINDER_DOT_LIGHT</a></li><li><a href="global.html#M_FORMAT">M_FORMAT</a></li><li><a href="global.html#M_FORMAT_DARK">M_FORMAT_DARK</a></li><li><a href="global.html#M_LOGO">M_LOGO</a></li><li><a href="global.html#M_LOGO_DARK">M_LOGO_DARK</a></li><li><a href="global.html#M_NULL">M_NULL</a></li><li><a href="global.html#M_QUIETZONE">M_QUIETZONE</a></li><li><a href="global.html#M_QUIETZONE_DARK">M_QUIETZONE_DARK</a></li><li><a href="global.html#M_SEPARATOR">M_SEPARATOR</a></li><li><a href="global.html#M_SEPARATOR_DARK">M_SEPARATOR_DARK</a></li><li><a href="global.html#M_TIMING">M_TIMING</a></li><li><a href="global.html#M_TIMING_DARK">M_TIMING_DARK</a></li><li><a href="global.html#M_VERSION">M_VERSION</a></li><li><a href="global.html#M_VERSION_DARK">M_VERSION_DARK</a></li><li><a href="global.html#TOTAL_CODEWORDS">TOTAL_CODEWORDS</a></li><li><a href="global.html#VERSION_AUTO">VERSION_AUTO</a></li><li><a href="global.html#_createMarkup">_createMarkup</a></li><li><a href="global.html#_fromIterable">_fromIterable</a></li><li><a href="global.html#_set_canvasMimeType">_set_canvasMimeType</a></li><li><a href="global.html#_set_circleRadius">_set_circleRadius</a></li><li><a href="global.html#_set_eccLevel">_set_eccLevel</a></li><li><a href="global.html#_set_logoSpaceHeight">_set_logoSpaceHeight</a></li><li><a href="global.html#_set_logoSpaceStartX">_set_logoSpaceStartX</a></li><li><a href="global.html#_set_logoSpaceStartY">_set_logoSpaceStartY</a></li><li><a href="global.html#_set_logoSpaceWidth">_set_logoSpaceWidth</a></li><li><a href="global.html#_set_maskPattern">_set_maskPattern</a></li><li><a href="global.html#_set_quietzoneSize">_set_quietzoneSize</a></li><li><a href="global.html#_set_version">_set_version</a></li><li><a href="global.html#_set_versionMax">_set_versionMax</a></li><li><a href="global.html#_set_versionMin">_set_versionMin</a></li><li><a href="global.html#addAlphaNumSegment">addAlphaNumSegment</a></li><li><a href="global.html#addByteSegment">addByteSegment</a></li><li><a href="global.html#addMatrixModifications">addMatrixModifications</a></li><li><a href="global.html#addNumericSegment">addNumericSegment</a></li><li><a href="global.html#addSegment">addSegment</a></li><li><a href="global.html#ansi8">ansi8</a></li><li><a href="global.html#array_combine">array_combine</a></li><li><a href="global.html#array_fill">array_fill</a></li><li><a href="global.html#check">check</a></li><li><a href="global.html#checkNeighbours">checkNeighbours</a></li><li><a href="global.html#checkType">checkType</a></li><li><a href="global.html#checkTypeIn">checkTypeIn</a></li><li><a href="global.html#clampLogoSpaceValue">clampLogoSpaceValue</a></li><li><a href="global.html#clear">clear</a></li><li><a href="global.html#clearSegments">clearSegments</a></li><li><a href="global.html#clone">clone</a></li><li><a href="global.html#collectModules">collectModules</a></li><li><a href="global.html#createMatrix">createMatrix</a></li><li><a href="global.html#dump">dump</a></li><li><a href="global.html#exp">exp</a></li><li><a href="global.html#flip">flip</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#getAlignmentPattern">getAlignmentPattern</a></li><li><a href="global.html#getBestPattern">getBestPattern</a></li><li><a href="global.html#getBuffer">getBuffer</a></li><li><a href="global.html#getCharCount">getCharCount</a></li><li><a href="global.html#getCoefficient">getCoefficient</a></li><li><a href="global.html#getCoefficients">getCoefficients</a></li><li><a href="global.html#getCssClass">getCssClass</a></li><li><a href="global.html#getDataMode">getDataMode</a></li><li><a href="global.html#getDefaultModuleValue">getDefaultModuleValue</a></li><li><a href="global.html#getDegree">getDegree</a></li><li><a href="global.html#getDimension">getDimension</a></li><li><a href="global.html#getEccLevel">getEccLevel</a></li><li><a href="global.html#getLength">getLength</a></li><li><a href="global.html#getLengthBitsForMode">getLengthBitsForMode</a></li><li><a href="global.html#getLengthBitsForVersion">getLengthBitsForVersion</a></li><li><a href="global.html#getLengthInBits">getLengthInBits</a></li><li><a href="global.html#getLevel">getLevel</a></li><li><a href="global.html#getMask">getMask</a></li><li><a href="global.html#getMaskPattern">getMaskPattern</a></li><li><a href="global.html#getMatrix">getMatrix</a></li><li><a href="global.html#getMaxBits">getMaxBits</a></li><li><a href="global.html#getModuleValue">getModuleValue</a></li><li><a href="global.html#getModuleValueAt">getModuleValueAt</a></li><li><a href="global.html#getOrdinal">getOrdinal</a></li><li><a href="global.html#getOutputDimensions">getOutputDimensions</a></li><li><a href="global.html#getPattern">getPattern</a></li><li><a href="global.html#getQRMatrix">getQRMatrix</a></li><li><a href="global.html#getRSBlocks">getRSBlocks</a></li><li><a href="global.html#getSize">getSize</a></li><li><a href="global.html#getTotalCodewords">getTotalCodewords</a></li><li><a href="global.html#getVersion">getVersion</a></li><li><a href="global.html#getVersionNumber">getVersionNumber</a></li><li><a href="global.html#getVersionPattern">getVersionPattern</a></li><li><a href="global.html#getViewBox">getViewBox</a></li><li><a href="global.html#getformatPattern">getformatPattern</a></li><li><a href="global.html#header">header</a></li><li><a href="global.html#initFunctionalPatterns">initFunctionalPatterns</a></li><li><a href="global.html#initOutputInterface">initOutputInterface</a></li><li><a href="global.html#interleaveEcBytes">interleaveEcBytes</a></li><li><a href="global.html#intval">intval</a></li><li><a href="global.html#invert">invert</a></li><li><a href="global.html#isDark">isDark</a></li><li><a href="global.html#isZero">isZero</a></li><li><a href="global.html#isset">isset</a></li><li><a href="global.html#log">log</a></li><li><a href="global.html#mask">mask</a></li><li><a href="global.html#mod">mod</a></li><li><a href="global.html#module">module</a></li><li><a href="global.html#moduleValueIsValid">moduleValueIsValid</a></li><li><a href="global.html#multiply">multiply</a></li><li><a href="global.html#ord">ord</a></li><li><a href="global.html#path">path</a></li><li><a href="global.html#paths">paths</a></li><li><a href="global.html#prepareModuleValue">prepareModuleValue</a></li><li><a href="global.html#put">put</a></li><li><a href="global.html#putBit">putBit</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#renderMatrix">renderMatrix</a></li><li><a href="global.html#saveToFile">saveToFile</a></li><li><a href="global.html#set">set</a></li><li><a href="global.html#setAlignmentPattern">setAlignmentPattern</a></li><li><a href="global.html#setArea">setArea</a></li><li><a href="global.html#setDarkModule">setDarkModule</a></li><li><a href="global.html#setData">setData</a></li><li><a href="global.html#setFinderPattern">setFinderPattern</a></li><li><a href="global.html#setFormatInfo">setFormatInfo</a></li><li><a href="global.html#setLogoSpace">setLogoSpace</a></li><li><a href="global.html#setMatrixDimensions">setMatrixDimensions</a></li><li><a href="global.html#setMinMaxVersion">setMinMaxVersion</a></li><li><a href="global.html#setModuleValues">setModuleValues</a></li><li><a href="global.html#setQuietZone">setQuietZone</a></li><li><a href="global.html#setSeparators">setSeparators</a></li><li><a href="global.html#setTimingPattern">setTimingPattern</a></li><li><a href="global.html#setVersionNumber">setVersionNumber</a></li><li><a href="global.html#testRule1">testRule1</a></li><li><a href="global.html#testRule2">testRule2</a></li><li><a href="global.html#testRule3">testRule3</a></li><li><a href="global.html#testRule4">testRule4</a></li><li><a href="global.html#toBase64DataURI">toBase64DataURI</a></li><li><a href="global.html#toString">toString</a></li><li><a href="global.html#validateString">validateString</a></li><li><a href="global.html#validateStringI">validateStringI</a></li><li><a href="global.html#write">write</a></li><li><a href="global.html#writeCodewords">writeCodewords</a></li><li><a href="global.html#writeMatrix">writeMatrix</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.11</a> on Tue Aug 09 2022 18:43:15 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Dec 17 2023 07:41:33 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>

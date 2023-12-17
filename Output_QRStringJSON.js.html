@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: Output/QRStringJSON.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,32 +17,79 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: Output/QRStringJSON.js</h1>
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @created      11.07.2022
+ * @author       smiley &lt;smiley@chillerlan.net>
+ * @copyright    2022 smiley
+ * @license      MIT
+ */
 
+import QROutputAbstract from './QROutputAbstract.js';
 
-    <h3> </h3>
+/**
+ * Converts the matrix data into string types
+ */
+export default class QRStringJSON extends QROutputAbstract{
 
+	/**
+	 * @inheritDoc
+	 */
+	mimeType = 'application/json';
 
+	/**
+	 * @inheritDoc
+	 */
+	dump($file){
+		let $data = JSON.stringify(this.matrix.getMatrix(this.options.jsonAsBooleans));
 
+		this.saveToFile($data, $file);
 
+		return $data;
+	}
 
+	/**
+	 * unused - required by interface
+	 *
+	 * @inheritDoc
+	 * @codeCoverageIgnore
+	 */
+	getDefaultModuleValue($isDark){
+		return null;
+	}
 
+	/**
+	 * unused - required by interface
+	 *
+	 * @inheritDoc
+	 * @codeCoverageIgnore
+	 */
+	prepareModuleValue($value){
+		return null;
+	}
 
+	/**
+	 * unused - required by interface
+	 *
+	 * @inheritDoc
+	 * @codeCoverageIgnore
+	 */
+	moduleValueIsValid($value){
+		return true;
+	}
 
-
-
-    
-
-
-
-
-
+}
+</code></pre>
+        </article>
+    </section>
 
 
 
