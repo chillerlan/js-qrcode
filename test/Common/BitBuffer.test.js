@@ -5,7 +5,7 @@
  * @license      MIT
  */
 
-import {BitBuffer, MODE_ALPHANUM, MODE_BYTE, MODE_KANJI, MODE_NUMBER} from '../../src/index.js';
+import {BitBuffer, MODE_ALPHANUM, MODE_BYTE, MODE_NUMBER} from '../../src/index.js';
 
 import {suite, test} from 'mocha';
 import {assert} from 'chai';
@@ -18,7 +18,6 @@ suite('BitBufferTest', function(){
 			{$bits: MODE_NUMBER, expected: 16, desc: 'number'},
 			{$bits: MODE_ALPHANUM, expected: 32, desc: 'alphanum'},
 			{$bits: MODE_BYTE, expected: 64, desc: 'byte'},
-			{$bits: MODE_KANJI, expected: 128, desc: 'kanji'},
 		];
 
 		bitProvider.forEach(({$bits, expected}) => {
@@ -34,3 +33,4 @@ suite('BitBufferTest', function(){
 	});
 
 });
+

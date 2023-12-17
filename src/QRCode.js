@@ -91,12 +91,12 @@ export default class QRCode{
 	/**
 	 * Renders a QR Code for the given QRMatrix and QROptions, saves $file optionally
 	 *
-	 * @param {QRMatrix} $matrix
+	 * @param {QRMatrix} $QRMatrix
 	 * @param {string|null} $file
 	 * @returns {*}
 	 */
-	renderMatrix($matrix, $file = null){
-		return this.initOutputInterface($matrix).dump($file ?? this.options.cachefile);
+	renderMatrix($QRMatrix, $file = null){
+		return this.initOutputInterface($QRMatrix).dump($file ?? this.options.cachefile);
 	}
 
 	/**
@@ -106,25 +106,25 @@ export default class QRCode{
 	 * @throws {QRCodeDataException}
 	 */
 	getQRMatrix(){
-		let $matrix = new QRData(this.options, this.dataSegments).writeMatrix();
+		let $QRMatrix = new QRData(this.options, this.dataSegments).writeMatrix();
 
 		let $maskPattern = this.options.maskPattern === MASK_PATTERN_AUTO
-			? MaskPattern.getBestPattern($matrix)
+			? MaskPattern.getBestPattern($QRMatrix)
 			: new MaskPattern(this.options.maskPattern);
 
-		$matrix.setFormatInfo($maskPattern).mask($maskPattern);
+		$QRMatrix.setFormatInfo($maskPattern).mask($maskPattern);
 
-		return this.addMatrixModifications($matrix);
+		return this.addMatrixModifications($QRMatrix);
 	}
 
 	/**
 	 * add matrix modifications after mask pattern evaluation and before handing over to output
 	 *
-	 * @param {QRMatrix} $matrix
+	 * @param {QRMatrix} $QRMatrix
 	 * @returns {QRMatrix}
 	 * @protected
 	 */
-	addMatrixModifications($matrix){
+	addMatrixModifications($QRMatrix){
 
 		if(this.options.addLogoSpace){
 			let $logoSpaceWidth  = this.options.logoSpaceWidth;
@@ -136,7 +136,7 @@ export default class QRCode{
 				$logoSpaceHeight = null;
 			}
 
-			$matrix.setLogoSpace(
+			$QRMatrix.setLogoSpace(
 				$logoSpaceWidth,
 				$logoSpaceHeight,
 				this.options.logoSpaceStartX,
@@ -145,10 +145,10 @@ export default class QRCode{
 		}
 
 		if(this.options.addQuietzone){
-			$matrix.setQuietZone(this.options.quietzoneSize);
+			$QRMatrix.setQuietZone(this.options.quietzoneSize);
 		}
 
-		return $matrix;
+		return $QRMatrix;
 	}
 
 	/**

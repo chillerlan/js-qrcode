@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /**
  * @created      22.07.2022
  * @author       smiley <smiley@chillerlan.net>

@@ -18,7 +18,7 @@ export default class PHPJS{
 		let arr = [];
 
 		for(let key = 0; key < $count; key++){
-			arr[key] = structuredClone($value);;
+			arr[key] = structuredClone($value);
 		}
 
 		return arr;
