@@ -178,26 +178,6 @@ const MATRIX_NEIGHBOURS = PHPJS.array_combine(MATRIX_NEIGHBOUR_FLAGS, [
 ]);
 
 /**
- * from QROutputInterface
- */
-
-const OUTPUT_CUSTOM      = 'custom';
-
-const OUTPUT_MARKUP_HTML = 'html';
-const OUTPUT_MARKUP_SVG  = 'svg';
-const OUTPUT_STRING_JSON = 'json';
-const OUTPUT_STRING_TEXT = 'text';
-const OUTPUT_CANVAS      = 'canvas';
-
-const OUTPUT_MODES = [
-	OUTPUT_MARKUP_SVG ,
-	OUTPUT_MARKUP_HTML,
-	OUTPUT_STRING_JSON,
-	OUTPUT_STRING_TEXT,
-	OUTPUT_CANVAS
-];
-
-/**
  * @type {number[]|int[]}
  * @internal
  */
@@ -257,6 +237,34 @@ const DEFAULT_MODULE_VALUES = PHPJS.array_combine(MODULE_VALUES_KEYS, [
 	true,
 ]);
 
+const LAYERNAMES = PHPJS.array_combine(MODULE_VALUES_KEYS, [
+	// light
+	'null',
+	'darkmodule-light',
+	'data',
+	'finder',
+	'separator',
+	'alignment',
+	'timing',
+	'format',
+	'version',
+	'quietzone',
+	'logo',
+	'finder-dot-light',
+	// dark
+	'darkmodule',
+	'data-dark',
+	'finder-dark',
+	'separator-dark',
+	'alignment-dark',
+	'timing-dark',
+	'format-dark',
+	'version-dark',
+	'quietzone-dark',
+	'logo-dark',
+	'finder-dot',
+]);
+
 export {
 	ECC_L, ECC_M, ECC_Q, ECC_H,
 	MASK_PATTERN_AUTO, PATTERNS, PATTERN_000, PATTERN_001, PATTERN_010,
@@ -268,6 +276,5 @@ export {
 	M_DATA_DARK, M_FINDER_DARK, M_SEPARATOR_DARK, M_ALIGNMENT_DARK, M_TIMING_DARK,
 	M_FORMAT_DARK, M_VERSION_DARK, M_QUIETZONE_DARK, M_LOGO_DARK,
 	MATRIX_NEIGHBOUR_FLAGS, MATRIX_NEIGHBOURS,
-	DEFAULT_MODULE_VALUES, OUTPUT_MODES, OUTPUT_CANVAS, OUTPUT_CUSTOM,
-	OUTPUT_MARKUP_SVG, OUTPUT_MARKUP_HTML, OUTPUT_STRING_JSON, OUTPUT_STRING_TEXT,
+	DEFAULT_MODULE_VALUES, LAYERNAMES,
 };

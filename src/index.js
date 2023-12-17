@@ -23,8 +23,7 @@ import {
 	M_DATA_DARK, M_FINDER_DARK, M_SEPARATOR_DARK, M_ALIGNMENT_DARK, M_TIMING_DARK,
 	M_FORMAT_DARK, M_VERSION_DARK, M_QUIETZONE_DARK, M_LOGO_DARK,
 	MATRIX_NEIGHBOUR_FLAGS, MATRIX_NEIGHBOURS,
-	DEFAULT_MODULE_VALUES, OUTPUT_MODES, OUTPUT_CANVAS, OUTPUT_CUSTOM,
-	OUTPUT_MARKUP_SVG, OUTPUT_MARKUP_HTML, OUTPUT_STRING_JSON, OUTPUT_STRING_TEXT,
+	DEFAULT_MODULE_VALUES, LAYERNAMES,
 } from './Common/constants.js';
 import BitBuffer from './Common/BitBuffer.js';
 import EccLevel from './Common/EccLevel.js';
@@ -48,7 +47,8 @@ import QRMarkupHTML from './Output/QRMarkupHTML.js';
 import QRMarkupSVG from './Output/QRMarkupSVG.js';
 import QROutputAbstract from './Output/QROutputAbstract.js';
 import QROutputInterface from './Output/QROutputInterface.js';
-import QRString from './Output/QRString.js';
+import QRStringText from './Output/QRStringText.js';
+import QRStringJSON from './Output/QRStringJSON.js';
 
 
 export {
@@ -74,11 +74,9 @@ export {
 		M_FORMAT_DARK, M_VERSION_DARK, M_QUIETZONE_DARK, M_LOGO_DARK, MATRIX_NEIGHBOUR_FLAGS, MATRIX_NEIGHBOURS,
 	QRCanvas,
 	QRCodeOutputException,
-	QRMarkup,
-	QRMarkupHTML,
 	QRMarkupSVG,
 	QROutputAbstract,
-	QROutputInterface, DEFAULT_MODULE_VALUES, OUTPUT_MODES, OUTPUT_CANVAS, OUTPUT_CUSTOM,
-		OUTPUT_MARKUP_SVG, OUTPUT_MARKUP_HTML, OUTPUT_STRING_JSON, OUTPUT_STRING_TEXT,
-	QRString
+	QROutputInterface, DEFAULT_MODULE_VALUES, LAYERNAMES,
+	QRStringText,
+	QRStringJSON,
 };

@@ -11,17 +11,12 @@ import AlphaNum from './Data/AlphaNum.js';
 import Byte from './Data/Byte.js';
 //import Kanji from './Data/Kanji.js';
 import Numeric from './Data/Numeric.js';
-import QRCodeDataException from './Data/QRCodeDataException.js';
 import QRData from './Data/QRData.js';
 import QRCodeOutputException from './Output/QRCodeOutputException.js';
-import QROutputAbstract from './Output/QROutputAbstract.js';
+import QROutputInterface from './Output/QROutputInterface.js';
 import PHPJS from './Common/PHPJS.js';
-import QRMarkupSVG from './Output/QRMarkupSVG.js';
-import QRMarkupHTML from './Output/QRMarkupHTML.js';
-import QRString from './Output/QRString.js';
-import QRCanvas from './Output/QRCanvas.js';
 import {
-	MASK_PATTERN_AUTO, MODE_ALPHANUM, MODE_BYTE, MODE_NUMBER, OUTPUT_CUSTOM, OUTPUT_MODES
+	MASK_PATTERN_AUTO, MODE_ALPHANUM, MODE_BYTE, MODE_NUMBER
 } from './Common/constants.js';
 
 /**
@@ -39,17 +34,6 @@ const MODE_INTERFACES = PHPJS.array_combine([
 	AlphaNum,
 //	Kanji,
 	Byte,
-]);
-
-/**
- * Map of built-in output modes => modules
- */
-const OUTPUT_MODE_INTERFACES = PHPJS.array_combine(OUTPUT_MODES, [
-	QRMarkupSVG,
-	QRMarkupHTML,
-	QRString,
-	QRString,
-	QRCanvas,
 ]);
 
 /**
@@ -148,43 +132,23 @@ export default class QRCode{
 	}
 
 	/**
-	 * returns a fresh (built-in) QROutputInterface
+	 * initializes a fresh built-in or custom QROutputInterface
 	 *
+	 * @param {QRMatrix} $QRMatrix
 	 * @returns {QROutputAbstract}
 	 * @throws {QRCodeOutputException}
 	 * @protected
 	 */
-	initOutputInterface(){
-
-		if(this.options.outputType === OUTPUT_CUSTOM){
-			return this.initCustomOutputInterface();
-		}
-
-		let $outputInterface = OUTPUT_MODE_INTERFACES[this.options.outputType] || false;
-
-		if($outputInterface){
-			return new $outputInterface(this.options, this.getMatrix());
-		}
-
-		throw new QRCodeOutputException('invalid output type');
-	}
-
-	/**
-	 * initializes a custom output module after checking the existence of the class and if it implemnts the required interface
-	 *
-	 * @throws {QRCodeOutputException}
-	 * @protected
-	 */
-	initCustomOutputInterface(){
+	initOutputInterface($QRMatrix){
 
 		if(typeof this.options.outputInterface !== 'function'){
-			throw new QRCodeOutputException('invalid custom output module');
+			throw new QRCodeOutputException('invalid output class');
 		}
 
-		let $outputInterface = new this.options.outputInterface(this.options, this.getMatrix());
+		let $outputInterface = new this.options.outputInterface(this.options, $QRMatrix);
 
-		if(!($outputInterface instanceof QROutputAbstract)){
-			throw new QRCodeOutputException('custom output module does not implement QROutputInterface');
+		if(!($outputInterface instanceof QROutputInterface)){
+			throw new QRCodeOutputException('output class does not implement QROutputInterface');
 		}
 
 		return $outputInterface

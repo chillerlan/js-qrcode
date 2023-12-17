@@ -25,8 +25,8 @@
 	import * as qrc from '../src/index.js';
 
 	let options = new qrc.QROptions({
-		outputType: qrc.OUTPUT_MARKUP_SVG,
-		version: 7,
+		outputInterface     : qrc.QRMarkupSVG,
+		version             : 7,
 		// toggle base64 data URI
 		imageBase64: true,
 		// if set to false, the light modules won't be rendered

@@ -8,8 +8,9 @@
 import QRCodeException from './QRCodeException.js';
 import PHPJS from './Common/PHPJS.js';
 import {
-	ECC_H, ECC_L, ECC_M, ECC_Q, MASK_PATTERN_AUTO, VERSION_AUTO, OUTPUT_MARKUP_SVG
+	ECC_H, ECC_L, ECC_M, ECC_Q, MASK_PATTERN_AUTO, VERSION_AUTO,
 } from './Common/constants.js';
+import QRMarkupSVG from './Output/QRMarkupSVG.js';
 
 /**
  * The QRCode plug-in settings & setter functionality
@@ -89,23 +90,11 @@ export default class QROptions{
 	_quietzoneSize = 4;
 
 	/**
-	 * The output type
-	 *
-	 *   - QRCode::OUTPUT_MARKUP_XXXX where XXXX = HTML, SVG
-	 *   - QRCode::OUTPUT_IMAGE_XXX where XXX = PNG, GIF, JPG
-	 *   - QRCode::OUTPUT_STRING_XXXX where XXXX = TEXT, JSON
-	 *   - QRCode::OUTPUT_CUSTOM
-	 *
-	 * @type {string}
-	 */
-	outputType = OUTPUT_MARKUP_SVG;
-
-	/**
 	 * the FQCN of the custom QROutputInterface if $outputType is set to QRCode::OUTPUT_CUSTOM
 	 *
 	 * @type {string|null}
 	 */
-	outputInterface = null;
+	outputInterface = QRMarkupSVG;
 
 	/**
 	 * /path/to/cache.file

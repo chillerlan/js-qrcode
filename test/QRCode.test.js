@@ -19,7 +19,7 @@ suite('QRCodeTest', function(){
 	 * tests if an exception is thrown when an invalid (built-in) output type is specified
 	 */
 	test('testInitOutputInterfaceException', function(){
-		assert.throws(() => (new QRCode(new QROptions({outputType: 'foo'}))).render('test'));
+		assert.throws(() => (new QRCode(new QROptions({outputInterface: 'foo'}))).render('test'));
 	});
 
 });
