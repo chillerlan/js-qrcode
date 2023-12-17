@@ -137,4 +137,20 @@ export default class PHPJS{
 		return code;
 	}
 
+	/**
+	 * @link https://www.php.net/manual/en/language.oop5.cloning.php
+	 *
+	 * because javascript is dumb (have I mentioned it yet??) we still cannot properly 1:1 clone objects in 2024.
+	 * structuredClone() suggest that but in fact it does not. so we have to invoke a new instance of the class,
+	 * and copy over the properties from the object we want to clone - could have done that by hand entirely...
+	 *
+	 * @param {Object.<*>} $object
+	 * @returns {Object.<*>}
+	 */
+	static clone($object){
+		let $dummy = Object.create(Object.getPrototypeOf($object));
+
+		return Object.assign($dummy, $object);
+	}
+
 }

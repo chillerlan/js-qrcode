@@ -10,6 +10,17 @@ import PHPJS from './PHPJS.js';
 import QRCodeException from '../QRCodeException.js';
 import {PATTERNS} from './constants.js';
 
+/*
+ * Penalty scores
+ *
+ * ISO/IEC 18004:2000 Section 8.8.1 - Table 24
+ */
+const PENALTY_N1 = 3;
+const PENALTY_N2 = 3;
+const PENALTY_N3 = 40;
+const PENALTY_N4 = 10;
+
+
 /**
  * ISO/IEC 18004:2000 Section 8.8.1
  * ISO/IEC 18004:2000 Section 8.8.2 - Evaluation of masking results
@@ -38,7 +49,7 @@ export default class MaskPattern{
 		$maskPattern = PHPJS.intval($maskPattern);
 
 		if((0b111 & $maskPattern) !== $maskPattern){
-			throw new QRCodeException('invalid mask pattern');
+			throw new QRCodeException(`invalid mask pattern: "${$maskPattern}"`);
 		}
 
 		this.maskPattern = $maskPattern;
@@ -55,11 +66,6 @@ export default class MaskPattern{
 
 	/**
 	 * Returns a closure that applies the mask for the chosen mask pattern.
-	 *
-	 * Encapsulates data masks for the data bits in a QR code, per ISO 18004:2006 6.8. Implementations
-	 * of this class can un-mask a raw BitMatrix. For simplicity, they will unmask the entire BitMatrix,
-	 * including areas used for finder patterns, timing patterns, etc. These areas should be unused
-	 * after the point they are unmasked anyway.
 	 *
 	 * Note that the diagram in section 6.8.1 is misleading since it indicates that i is column position
 	 * and j is row position. In fact, as the text says, i is row position and j is column position.
@@ -86,16 +92,17 @@ export default class MaskPattern{
 	/**
 	 * Evaluates the matrix of the given data interface and returns a new mask pattern instance for the best result
 	 *
-	 * @param {QRData} $dataInterface
+	 * @param {QRMatrix} $QRMatrix
 	 *
 	 * @returns {MaskPattern}
 	 */
-	static getBestPattern($dataInterface){
+	static getBestPattern($QRMatrix){
 		let $penalties = [];
+		let $size      = $QRMatrix.getSize();
 
-		for(let $i = 0; $i < 8; $i++){
-			let $pattern = PATTERNS[$i];
-			let $matrix  = $dataInterface.writeMatrix(new MaskPattern($pattern));
+		for(let $pattern of PATTERNS){
+			let $mp      = new MaskPattern($pattern);
+			let $matrix  = PHPJS.clone($QRMatrix).setFormatInfo($mp).mask($mp).getMatrix(true);
 			let $penalty = 0;
 
 			for(let $level = 1; $level <= 4; $level++){
@@ -112,54 +119,57 @@ export default class MaskPattern{
 	 * Apply mask penalty rule 1 and return the penalty. Find repetitive cells with the same color and
 	 * give penalty to them. Example: 00000 or 11111.
 	 *
-	 * @param {QRMatrix} $matrix
+	 * @param {Array} $matrix
 	 * @param {number|int} $height
 	 * @param {number|int} $width
 	 *
 	 * @returns {number|int}
 	 */
 	static testRule1($matrix, $height, $width){
-		return MaskPattern.applyRule1($matrix, $height, $width, true) + MaskPattern.applyRule1($matrix, $height, $width, false);
+		let $penalty = 0;
+
+		// horizontal
+		for(let $y = 0; $y < $height; $y++){
+			$penalty += MaskPattern.applyRule1($matrix[$y]);
+		}
+
+		// vertical
+		for(let $x = 0; $x < $width; $x++){
+			$penalty += MaskPattern.applyRule1($matrix.map(y => y[$x]));
+		}
+
+		return $penalty;
 	}
 
 	/**
-	 * @param {QRMatrix} $matrix
-	 * @param {number|int} $height
-	 * @param {number|int} $width
-	 * @param {boolean} $isHorizontal
+	 * @param {Array} $rc
 	 *
 	 * @returns {number|int}
 	 * @private
 	 */
-	static applyRule1($matrix, $height, $width, $isHorizontal){
-		let $penalty = 0;
-		let $yLimit  = $isHorizontal ? $height : $width;
-		let $xLimit  = $isHorizontal ? $width : $height;
+	static applyRule1($rc){
+		let $penalty         = 0;
+		let $numSameBitCells = 0;
+		let $prevBit         = null;
 
-		for(let $y = 0; $y < $yLimit; $y++){
-			let $numSameBitCells = 0;
-			let $prevBit         = null;
+		for(let $val of $rc){
 
-			for(let $x = 0; $x < $xLimit; $x++){
-				// noinspection JSSuspiciousNameCombination
-				let $bit = $isHorizontal ? $matrix.check($x, $y) : $matrix.check($y, $x);
-
-				if($bit === $prevBit){
-					$numSameBitCells++;
-				}
-				else{
-
-					if($numSameBitCells >= 5){
-						$penalty += 3 + ($numSameBitCells - 5);
-					}
-
-					$numSameBitCells = 1;  // Include the cell itself.
-					$prevBit = $bit;
-				}
+			if($val === $prevBit){
+				$numSameBitCells++;
 			}
-			if($numSameBitCells >= 5){
-				$penalty += 3 + ($numSameBitCells - 5);
+			else{
+
+				if($numSameBitCells >= 5){
+					$penalty += (PENALTY_N1 + $numSameBitCells - 5);
+				}
+
+				$numSameBitCells = 1;  // Include the cell itself.
+				$prevBit         = $val;
 			}
+		}
+
+		if($numSameBitCells >= 5){
+			$penalty += (PENALTY_N1 + $numSameBitCells - 5);
 		}
 
 		return $penalty;
@@ -170,7 +180,7 @@ export default class MaskPattern{
 	 * penalty to them. This is actually equivalent to the spec's rule, which is to find MxN blocks and give a
 	 * penalty proportional to (M-1)x(N-1), because this is the number of 2x2 blocks inside such a block.
 	 *
-	 * @param {QRMatrix} $matrix
+	 * @param {Array} $matrix
 	 * @param {number|int} $height
 	 * @param {number|int} $width
 	 *
@@ -191,19 +201,19 @@ export default class MaskPattern{
 					break;
 				}
 
-				let $val = $matrix.check($x, $y);
+				let $val = $matrix[$y][$x];
 
 				if(
-					$val === $matrix.check($x + 1, $y)
-					&& $val === $matrix.check($x, $y + 1)
-					&& $val === $matrix.check($x + 1, $y + 1)
+					$val === $matrix[$y][$x + 1]
+					&& $val === $matrix[$y + 1][$x]
+					&& $val === $matrix[$y + 1][$x + 1]
 				){
 					$penalty++;
 				}
 			}
 		}
 
-		return 3 * $penalty;
+		return PENALTY_N2 * $penalty;
 	}
 
 	/**
@@ -211,7 +221,7 @@ export default class MaskPattern{
 	 * starting with black, or 4:1:1:3:1:1 starting with white, and give penalty to them.  If we
 	 * find patterns like 000010111010000, we give penalty once.
 	 *
-	 * @param {QRMatrix} $matrix
+	 * @param {Array} $matrix
 	 * @param {number|int} $height
 	 * @param {number|int} $width
 	 *
@@ -225,13 +235,13 @@ export default class MaskPattern{
 
 				if(
 					$x + 6 < $width
-					&&  $matrix.check($x, $y)
-					&& !$matrix.check($x + 1, $y)
-					&&  $matrix.check($x + 2, $y)
-					&&  $matrix.check($x + 3, $y)
-					&&  $matrix.check($x + 4, $y)
-					&& !$matrix.check($x + 5, $y)
-					&&  $matrix.check($x + 6, $y)
+					&&  $matrix[$y][$x] === true
+					&& !$matrix[$y][($x + 1)]
+					&&  $matrix[$y][($x + 2)]
+					&&  $matrix[$y][($x + 3)]
+					&&  $matrix[$y][($x + 4)]
+					&& !$matrix[$y][($x + 5)]
+					&&  $matrix[$y][($x + 6)]
 					&& (
 						MaskPattern.isWhiteHorizontal($matrix, $width, $y, $x - 4, $x)
 						|| MaskPattern.isWhiteHorizontal($matrix, $width, $y, $x + 7, $x + 11)
@@ -242,13 +252,13 @@ export default class MaskPattern{
 
 				if(
 					$y + 6 < $height
-					&&  $matrix.check($x, $y)
-					&& !$matrix.check($x, $y + 1)
-					&&  $matrix.check($x, $y + 2)
-					&&  $matrix.check($x, $y + 3)
-					&&  $matrix.check($x, $y + 4)
-					&& !$matrix.check($x, $y + 5)
-					&&  $matrix.check($x, $y + 6)
+					&&  $matrix[$y][$x] === true
+					&& !$matrix[($y + 1)][$x]
+					&&  $matrix[($y + 2)][$x]
+					&&  $matrix[($y + 3)][$x]
+					&&  $matrix[($y + 4)][$x]
+					&& !$matrix[($y + 5)][$x]
+					&&  $matrix[($y + 6)][$x]
 					&& (
 						MaskPattern.isWhiteVertical($matrix, $height, $x, $y - 4, $y)
 						|| MaskPattern.isWhiteVertical($matrix, $height, $x, $y + 7, $y + 11)
@@ -260,11 +270,11 @@ export default class MaskPattern{
 			}
 		}
 
-		return $penalties * 40;
+		return $penalties * PENALTY_N3;
 	}
 
 	/**
-	 * @param {QRMatrix} $matrix
+	 * @param {Array} $matrix
 	 * @param {number|int} $width
 	 * @param {number|int} $y
 	 * @param {number|int} $from
@@ -280,7 +290,7 @@ export default class MaskPattern{
 		}
 
 		for(let $x = $from; $x < $to; $x++){
-			if($matrix.check($x, $y)){
+			if($matrix[$y][$x] === true){
 				return false;
 			}
 		}
@@ -289,7 +299,7 @@ export default class MaskPattern{
 	}
 
 	/**
-	 * @param {QRMatrix} $matrix
+	 * @param {Array} $matrix
 	 * @param {number|int} $height
 	 * @param {number|int} $x
 	 * @param {number|int} $from
@@ -305,7 +315,7 @@ export default class MaskPattern{
 		}
 
 		for(let $y = $from; $y < $to; $y++){
-			if($matrix.check($x, $y)){
+			if($matrix[$y][$x] === true){
 				return false;
 			}
 		}
@@ -317,7 +327,7 @@ export default class MaskPattern{
 	 * Apply mask penalty rule 4 and return the penalty. Calculate the ratio of dark cells and give
 	 * penalty if the ratio is far from 50%. It gives 10 penalty for 5% distance.
 	 *
-	 * @param {QRMatrix} $matrix
+	 * @param {Array} $matrix
 	 * @param {number|int} $height
 	 * @param {number|int} $width
 	 *
@@ -327,15 +337,15 @@ export default class MaskPattern{
 		let $darkCells  = 0;
 		let $totalCells = $height * $width;
 
-		for(let $y = 0; $y < $height; $y++){
-			for(let $x = 0; $x < $width; $x++){
-				if($matrix.check($x, $y)){
+		for(let $row of $matrix){
+			for(let $val of $row){
+				if($val === true){
 					$darkCells++;
 				}
 			}
 		}
 
-		return PHPJS.intval((Math.abs($darkCells * 2 - $totalCells) * 10 / $totalCells)) * 10;
+		return PHPJS.intval((Math.abs($darkCells * 2 - $totalCells) * 10 / $totalCells)) * PENALTY_N4;
 	}
 
 }
