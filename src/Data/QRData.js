@@ -103,15 +103,12 @@ export default class QRData{
 	/**
 	 * returns a fresh matrix object with the data written and masked with the given $maskPattern
 	 *
-	 * @param {MaskPattern} $maskPattern
-	 *
 	 * @returns {QRMatrix}
 	 */
-	writeMatrix($maskPattern){
-		return (new QRMatrix(this.version, this.eccLevel, $maskPattern))
+	writeMatrix(){
+		return (new QRMatrix(this.version, this.eccLevel))
 			.initFunctionalPatterns()
 			.writeCodewords(this.bitBuffer)
-			.mask()
 		;
 	}
 

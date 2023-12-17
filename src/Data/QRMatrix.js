@@ -68,12 +68,10 @@ export default class QRMatrix{
 	 *
 	 * @param {Version} $version
 	 * @param {EccLevel} $eccLevel
-	 * @param {MaskPattern} $maskPattern
 	 */
-	constructor($version, $eccLevel, $maskPattern){
+	constructor($version, $eccLevel){
 		this._version     = $version;
 		this._eccLevel    = $eccLevel;
-		this._maskPattern = $maskPattern;
 		this.moduleCount  = this._version.getDimension();
 		this._matrix      = this.createMatrix(this.moduleCount, M_NULL);
 	}
@@ -487,14 +485,21 @@ export default class QRMatrix{
 	}
 
 	/**
-	 * Draws the format info along the finder patterns
+	 * Draws the format info along the finder patterns. If no $maskPattern, all format info modules will be set to false.
 	 *
 	 * ISO/IEC 18004:2000 Section 8.9
 	 *
+	 * @param {MaskPattern|null} $maskPattern
+	 *
 	 * @returns {QRMatrix}
 	 */
-	setFormatInfo(){
-		let $bits = this._eccLevel.getformatPattern(this._maskPattern);
+	setFormatInfo($maskPattern = null){
+		this._maskPattern = $maskPattern;
+		let $bits         = 0; // sets all format fields to false (test mode)
+
+		if(this._maskPattern instanceof MaskPattern){
+			$bits = this._eccLevel.getformatPattern(this._maskPattern);
+		}
 
 		for(let $i = 0; $i < 15; $i++){
 			let $v = (($bits >> $i) & 1) === 1;
@@ -698,10 +703,12 @@ export default class QRMatrix{
 	 *
 	 * ISO/IEC 18004:2000 Section 8.8.1
 	 *
+	 * @param {MaskPattern} $maskPattern
 	 * @returns {QRMatrix}
 	 */
-	mask(){
-		let $mask = this._maskPattern.getMask();
+	mask($maskPattern){
+		this._maskPattern = $maskPattern;
+		let $mask         = this._maskPattern.getMask();
 
 		for(let $y = 0; $y < this.moduleCount; $y++){
 			for(let $x = 0; $x < this.moduleCount; $x++){

@@ -6,10 +6,8 @@
  */
 
 import {
-	AlphaNum, Byte, MaskPattern, /* Kanji, */Numeric, PATTERN_000, PATTERN_001, PATTERN_010, PATTERN_011, PATTERN_100,
-	PATTERN_101, PATTERN_110, PATTERN_111, QRData,
-	QRDataModeInterface,
-	QRMatrix, QROptions, VERSION_AUTO,
+	AlphaNum, Byte, /* Kanji, */Numeric, PATTERN_000, PATTERN_001, PATTERN_010, PATTERN_011, PATTERN_100,
+	PATTERN_101, PATTERN_110, PATTERN_111, QRData, QRDataModeInterface, QRMatrix, QROptions,
 } from '../../src/index.js';
 
 import {beforeEach, suite, test} from 'mocha';
@@ -117,17 +115,12 @@ suite('QRDataModeTest', function(){
 				/**
 				 * Tests initializing the data matrix
 				 */
-				suite('testInitMatrix', function(){
-					maskPatternProvider.forEach(({$maskPattern, pattern}) => {
-						test(`${pattern}`, function(){
-							_qrdata.setData([new $fqn(testData)]);
+				test('writeMatrix', function(){
+					_qrdata.setData([new $fqn(testData)]);
 
-							let matrix = _qrdata.writeMatrix(new MaskPattern($maskPattern));
+					let matrix = _qrdata.writeMatrix();
 
-							assert.instanceOf(matrix, QRMatrix);
-							assert.strictEqual(matrix.maskPattern().getPattern(), $maskPattern);
-						});
-					});
+					assert.instanceOf(matrix, QRMatrix);
 				});
 
 				/**

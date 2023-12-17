@@ -112,7 +112,7 @@ export default class QRCode{
 			}
 		}
 
-		return this.initOutputInterface().dump($file);
+		return this.renderMatrix(this.getQRMatrix(), $file);
 	}
 
 	/**
@@ -121,18 +121,14 @@ export default class QRCode{
 	 * @returns {QRMatrix}
 	 * @throws {QRCodeDataException}
 	 */
-	getMatrix(){
+	getQRMatrix(){
+		let $matrix = new QRData(this.options, this.dataSegments).writeMatrix();
 
-		if(!this.dataSegments.length){
-			throw new QRCodeDataException('QRCode::getMatrix() No data given.');
-		}
-
-		let $dataInterface = new QRData(this.options, this.dataSegments);
-		let $maskPattern   = this.options.maskPattern === MASK_PATTERN_AUTO
-			? MaskPattern.getBestPattern($dataInterface)
+		let $maskPattern = this.options.maskPattern === MASK_PATTERN_AUTO
+			? MaskPattern.getBestPattern($matrix)
 			: new MaskPattern(this.options.maskPattern);
 
-		let $matrix = $dataInterface.writeMatrix($maskPattern);
+		$matrix.setFormatInfo($maskPattern).mask($maskPattern);
 
 		// add matrix modifications after mask pattern evaluation and before handing over to output
 		if(this.options.addLogoSpace){

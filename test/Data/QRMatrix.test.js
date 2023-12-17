@@ -33,8 +33,7 @@ suite('QRMatrixTest', function(){
 	beforeEach(function(){
 		_matrix = new QRMatrix(
 			new Version(_version),
-			new EccLevel(ECC_L),
-			new MaskPattern(PATTERN_000)
+			new EccLevel(ECC_L)
 		)
 	});
 
@@ -98,12 +97,11 @@ suite('QRMatrixTest', function(){
 		// we need to recreate the matrix array on each run because js is dumb (per reference etc...)
 		let matrixProvider = function(){
 			let ecc  = new EccLevel(ECC_L);
-			let mask = new MaskPattern(PATTERN_000);
 			let m    = [];
 
 			for(let version = 1; version <= 40; version++){
 				m.push({
-					$matrix: new QRMatrix(new Version(version), ecc, mask),
+					$matrix: new QRMatrix(new Version(version), ecc),
 					desc  : `version ${version}`,
 				});
 			}
@@ -300,7 +298,7 @@ suite('QRMatrixTest', function(){
 		$o.eccLevel     = ECC_H;
 		$o.addQuietzone = false;
 
-		let $matrix = (new QRCode($o)).addByteSegment('testdata').getMatrix();
+		let $matrix = (new QRCode($o)).addByteSegment('testdata').getQRMatrix();
 		// also testing size adjustment to uneven numbers
 		$matrix.setLogoSpace(20, 14);
 
@@ -318,7 +316,7 @@ suite('QRMatrixTest', function(){
 	 */
 	test('testSetLogoSpaceInvalidEccException', function(){
 		assert.throws(() => {
-			(new QRCode()).addByteSegment('testdata').getMatrix().setLogoSpace(50, 50);
+			(new QRCode()).addByteSegment('testdata').getQRMatrix().setLogoSpace(50, 50);
 		}, 'ECC level "H" required to add logo space')
 	});
 
@@ -331,7 +329,7 @@ suite('QRMatrixTest', function(){
 			$o.version      = 5;
 			$o.eccLevel     = ECC_H;
 
-			(new QRCode($o)).addByteSegment('testdata').getMatrix().setLogoSpace(37, 37);
+			(new QRCode($o)).addByteSegment('testdata').getQRMatrix().setLogoSpace(37, 37);
 		}, 'logo space exceeds the maximum error correction capacity')
 	});
 

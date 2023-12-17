@@ -22,11 +22,4 @@ suite('QRCodeTest', function(){
 		assert.throws(() => (new QRCode(new QROptions({outputType: 'foo'}))).render('test'));
 	});
 
-	/**
-	 * tests if an exception is thrown when trying to call getMatrix() without data (empty string, no data set)
-	 */
-	test('testGetMatrixException', function(){
-		assert.throws(() => (new QRCode()).getMatrix());
-	});
-
 });
