@@ -15,7 +15,7 @@ import {assert} from 'chai';
 /**
  * Tests the QRString output module
  */
-suite('QRStringOutputTest', function(){
+suite('QRStringTextTest', function(){
 
 	let _options;
 	let _matrix;
