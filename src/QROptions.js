@@ -267,18 +267,18 @@ export default class QROptions{
 	/**
 	 * width of the logo space
 	 *
-	 * @type {number|int}
+	 * @type {number|int|null}
 	 * @protected
 	 */
-	_logoSpaceWidth = 0;
+	_logoSpaceWidth = null;
 
 	/**
 	 * height of the logo space
 	 *
-	 * @type {number|int}
+	 * @type {number|int|null}
 	 * @protected
 	 */
-	_logoSpaceHeight = 0;
+	_logoSpaceHeight = null;
 
 	/**
 	 * optional horizontal start position of the logo space (top left corner)

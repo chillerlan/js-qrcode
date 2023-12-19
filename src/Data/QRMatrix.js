@@ -200,7 +200,14 @@ export default class QRMatrix{
 	set($x, $y, $value, $M_TYPE){
 
 		if(PHPJS.isset(() => this._matrix[$y][$x])){
-			this._matrix[$y][$x] = $M_TYPE | ($value ? IS_DARK : 0);
+			// we don't know whether the input is dark, so we remove the dark bit
+			$M_TYPE &= ~IS_DARK
+
+			if($value === true){
+				$M_TYPE |= IS_DARK;
+			}
+
+			this._matrix[$y][$x] = $M_TYPE;
 		}
 
 		return this;
@@ -259,11 +266,11 @@ export default class QRMatrix{
 	 */
 	checkType($x, $y, $M_TYPE){
 
-		if(!PHPJS.isset(() => this._matrix[$y][$x])){
-			return false;
+		if(PHPJS.isset(() => this._matrix[$y][$x])){
+			return (this._matrix[$y][$x] & $M_TYPE) === $M_TYPE;
 		}
 
-		return (this._matrix[$y][$x] & $M_TYPE) === $M_TYPE;
+		return false;
 	}
 
 	/**
@@ -299,7 +306,12 @@ export default class QRMatrix{
 	 * @returns {boolean}
 	 */
 	check($x, $y){
-		return this.checkType($x, $y, IS_DARK);
+
+		if(PHPJS.isset(() => this._matrix[$y][$x])){
+			return this.isDark(this._matrix[$y][$x]);
+		}
+
+		return false;
 	}
 
 	/**
@@ -586,6 +598,17 @@ export default class QRMatrix{
 	}
 
 	/**
+	 * Rotates the matrix by 90 degrees clock wise
+	 *
+	 * @link https://stackoverflow.com/a/58668351
+	 */
+	rotate90(){
+		this._matrix = this._matrix[0].map((val, index) => this._matrix.map(row => row[index]).reverse())
+
+		return this;
+	}
+
+	/**
 	 * Inverts the values of the whole matrix
 	 *
 	 * ISO/IEC 18004:2015 Section 6.2 - Reflectance reversal
@@ -630,18 +653,18 @@ export default class QRMatrix{
 	 * @link https://github.com/chillerlan/php-qrcode/issues/52
 	 *
 	 * @param {number|int} $width
-	 * @param {number|int} $height
+	 * @param {number|int|null} $height
 	 * @param {number|int|null} $startX
 	 * @param {number|int|null} $startY
 	 *
 	 * @returns {QRMatrix}
 	 * @throws {QRCodeDataException}
 	 */
-	setLogoSpace($width, $height, $startX = null, $startY = null){
+	setLogoSpace($width, $height = null, $startX = null, $startY = null){
 		$height ??= $width;
 
 		// if width and height happen to be negative or 0 (default value), just return - nothing to do
-		if($width === 0 || $height === 0){
+		if($width <= 0 || $height <= 0){
 			return this;
 		}
 
@@ -654,8 +677,8 @@ export default class QRMatrix{
 		let $dimension = this._version.getDimension();
 
 		// throw if the size is negative or exceeds the qrcode size
-		if($width < 0 || $height < 0 || $width > $dimension || $height > $dimension){
-			throw new QRCodeDataException('invalid logo dimensions');
+		if($width > $dimension || $height > $dimension){
+			throw new QRCodeDataException('logo dimensions exceed matrix size');
 		}
 
 		// we need uneven sizes to center the logo space, adjust if needed
@@ -765,7 +788,7 @@ export default class QRMatrix{
 
 		for(let $y = 0; $y < this.moduleCount; $y++){
 			for(let $x = 0; $x < this.moduleCount; $x++){
-				if($mask($x, $y) && (this._matrix[$y][$x] & M_DATA) === M_DATA){
+				if((this._matrix[$y][$x] & M_DATA) === M_DATA && $mask($x, $y)){
 					this.flip($x, $y);
 				}
 			}

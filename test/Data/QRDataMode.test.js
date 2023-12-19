@@ -6,8 +6,7 @@
  */
 
 import {
-	AlphaNum, Byte, /* Kanji, */Numeric, PATTERN_000, PATTERN_001, PATTERN_010, PATTERN_011, PATTERN_100,
-	PATTERN_101, PATTERN_110, PATTERN_111, QRData, QRDataModeInterface, QRMatrix, QROptions,
+	AlphaNum, Byte, Numeric, QRData, QRDataModeInterface, QRMatrix, QROptions,
 } from '../../src/index.js';
 
 import {beforeEach, suite, test} from 'mocha';
@@ -34,7 +33,6 @@ suite('QRDataModeTest', function(){
 		let datamodeProvider = [
 			{$fqn: AlphaNum, desc: 'AlphaNum'},
 			{$fqn: Byte, desc: 'Byte'},
-//			{$fqn: Kanji, desc: 'Kanji'},
 			{$fqn: Numeric, desc: 'Numeric'},
 		];
 
@@ -77,17 +75,6 @@ suite('QRDataModeTest', function(){
 				],
 			}[desc];
 
-			// the 8 mask patterns to iterate over
-			let maskPatternProvider = [
-				{$maskPattern: PATTERN_000, pattern: 'PATTERN_000'},
-				{$maskPattern: PATTERN_001, pattern: 'PATTERN_001'},
-				{$maskPattern: PATTERN_010, pattern: 'PATTERN_010'},
-				{$maskPattern: PATTERN_011, pattern: 'PATTERN_011'},
-				{$maskPattern: PATTERN_100, pattern: 'PATTERN_100'},
-				{$maskPattern: PATTERN_101, pattern: 'PATTERN_101'},
-				{$maskPattern: PATTERN_110, pattern: 'PATTERN_110'},
-				{$maskPattern: PATTERN_111, pattern: 'PATTERN_111'},
-			];
 
 			suite(desc, function(){
 

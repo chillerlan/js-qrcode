@@ -127,14 +127,9 @@ export default class QRCode{
 	addMatrixModifications($QRMatrix){
 
 		if(this.options.addLogoSpace){
-			let $logoSpaceWidth  = this.options.logoSpaceWidth;
-			let $logoSpaceHeight = this.options.logoSpaceHeight;
-
 			// check whether one of the dimensions was omitted
-			if($logoSpaceWidth === null || $logoSpaceHeight === null){
-				$logoSpaceWidth  = ($logoSpaceWidth ?? $logoSpaceHeight ?? 0);
-				$logoSpaceHeight = null;
-			}
+			let $logoSpaceWidth  = (this.options.logoSpaceWidth ?? this.options.logoSpaceHeight ?? 0);
+			let $logoSpaceHeight = (this.options.logoSpaceHeight ?? $logoSpaceWidth);
 
 			$QRMatrix.setLogoSpace(
 				$logoSpaceWidth,

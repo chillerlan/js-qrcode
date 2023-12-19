@@ -101,12 +101,15 @@ export default class MaskPattern{
 		let $size      = $QRMatrix.getSize();
 
 		for(let $pattern of PATTERNS){
-			let $mp      = new MaskPattern($pattern);
-			let $matrix  = PHPJS.clone($QRMatrix).setFormatInfo($mp).mask($mp).getMatrix(true);
 			let $penalty = 0;
+			let $mp      = new MaskPattern($pattern);
+			let $matrix  = PHPJS.clone($QRMatrix);
+			// because js is fucking dumb, it can't even properly clone THAT ONE FUCKING ARRAY WITHOUT LEAVING REFERENCES
+			$matrix._matrix = structuredClone($QRMatrix._matrix);
+			let $m = $matrix.setFormatInfo($mp).mask($mp).getMatrix(true);
 
 			for(let $level = 1; $level <= 4; $level++){
-				$penalty += this['testRule' + $level]($matrix, $size, $size);
+				$penalty += this['testRule' + $level]($m, $size, $size);
 			}
 
 			$penalties[$pattern] = PHPJS.intval($penalty);
