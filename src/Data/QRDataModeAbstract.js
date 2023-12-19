@@ -39,7 +39,7 @@ export default class QRDataModeAbstract extends QRDataModeInterface{
 	constructor($data){
 		super(); // JS dum
 
-		if(!this.validateStringI($data)){
+		if(!this.constructor.validateString($data)){
 			throw new QRCodeDataException('invalid data');
 		}
 

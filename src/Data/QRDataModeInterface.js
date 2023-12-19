@@ -51,12 +51,4 @@ export default class QRDataModeInterface{
 	 */
 	static validateString($string){}
 
-	/**
-	 * same as validateString, but instanced mode because JS is dumb
-	 *
-	 * @param $string
-	 * @returns {boolean}
-	 */
-	validateStringI($string){}
-
 }

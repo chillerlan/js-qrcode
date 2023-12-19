@@ -39,13 +39,6 @@ export default class Byte extends QRDataModeAbstract{
 	/**
 	 * @inheritDoc
 	 */
-	validateStringI($string){
-		return Byte.validateString($string);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
 	write($bitBuffer, $versionNumber){
 		let $len  = this.getCharCount();
 		let $data = this.data.split('');

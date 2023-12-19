@@ -54,13 +54,6 @@ export default class Numeric extends QRDataModeAbstract{
 	/**
 	 * @inheritDoc
 	 */
-	validateStringI($string){
-		return Numeric.validateString($string);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
 	write($bitBuffer, $versionNumber){
 		let $len = this.getCharCount();
 

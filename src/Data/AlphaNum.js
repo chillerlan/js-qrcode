@@ -65,13 +65,6 @@ export default class AlphaNum extends QRDataModeAbstract{
 	/**
 	 * @inheritDoc
 	 */
-	validateStringI($string){
-		return AlphaNum.validateString($string);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
 	write($bitBuffer, $versionNumber){
 		let $len = this.getCharCount();
 		let $i;
