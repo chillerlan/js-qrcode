@@ -44,33 +44,39 @@
 		{
 			"type": "ko-fi",
 			"url": "https://ko-fi.com/codemasher"
-		},
-		{
-			"type": "paypal",
-			"url": "https://www.paypal.com/donate?hosted_button_id=WLYUNAT9ZTJZ4"
 		}
 	],
 	"type": "module",
 	"main": "lib/main.cjs",
 	"browser": "./lib/browser.js",
+	"files": [
+		"dist/*",
+		"lib/*",
+		"src/*",
+		"LICENSE",
+		"README.md"
+	],
+	"publishConfig": {
+		"registry": "https://npm.pkg.github.com"
+	},
 	"dependencies": {},
 	"devDependencies": {
-		"@babel/eslint-parser": "~7.23.3",
-		"@babel/plugin-proposal-class-properties": "~7.18.6",
-		"@babel/plugin-proposal-object-rest-spread": "~7.20.7",
-		"@babel/preset-env": "~7.23.5",
+		"@babel/eslint-parser": "~7.24.6",
+		"@babel/plugin-syntax-import-attributes": "~7.24.7",
+		"@babel/preset-env": "~7.24.6",
+		"@istanbuljs/nyc-config-babel": "~3.0.0",
 		"@rollup/plugin-babel": "~6.0.4",
 		"@rollup/plugin-terser": "~0.4.4",
 		"c8": "~8.0.1",
-		"chai": "~4.3.10",
-		"core-js": "~3.34.0",
-		"eslint": "~8.55.0",
-		"jsdoc": "~4.0.2",
-		"mocha": "~10.2.0",
-		"node": "~21.2.0",
+		"chai": "~5.1.1",
+		"core-js": "~3.37.1",
+		"eslint": "~9.4.0",
+		"jsdoc": "~4.0.3",
+		"mocha": "~10.4.0",
+		"node": "~22.2.0",
 		"nyc": "~15.1.0",
-		"rollup": "~4.7.0",
-		"util": "^0.12.5"
+		"rollup": "~4.18.0",
+		"util": "~0.12.5"
 	},
 	"scripts": {
 		"lint": "eslint ./src ./test",

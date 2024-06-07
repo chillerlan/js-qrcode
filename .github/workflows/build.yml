@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: "checkout sources"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: "install dependencies"
         run: npm install
@@ -32,9 +32,10 @@ jobs:
         run: npm run build-src
 
       - name: "send code coverage report to codecov.io"
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
-          directory: ./.build/coverage/
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: .build/coverage/clover.xml
 
       - name: "build docs"
         run: npm run jsdoc
@@ -47,7 +48,7 @@ jobs:
           clean: true
 
       - name: "upload artifacts"
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: js-qrcode-${{ github.sha }}
           path: ./dist

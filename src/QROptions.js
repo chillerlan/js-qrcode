@@ -448,11 +448,11 @@ export default class QROptions{
 		this.setMinMaxVersion($versionMin, this._versionMax);
 	}
 
-	set versionMin($versionMin){ // eslint-disable-line no-dupe-class-members
+	set versionMin($versionMin){
 		this._set_versionMin($versionMin);
 	}
 
-	get versionMin(){ // eslint-disable-line no-dupe-class-members
+	get versionMin(){
 		return this._versionMin;
 	}
 
@@ -468,11 +468,11 @@ export default class QROptions{
 		this.setMinMaxVersion(this._versionMin, $versionMax);
 	}
 
-	set versionMax($versionMax){ // eslint-disable-line no-dupe-class-members
+	set versionMax($versionMax){
 		this._set_versionMax($versionMax);
 	}
 
-	get versionMax(){ // eslint-disable-line no-dupe-class-members
+	get versionMax(){
 		return this._versionMax;
 	}
 
@@ -488,11 +488,11 @@ export default class QROptions{
 		this._version = $version !== VERSION_AUTO ? Math.max(1, Math.min(40, $version)) : VERSION_AUTO;
 	}
 
-	set version($version){ // eslint-disable-line no-dupe-class-members
+	set version($version){
 		this._set_version($version);
 	}
 
-	get version(){ // eslint-disable-line no-dupe-class-members
+	get version(){
 		return this._version;
 	}
 
@@ -514,11 +514,11 @@ export default class QROptions{
 		this._eccLevel = $eccLevel;
 	}
 
-	set eccLevel($eccLevel){ // eslint-disable-line no-dupe-class-members
+	set eccLevel($eccLevel){
 		this._set_eccLevel($eccLevel);
 	}
 
-	get eccLevel(){ // eslint-disable-line no-dupe-class-members
+	get eccLevel(){
 		return this._eccLevel;
 	}
 
@@ -538,11 +538,11 @@ export default class QROptions{
 
 	}
 
-	set maskPattern($maskPattern){ // eslint-disable-line no-dupe-class-members
+	set maskPattern($maskPattern){
 		this._set_maskPattern($maskPattern);
 	}
 
-	get maskPattern(){ // eslint-disable-line no-dupe-class-members
+	get maskPattern(){
 		return this._maskPattern;
 	}
 
@@ -558,11 +558,11 @@ export default class QROptions{
 		this._quietzoneSize = Math.max(0, Math.min($quietzoneSize, 75));
 	}
 
-	set quietzoneSize($quietzoneSize){ // eslint-disable-line no-dupe-class-members
+	set quietzoneSize($quietzoneSize){
 		this._set_quietzoneSize($quietzoneSize) ;
 	}
 
-	get quietzoneSize(){ // eslint-disable-line no-dupe-class-members
+	get quietzoneSize(){
 		return this._quietzoneSize;
 	}
 
@@ -592,11 +592,11 @@ export default class QROptions{
 		this._logoSpaceWidth = this.clampLogoSpaceValue($width);
 	}
 
-	set logoSpaceWidth($width){ // eslint-disable-line no-dupe-class-members
+	set logoSpaceWidth($width){
 		this._set_logoSpaceWidth($width);
 	}
 
-	get logoSpaceWidth(){ // eslint-disable-line no-dupe-class-members
+	get logoSpaceWidth(){
 		return this._logoSpaceWidth;
 	}
 
@@ -612,11 +612,11 @@ export default class QROptions{
 		this._logoSpaceHeight = this.clampLogoSpaceValue($height);
 	}
 
-	set logoSpaceHeight($height){ // eslint-disable-line no-dupe-class-members
+	set logoSpaceHeight($height){
 		this._set_logoSpaceHeight($height);
 	}
 
-	get logoSpaceHeight(){ // eslint-disable-line no-dupe-class-members
+	get logoSpaceHeight(){
 		return this._logoSpaceHeight;
 	}
 
@@ -632,11 +632,11 @@ export default class QROptions{
 		this._logoSpaceStartX = (typeof $startX === 'undefined' || $startX === null) ? null : this.clampLogoSpaceValue($startX);
 	}
 
-	set logoSpaceStartX($startX){ // eslint-disable-line no-dupe-class-members
+	set logoSpaceStartX($startX){
 		this._set_logoSpaceStartX($startX);
 	}
 
-	get logoSpaceStartX(){ // eslint-disable-line no-dupe-class-members
+	get logoSpaceStartX(){
 		return this._logoSpaceStartX;
 	}
 
@@ -652,11 +652,11 @@ export default class QROptions{
 		this._logoSpaceStartY = (typeof $startY === 'undefined' || $startY === null) ? null : this.clampLogoSpaceValue($startY);
 	}
 
-	set logoSpaceStartY($startY){ // eslint-disable-line no-dupe-class-members
+	set logoSpaceStartY($startY){
 		this._set_logoSpaceStartY($startY);
 	}
 
-	get logoSpaceStartY(){ // eslint-disable-line no-dupe-class-members
+	get logoSpaceStartY(){
 		return this._logoSpaceStartY;
 	}
 
@@ -672,11 +672,11 @@ export default class QROptions{
 		this._circleRadius = Math.max(0.1, Math.min(0.75, $circleRadius));
 	}
 
-	set circleRadius($circleRadius){ // eslint-disable-line no-dupe-class-members
+	set circleRadius($circleRadius){
 		this._set_circleRadius($circleRadius);
 	}
 
-	get circleRadius(){ // eslint-disable-line no-dupe-class-members
+	get circleRadius(){
 		return this._circleRadius;
 	}
 
@@ -698,11 +698,11 @@ export default class QROptions{
 		this._canvasMimeType = `image/${$canvasImageType}`;
 	}
 
-	set canvasMimeType($canvasImageType){ // eslint-disable-line no-dupe-class-members
+	set canvasMimeType($canvasImageType){
 		this._set_canvasMimeType($canvasImageType);
 	}
 
-	get canvasMimeType(){ // eslint-disable-line no-dupe-class-members
+	get canvasMimeType(){
 		return this._canvasMimeType;
 	}
 

@@ -1,7 +1,7 @@
 /**
  * @type {import('rollup').RollupOptions}
  */
-let config = {
+export default {
 	input: 'src/index.js',
 	output: [
 		{
@@ -17,5 +17,3 @@ let config = {
 	],
 	plugins: [],
 };
-
-export default config;

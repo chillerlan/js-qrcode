@@ -2,7 +2,7 @@
 	"all": true,
 	"es-modules": true,
 	"include": ["src/**"],
-	"reporter": ["clover", "lcov", "text"],
+	"reporter": ["clover"],
 	"report-dir": "./.build/coverage",
 	"temp-dir": "./.build/c8"
 }

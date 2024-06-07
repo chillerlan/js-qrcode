@@ -4,7 +4,7 @@ import terser from '@rollup/plugin-terser';
 /**
  * @type {import('rollup').RollupOptions}
  */
-let config = {
+export default {
 	input: 'src/index.js',
 	output: [
 		{
@@ -32,25 +32,24 @@ let config = {
 	plugins: [
 		babel({
 			babelHelpers: 'bundled',
-			exclude: 'node_modules/**',
+			configFile: './babel.config.json',
 		}),
 		terser({
 			format: {
 				comments: false,
 				keep_quoted_props: true,
 //				max_line_len: 130,
-				quote_style: 3,
-				preamble: '/*\n'
+				quote_style: 1,
+				preamble:
+					  '/*\n'
 					+ ' * js-qrcode - a javascript port of chillerlan/php-qrcode\n'
-					+ ' * @link       https://github.com/chillerlan/php-qrcode\n'
 					+ ' *\n'
 					+ ' * @copyright  2022 smiley\n'
 					+ ' * @license    MIT\n'
 					+ ' * @link       https://github.com/chillerlan/js-qrcode\n'
+					+ ' * @link       https://github.com/chillerlan/php-qrcode\n'
 					+ ' */',
 			},
 		}),
 	],
 };
-
-export default config;

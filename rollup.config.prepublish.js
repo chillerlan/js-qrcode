@@ -5,7 +5,7 @@ import babel from '@rollup/plugin-babel';
 /**
  * @type {import('rollup').RollupOptions}
  */
-let config = {
+export default {
 	input: 'src/index.js',
 	output: [
 		{
@@ -22,9 +22,7 @@ let config = {
 	plugins: [
 		babel({
 			babelHelpers: 'bundled',
-			exclude: 'node_modules/**',
+			configFile: './babel.config.json',
 		}),
 	],
 };
-
-export default config;
