@@ -34,9 +34,9 @@ mv[M_SEPARATOR]      = QRStringText.ansi8('░░', 253);
 
 let $options = new QROptions;
 
+$options.outputInterface = QRStringText;
 $options.version         = 3;
 $options.quietzoneSize   = 2;
-$options.outputInterface = QRStringText;
 $options.moduleValues    = mv;
 
 let $qrcode  = new QRCode($options);

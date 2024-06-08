@@ -29,17 +29,34 @@ export default class ReedSolomonEncoder{
 	interleavedDataIndex;
 
 	/**
+	 * @type {Version} $version
+	 */
+	version;
+
+	/**
+	 * @type {EccLevel} $eccLevel
+	 */
+	eccLevel;
+
+	/**
+	 * @param {Version} $version
+	 * @param {EccLevel} $eccLevel
+	 */
+	constructor($version, $eccLevel){
+		this.version  = $version;
+		this.eccLevel = $eccLevel;
+	}
+
+	/**
 	 * ECC interleaving
 	 *
 	 * @param {BitBuffer} $bitBuffer
-	 * @param {Version} $version
-	 * @param {EccLevel} $eccLevel
 	 *
 	 * @returns {Object<{}>}
 	 * @throws QRCodeException
 	 */
-	interleaveEcBytes($bitBuffer, $version, $eccLevel){
-		let $rsblockData     = $version.getRSBlocks($eccLevel);
+	interleaveEcBytes($bitBuffer){
+		let $rsblockData     = this.version.getRSBlocks(this.eccLevel);
 		let $numEccCodewords = $rsblockData[0];
 		let $l1              = $rsblockData[1][0][0];
 		let $b1              = $rsblockData[1][0][1];
@@ -69,13 +86,13 @@ export default class ReedSolomonEncoder{
 			}
 
 			let $ecByteCount = $rsBlockTotal - $dataByteCount;
-			$ecBytes[$key]   = this.generateEcBytes($dataBytes[$key], $ecByteCount);
+			$ecBytes[$key]   = this.encode($dataBytes[$key], $ecByteCount);
 			$maxDataBytes    = Math.max($maxDataBytes, $dataByteCount);
 			$maxEcBytes      = Math.max($maxEcBytes, $ecByteCount);
 			$dataByteOffset += $dataByteCount;
 		}
 
-		this.interleavedData      = PHPJS.array_fill($version.getTotalCodewords(), 0);
+		this.interleavedData      = PHPJS.array_fill(this.version.getTotalCodewords(), 0);
 		this.interleavedDataIndex = 0;
 		let $numRsBlocks          = $l1 + $l2;
 
@@ -92,7 +109,7 @@ export default class ReedSolomonEncoder{
 	 * @returns {Object<{}>}
 	 * @private
 	 */
-	generateEcBytes($dataBytes, $ecByteCount){
+	encode($dataBytes, $ecByteCount){
 		let $rsPoly = new GenericGFPoly([1]);
 
 		for(let $i = 0; $i < $ecByteCount; $i++){

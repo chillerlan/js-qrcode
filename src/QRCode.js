@@ -53,17 +53,28 @@ export default class QRCode{
 	/**
 	 * QRCode constructor.
 	 *
-	 * Sets the options instance
-	 *
 	 * @param {QROptions} $options
 	 */
 	constructor($options){
+		this.setOptions($options);
+	}
+
+	/**
+	 * Sets an options instance
+	 *
+	 * @param {QROptions} $options
+	 *
+	 * @returns {QRCode}
+	 */
+	setOptions($options){
 
 		if(!($options instanceof QROptions)){
 			$options = new QROptions();
 		}
 
 		this.options = $options;
+
+		return this;
 	}
 
 	/**

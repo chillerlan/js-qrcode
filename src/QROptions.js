@@ -111,7 +111,7 @@ export default class QROptions{
 	eol = '\n';
 
 	/**
-	 * size of a QR code pixel [SVG, IMAGE_*], HTML via CSS
+	 * size of a QR code module in pixels [SVG, IMAGE_*], HTML via CSS
 	 *
 	 * @type {number|int}
 	 */
@@ -167,13 +167,6 @@ export default class QROptions{
 	 * @type {boolean}
 	 */
 	svgUseFillAttributes = true;
-
-	/**
-	 * Whether to return matrix values in JSON as booleans or `$M_TYPE` integers
-	 *
-	 * @type {boolean}
-	 */
-	jsonAsBooleans = false;
 
 	/**
 	 * whether to connect the paths for the several module types to avoid weird glitches when using gradients etc.
@@ -357,7 +350,7 @@ export default class QROptions{
 	canvasImageQuality = 0.85;
 
 	/**
-	 * because javascript is dumb, and we can't call getters and setters directly we have to this silly workaround.
+	 * because javascript is dumb, and we can't call getters and setters directly we have to do this silly workaround.
 	 * if your inherited options class uses magic getters and setters, add the relevant property names to this array
 	 * and call _fromIterable() afterwards:
 	 *

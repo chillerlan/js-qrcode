@@ -48,7 +48,7 @@ export default class MaskPattern{
 	constructor($maskPattern){
 		$maskPattern = PHPJS.intval($maskPattern);
 
-		if((0b111 & $maskPattern) !== $maskPattern){
+		if(($maskPattern & 0b111) !== $maskPattern){
 			throw new QRCodeException(`invalid mask pattern: "${$maskPattern}"`);
 		}
 

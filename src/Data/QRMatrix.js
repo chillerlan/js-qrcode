@@ -25,14 +25,6 @@ import MaskPattern from '../Common/MaskPattern.js';
 export default class QRMatrix{
 
 	/**
-	 * the used mask pattern, set via QRMatrix::mask()
-	 *
-	 * @type {MaskPattern}
-	 * @protected
-	 */
-	_maskPattern;
-
-	/**
 	 * the current ECC level
 	 *
 	 * @type {EccLevel}
@@ -49,12 +41,12 @@ export default class QRMatrix{
 	_version;
 
 	/**
-	 * the actual matrix data array
+	 * the used mask pattern, set via QRMatrix::mask()
 	 *
-	 * @type {number[][]|int[][]}
+	 * @type {MaskPattern}
 	 * @protected
 	 */
-	_matrix;
+	_maskPattern;
 
 	/**
 	 * the size (side length) of the matrix, including quiet zone (if created)
@@ -63,6 +55,14 @@ export default class QRMatrix{
 	 * @protected
 	 */
 	moduleCount;
+
+	/**
+	 * the actual matrix data array
+	 *
+	 * @type {number[][]|int[][]}
+	 * @protected
+	 */
+	_matrix;
 
 	/**
 	 * QRMatrix constructor.
@@ -258,6 +258,8 @@ export default class QRMatrix{
 	 *
 	 *   true => $value & $M_TYPE === $M_TYPE
 	 *
+	 * Also, returns false if the given coordinates are out of range.
+	 *
 	 * @param {number|int} $x
 	 * @param {number|int} $y
 	 * @param {number|int} $M_TYPE
@@ -297,6 +299,8 @@ export default class QRMatrix{
 	/**
 	 * Checks whether a module is true (dark) or false (light)
 	 *
+	 * Also, returns false if the given coordinates are out of range.
+	 *
 	 *   true  => $value & 0x800 === 0x800
 	 *   false => $value & 0x800 === 0
 	 *
@@ -331,9 +335,9 @@ export default class QRMatrix{
 	 * The 8 flags of the bitmask represent the status of each of the neighbouring fields,
 	 * starting with the lowest bit for top left, going clockwise:
 	 *
-	 *   1 2 3
-	 *   8 # 4
-	 *   7 6 5
+	 *   0 1 2
+	 *   7 # 3
+	 *   6 5 4
 	 *
 	 * @param {number|int} $x
 	 * @param {number|int} $y
@@ -727,7 +731,7 @@ export default class QRMatrix{
 	 * @returns {QRMatrix}
 	 */
 	writeCodewords($bitBuffer){
-		let $data = (new ReedSolomonEncoder).interleaveEcBytes($bitBuffer, this._version, this._eccLevel);
+		let $data = new ReedSolomonEncoder(this._version, this._eccLevel).interleaveEcBytes($bitBuffer);
 		let $byteCount = $data.length;
 		let $iByte = 0;
 		let $iBit = 7;
