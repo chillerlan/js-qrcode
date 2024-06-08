@@ -6,7 +6,7 @@
  */
 
 import {
-	Byte, MaskPattern, QRData, QROptions, QROutputAbstract, QROutputInterface, QRStringText, PATTERN_010, M_DATA, IS_DARK,
+	QRCode, QROptions, QROutputAbstract, QROutputInterface, QRStringText, M_DATA, M_DATA_DARK,
 } from '../../src/index.js';
 
 import {beforeEach, suite, test} from 'mocha';
@@ -22,7 +22,7 @@ suite('QRStringTextTest', function(){
 
 	beforeEach(function(){
 		_options = new QROptions();
-		_matrix  = (new QRData(_options, [new Byte('testdata')])).writeMatrix(new MaskPattern(PATTERN_010));
+		_matrix  = (new QRCode(_options)).addByteSegment('testdata').getQRMatrix();
 	});
 
 	suite('QRStringTest', function(){
@@ -49,14 +49,16 @@ suite('QRStringTextTest', function(){
 		test('testSetModuleValues', function(){
 			let mv = {};
 
-			mv[M_DATA]         = 'A'; // 2
-			mv[M_DATA|IS_DARK] = 'B'; // 2050
+			mv[M_DATA]      = 'A';
+			mv[M_DATA_DARK] = 'B';
 
 			_options.moduleValues = mv;
 			_outputInterface      = new QRStringText(_options, _matrix);
 
-			assert.strictEqual(_outputInterface.moduleValues[M_DATA], 'A');
-			assert.strictEqual(_outputInterface.moduleValues[M_DATA|IS_DARK], 'B');
+			let data = _outputInterface.dump();
+
+			assert.isTrue(data.includes('A'));
+			assert.isTrue(data.includes('B'));
 		});
 
 	});

@@ -6,7 +6,7 @@
  */
 
 import {
-	Byte, MaskPattern, QRData, QROptions, QROutputAbstract, QROutputInterface, QRStringJSON, PATTERN_010,
+	QRCode, QROptions, QROutputAbstract, QROutputInterface, QRStringJSON, M_DATA, M_DATA_DARK,
 } from '../../src/index.js';
 
 import {beforeEach, suite, test} from 'mocha';
@@ -22,7 +22,7 @@ suite('QRStringJSONTest', function(){
 
 	beforeEach(function(){
 		_options = new QROptions();
-		_matrix  = (new QRData(_options, [new Byte('testdata')])).writeMatrix(new MaskPattern(PATTERN_010));
+		_matrix  = (new QRCode(_options)).addByteSegment('testdata').getQRMatrix();
 	});
 
 	suite('QRStringJSON', function(){
@@ -43,6 +43,22 @@ suite('QRStringJSONTest', function(){
 			assert.instanceOf(_outputInterface, QROutputInterface);
 		});
 
+
+		test('testSetModuleValues', function(){
+			let mv = {};
+
+			mv[M_DATA_DARK] = '#AAA'
+			mv[M_DATA]      = '#BBB'
+
+			_options.moduleValues = mv;
+
+			_outputInterface = new QRStringJSON(_options, _matrix);
+
+			let data = _outputInterface.dump();
+
+			assert.isTrue(data.includes('"layer":"data-dark","value":"#AAA"'));
+			assert.isTrue(data.includes('"layer":"data","value":"#BBB"'));
+		});
 
 	});
 
