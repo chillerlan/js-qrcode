@@ -11,7 +11,6 @@ import Version from '../Common/Version.js';
 import QRMatrix from './QRMatrix.js';
 import Mode from '../Common/Mode.js';
 import QRCodeDataException from './QRCodeDataException.js';
-import Byte from './Byte.js';
 import {VERSION_AUTO} from '../Common/constants.js';
 
 /**
@@ -69,18 +68,15 @@ export default class QRData{
 	 * QRData constructor.
 	 *
 	 * @param {QROptions}                 $options
-	 * @param {QRDataModeAbstract[]|null} $dataSegments
+	 * @param {QRDataModeAbstract[]} $dataSegments
 	 */
-	constructor($options, $dataSegments = null){
+	constructor($options, $dataSegments = []){
 		this.options       = $options;
 		this.bitBuffer     = new BitBuffer;
 		this.eccLevel      = new EccLevel(this.options.eccLevel);
 		this.maxBitsForEcc = this.eccLevel.getMaxBits();
 
-		if($dataSegments !== null){
-			this.setData($dataSegments);
-		}
-
+		this.setData($dataSegments);
 	}
 
 	/**
@@ -121,36 +117,51 @@ export default class QRData{
 	 */
 	estimateTotalBitLength(){
 		let $length = 0;
-		let $margin = 0;
-		let $i;
+		let $segment;
 
-		for($i = 0; $i < this.dataSegments.length; $i++){
-			let $segment = this.dataSegments[$i];
-			// data length in bits of the current segment +4 bits for each mode descriptor
-			$length += ($segment.getLengthInBits() + Mode.getLengthBitsForMode($segment.getDataMode())[0] + 4);
+		for($segment of this.dataSegments){
+			// data length of the current segment
+			$length += $segment.getLengthInBits();
+			// +4 bits for the mode descriptor
+			$length += 4;
+		}
 
-//			if(!$segment instanceof ECI){
-				// mode length bits margin to the next breakpoint
-				$margin += ($segment instanceof Byte ? 8 : 2);
-//			}
+		let $provisionalVersion = null;
+
+		for(let $version in this.maxBitsForEcc){
+
+			if($version === 0){ // JS array/object weirdness vs php arrays...
+				continue;
+			}
+
+			if($length <= this.maxBitsForEcc[$version]){
+				$provisionalVersion = $version;
+			}
 
 		}
 
-		let $breakpoints = [9, 26, 40];
+		if($provisionalVersion !== null){
 
-		for($i = 0; $i < $breakpoints.length; $i++){
-			// length bits for the first breakpoint have already been added
-			if($breakpoints[$i] > 9){
-				$length += $margin;
+			// add character count indicator bits for the provisional version
+			for($segment of this.dataSegments){
+				$length += Mode.getLengthBitsForVersion($segment.datamode, $provisionalVersion);
 			}
 
-			if($length < this.maxBitsForEcc[$breakpoints[$i]]){
+			// it seems that in some cases the estimated total length is not 100% accurate,
+			// so we substract 4 bits from the total when not in mixed mode
+			if(this.dataSegments.length <= 1){
+				$length -= 4;
+			}
+
+			// we've got a match!
+			// or let's see if there's a higher version number available
+			if($length <= this.maxBitsForEcc[$provisionalVersion] || this.maxBitsForEcc[($provisionalVersion + 1)]){
 				return $length;
 			}
 
 		}
 
-		throw new QRCodeDataException(`estimated data exceeds ${$length} bits, max: ${this.maxBitsForEcc[$breakpoints[$i]]}`);
+		throw new QRCodeDataException(`estimated data exceeds ${$length} bits`);
 	}
 
 	/**
@@ -170,7 +181,7 @@ export default class QRData{
 
 		// guess the version number within the given range
 		for(let $version = this.options.versionMin; $version <= this.options.versionMax; $version++){
-			if($total <= this.maxBitsForEcc[$version]){
+			if($total <= (this.maxBitsForEcc[$version] - 4)){
 				return new Version($version);
 			}
 		}
@@ -187,16 +198,15 @@ export default class QRData{
 	 * @private
 	 */
 	writeBitBuffer(){
-		let $version  = this.version.getVersionNumber();
-		let $MAX_BITS = this.maxBitsForEcc[$version];
+		let $MAX_BITS = this.eccLevel.getMaxBitsForVersion(this.version);
 
 		for(let $i = 0; $i < this.dataSegments.length; $i++){
-			this.dataSegments[$i].write(this.bitBuffer, $version);
+			this.dataSegments[$i].write(this.bitBuffer, this.version.getVersionNumber());
 		}
 
 		// overflow, likely caused due to invalid version setting
 		if(this.bitBuffer.getLength() > $MAX_BITS){
-			throw new QRCodeDataException('code length overflow. (' + this.bitBuffer.getLength() + ' > ' + $MAX_BITS + ' bit)');
+			throw new QRCodeDataException(`code length overflow. (${this.bitBuffer.getLength()} > ${$MAX_BITS} bit)`);
 		}
 
 		// add terminator (ISO/IEC 18004:2000 Table 2)
@@ -209,6 +219,11 @@ export default class QRData{
 		// if the final codeword is not exactly 8 bits in length, it shall be made 8 bits long
 		// by the addition of padding bits with binary value 0
 		while(this.bitBuffer.getLength() % 8 !== 0){
+
+			if(this.bitBuffer.getLength() === $MAX_BITS){
+				break;
+			}
+
 			this.bitBuffer.putBit(false);
 		}
 
@@ -220,6 +235,12 @@ export default class QRData{
 		while(this.bitBuffer.getLength() <= $MAX_BITS){
 			this.bitBuffer.put($alternate ? 0b00010001 : 0b11101100, 8);
 			$alternate = !$alternate;
+		}
+
+		// In certain versions of symbol, it may be necessary to add 3, 4 or 7 Remainder Bits (all zeros)
+		// to the end of the message in order exactly to fill the symbol capacity
+		while(this.bitBuffer.getLength() <= $MAX_BITS){
+			this.bitBuffer.putBit(false);
 		}
 
 	}

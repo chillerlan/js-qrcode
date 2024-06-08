@@ -20,7 +20,7 @@ const ECC_LEVELS = [ECC_L, ECC_M, ECC_Q, ECC_H];
  */
 const MAX_BITS = [
 	//  version  => [L, M, Q, H]  // modules
-	[ null,  null,  null,  null], // empty element, count starts at 1
+	[    0,     0,     0,     0], // empty element, count starts at 1
 	[  152,   128,   104,    72], //  21
 	[  272,   224,   176,   128], //  25
 	[  440,   352,   272,   208], //  29
@@ -202,6 +202,17 @@ export default class EccLevel{
 		}
 
 		return $v;
+	}
+
+	/**
+	 * Returns the maximum bit length for the given version and current ECC level
+	 *
+	 * @param {Version} $version
+	 *
+	 * @returns {number|int}
+	 */
+	getMaxBitsForVersion($version){
+		return MAX_BITS[$version.getVersionNumber()][this.getOrdinal()];
 	}
 
 }
