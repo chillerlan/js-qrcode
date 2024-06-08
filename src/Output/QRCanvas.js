@@ -35,7 +35,7 @@ export default class QRCanvas extends QROutputAbstract{
 	 * @todo: validate css value
 	 * @inheritDoc
 	 */
-	moduleValueIsValid($value){
+	static moduleValueIsValid($value){
 
 		if(typeof $value !== 'string'){
 			return false;
@@ -75,6 +75,13 @@ export default class QRCanvas extends QROutputAbstract{
 	 */
 	getDefaultModuleValue($isDark){
 		return $isDark ? '#000' : '#fff';
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	getOutputDimensions(){
+		return [this.length, this.length];
 	}
 
 	/**
@@ -134,7 +141,7 @@ export default class QRCanvas extends QROutputAbstract{
 		this._canvas.height = this.length;
 		this._context       = this._canvas.getContext('2d', {alpha: this.options.imageTransparent})
 
-		if(this.options.bgcolor && this.moduleValueIsValid(this.options.bgcolor)){
+		if(this.options.bgcolor && this.constructor.moduleValueIsValid(this.options.bgcolor)){
 			this._context.fillStyle = this.options.bgcolor;
 			this._context.fillRect(0, 0, this.length, this.length);
 		}

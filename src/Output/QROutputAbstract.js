@@ -93,13 +93,13 @@ export default class QROutputAbstract extends QROutputInterface{
 	/**
 	 * Returns a 2 element array with the current output width and height
 	 *
-	 * The type and units of the values depend on the output class. The default value is the current module count * scale.
+	 * The type and units of the values depend on the output class. The default value is the current module count.
 	 *
 	 * @returna {array}
 	 * @protected
 	 */
 	getOutputDimensions(){
-		return [this.length, this.length];
+		return [this.moduleCount, this.moduleCount];
 	}
 
 	/**
@@ -111,14 +111,16 @@ export default class QROutputAbstract extends QROutputInterface{
 	setModuleValues(){
 		let $M_TYPE;
 
+		// first fill the map with the default values
 		for($M_TYPE in DEFAULT_MODULE_VALUES){
 			this.moduleValues[$M_TYPE] = this.getDefaultModuleValue(DEFAULT_MODULE_VALUES[$M_TYPE]);
 		}
 
+		// now loop over the options values to replace defaults and add extra values
 		for($M_TYPE in this.options.moduleValues){
 			let $value = this.options.moduleValues[$M_TYPE];
 
-			if(this.moduleValueIsValid($value)){
+			if(this.constructor.moduleValueIsValid($value)){
 				this.moduleValues[$M_TYPE] = this.prepareModuleValue($value);
 			}
 		}
@@ -126,34 +128,62 @@ export default class QROutputAbstract extends QROutputInterface{
 	}
 
 	/**
-	 * Determines whether the given value is valid
-	 *
-	 * @param {*} $value
-	 * @returns {boolean}
-	 * @abstract
-	 * @protected
-	 */
-	moduleValueIsValid($value){}
-
-	/**
 	 * Returns the final value for the given input (return value depends on the output module)
 	 *
 	 * @param {*} $value
 	 * @returna {*}
-	 * @abstract
 	 * @protected
 	 */
-	prepareModuleValue($value){}
+	prepareModuleValue($value){
+		return $value.replace(/(<([^>]+)>)/gi, '').replace(/([ '"\r\n\t]+)/g, '');
+	}
 
 	/**
 	 * Returns a defualt value for either dark or light modules (return value depends on the output module)
 	 *
 	 * @param {boolean} $isDark
 	 * @returna {*}
-	 * @abstract
 	 * @protected
 	 */
-	getDefaultModuleValue($isDark){}
+	getDefaultModuleValue($isDark){
+		return $isDark ? '#000' : '#fff';
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	static moduleValueIsValid($value){
+
+		if(typeof $value !== 'string'){
+			return false;
+		}
+
+		$value = $value.trim();
+
+		// hex notation
+		// #rgb(a)
+		// #rrggbb(aa)
+		if($value.match(/^#([\da-f]{3}){1,2}$|^#([\da-f]{4}){1,2}$/i)){
+			return true;
+		}
+
+		// css: hsla/rgba(...values)
+		if($value.match(/^(hsla?|rgba?)\([\d .,%\/]+\)$/i)){
+			return true;
+		}
+
+		// url(...)
+		if($value.match(/^url\([-\/#a-z\d]+\)$/i)){
+			return true;
+		}
+
+		// predefined css color
+		if($value.match(/^[a-z]+$/i)){
+			return true;
+		}
+
+		return false;
+	}
 
 	/**
 	 * Returns the prepared value for the given $M_TYPE

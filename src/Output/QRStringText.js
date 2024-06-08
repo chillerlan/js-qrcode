@@ -34,7 +34,7 @@ export default class QRStringText extends QROutputAbstract{
 	/**
 	 * @inheritDoc
 	 */
-	moduleValueIsValid($value){
+	static moduleValueIsValid($value){
 		return typeof $value === 'string';
 	}
 
@@ -73,4 +73,5 @@ export default class QRStringText extends QROutputAbstract{
 
 		return `\x1b[${($background === true ? 48 : 38)};5;${$color}m${$str}\x1b[0m`;
 	}
+
 }

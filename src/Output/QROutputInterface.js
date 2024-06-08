@@ -17,6 +17,16 @@ export default class QROutputInterface{
 	 */
 	mimeType;
 
+
+	/**
+	 * Determines whether the given value is valid
+	 *
+	 * @param {*} $value
+	 * @returns {boolean}
+	 * @abstract
+	 */
+	static moduleValueIsValid($value){}
+
 	/**
 	 * generates the output, optionally dumps it to a file, and returns it
 	 *

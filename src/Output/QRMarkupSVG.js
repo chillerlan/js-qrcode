@@ -14,7 +14,7 @@ import {LAYERNAMES} from '../Common/constants.js';
  * @see https://github.com/codemasher/php-qrcode/pull/5
  * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Element/svg
  * @see https://www.sarasoueidan.com/demos/interactive-svg-coordinate-system/
- * @see http://apex.infogridpacific.com/SVG/svg-tutorial-contents.html
+ * @see https://web.archive.org/web/20200220211445/http://apex.infogridpacific.com/SVG/svg-tutorial-contents.html
  */
 export default class QRMarkupSVG extends QROutputAbstract{
 
@@ -22,65 +22,6 @@ export default class QRMarkupSVG extends QROutputAbstract{
 	 * @inheritDoc
 	 */
 	mimeType = 'image/svg+xml';
-
-	/**
-	 * @inheritDoc
-	 */
-	moduleValueIsValid($value){
-
-		if(typeof $value !== 'string'){
-			return false;
-		}
-
-		$value = $value.trim();
-
-		// hex notation
-		// #rgb(a)
-		// #rrggbb(aa)
-		if($value.match(/^#([\da-f]{3}){1,2}$|^#([\da-f]{4}){1,2}$/i)){
-			return true;
-		}
-
-		// css: hsla/rgba(...values)
-		if($value.match(/^(hsla?|rgba?)\([\d .,%\/]+\)$/i)){
-			return true;
-		}
-
-		// url(...)
-		if($value.match(/^url\([-\/#a-z\d]+\)$/i)){
-			return true;
-		}
-
-		// predefined css color
-		if($value.match(/^[a-z]+$/i)){
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	prepareModuleValue($value){
-		return $value.replace(/(<([^>]+)>)/gi, '').replace(/([ '"\r\n\t]+)/g, '');
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	getDefaultModuleValue($isDark){
-		return $isDark ? '#000' : '#fff';
-	}
-
-	/**
-	 * @inheritDoc
-	 *
-	 * @returns {number[]|int[]}
-	 */
-	getOutputDimensions(){
-		return [this.moduleCount, this.moduleCount];
-	}
 
 	/**
 	 * @protected
@@ -99,7 +40,7 @@ export default class QRMarkupSVG extends QROutputAbstract{
 	 * @returns {HTMLElement|SVGElement|ChildNode|string|*}
 	 */
 	dump($file = null){
-		let $data = this._createMarkup($file !== null);
+		let $data = this.createMarkup($file !== null);
 
 		this.saveToFile($data, $file);
 
@@ -119,7 +60,7 @@ export default class QRMarkupSVG extends QROutputAbstract{
 	/**
 	 * @inheritDoc
 	 */
-	_createMarkup($saveToFile){
+	createMarkup($saveToFile){
 		let $svg = this.header();
 		let $eol = this.options.eol;
 
