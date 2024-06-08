@@ -62,7 +62,6 @@
 	"dependencies": {},
 	"devDependencies": {
 		"@babel/eslint-parser": "~7.24.6",
-		"@babel/plugin-syntax-import-attributes": "~7.24.7",
 		"@babel/preset-env": "~7.24.6",
 		"@istanbuljs/nyc-config-babel": "~3.0.0",
 		"@rollup/plugin-babel": "~6.0.4",

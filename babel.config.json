@@ -1,7 +1,6 @@
 {
 	"exclude": "node_modules/**",
 	"plugins": [
-		"@babel/plugin-syntax-import-attributes",
 		"istanbul"
 	],
 	"presets": [
