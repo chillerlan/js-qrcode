@@ -36,10 +36,15 @@ The API is very similar to [the PHP version of this library](https://github.com/
 
 Key differences:
 
-- no multi-mode support for Kanji and Hanzi character sets (handling/converting non-UTF8 strings in javascript is a mess), no [ECI](https://en.wikipedia.org/wiki/Extended_Channel_Interpretation) support for the same reason.
-- class constants of the PHP version are regular constants here, e.g. `QRMatrix::M_DATA` becomes `M_DATA`, `Version::AUTO` is `VERSION_AUTO` and `EccLevel:L` to `ECC_L` - see [index.js](https://github.com/chillerlan/js-qrcode/blob/main/src/index.js) for the proper names of all symbols.
+- Class constants of the PHP version are regular constants here, e.g. `QRMatrix::M_DATA` becomes `M_DATA`, `Version::AUTO` is `VERSION_AUTO` and `EccLevel:L` to `ECC_L` - see [index.js](https://github.com/chillerlan/js-qrcode/blob/main/src/index.js) for the proper names of all symbols.
+- No multimode support for Kanji and Hanzi character sets (handling/converting non-UTF8 strings in javascript is a mess), no [ECI](https://en.wikipedia.org/wiki/Extended_Channel_Interpretation) support for the same reason.
 - save-to-file is not supported. You can re-implement the method `QROutputAbstract::saveToFile()` in case you need it. It's called internally, but it has no function.
-- no QR Code reader included
+- No QR Code reader included
+- The usual javascript quirks:
+	- the internal structure of some classes may deviate from their PHP counterparts
+	- key-value arrays become objects, causing inconsistent return values in some cases, not to mention the inconsistent loop types for each (pun intended)
+	- numbers may act strange
+	- magic getters and setters come with downsides, [see this comment](https://github.com/chillerlan/js-qrcode/blob/76a7a8db1b6e39d09a09f2091a830dcd7d98e9ff/src/QROptions.js#L352-L412)
 
 An API documentation created with [jsdoc](https://github.com/jsdoc/jsdoc) can be found at https://chillerlan.github.io/js-qrcode/ (WIP).
 
