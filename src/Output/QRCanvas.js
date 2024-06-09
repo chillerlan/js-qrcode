@@ -21,18 +21,17 @@ export default class QRCanvas extends QROutputAbstract{
 
 	/**
 	 * @type {HTMLCanvasElement}
-	 * @private
+	 * @protected
 	 */
-	_canvas;
+	canvas;
 
 	/**
 	 * @type {CanvasRenderingContext2D}
-	 * @private
+	 * @protected
 	 */
-	_context;
+	context;
 
 	/**
-	 * @todo: validate css value
 	 * @inheritDoc
 	 */
 	static moduleValueIsValid($value){
@@ -97,7 +96,7 @@ export default class QRCanvas extends QROutputAbstract{
 			$mime = this.mimeType;
 		}
 
-		return this._canvas.toDataURL($mime, this.options.canvasImageQuality)
+		return this.canvas.toDataURL($mime, this.options.canvasImageQuality)
 	}
 
 	/**
@@ -107,17 +106,17 @@ export default class QRCanvas extends QROutputAbstract{
 	 * @throws {QRCodeOutputException}
 	 */
 	dump($file = null){
-		this._canvas = (this.options.canvasElement || document.createElement('canvas'));
+		this.canvas = (this.options.canvasElement || document.createElement('canvas'));
 
 		// @todo: test if instance check also works with nodejs canvas modules etc.
-		if(!this._canvas || !(this._canvas instanceof HTMLCanvasElement) || (typeof this._canvas.getContext !== 'function')){
+		if(!this.canvas || !(this.canvas instanceof HTMLCanvasElement) || (typeof this.canvas.getContext !== 'function')){
 			throw new QRCodeOutputException('invalid canvas element');
 		}
 
-		this._drawImage();
+		this.drawImage();
 
 		if(this.options.returnAsDomElement){
-			return this._canvas;
+			return this.canvas;
 		}
 
 		let base64DataURI = this.toBase64DataURI();
@@ -134,21 +133,21 @@ export default class QRCanvas extends QROutputAbstract{
 
 	/**
 	 * @returns {void}
-	 * @private
+	 * @protected
 	 */
-	_drawImage(){
-		this._canvas.width  = this.length;
-		this._canvas.height = this.length;
-		this._context       = this._canvas.getContext('2d', {alpha: this.options.imageTransparent})
+	drawImage(){
+		this.canvas.width  = this.length;
+		this.canvas.height = this.length;
+		this.context       = this.canvas.getContext('2d', {alpha: this.options.imageTransparent})
 
 		if(this.options.bgcolor && this.constructor.moduleValueIsValid(this.options.bgcolor)){
-			this._context.fillStyle = this.options.bgcolor;
-			this._context.fillRect(0, 0, this.length, this.length);
+			this.context.fillStyle = this.options.bgcolor;
+			this.context.fillRect(0, 0, this.length, this.length);
 		}
 
 		for(let $y = 0; $y < this.moduleCount; $y++){
 			for(let $x = 0; $x < this.moduleCount; $x++){
-				this._module($x, $y, this.matrix.get($x, $y))
+				this.module($x, $y, this.matrix.get($x, $y))
 			}
 		}
 
@@ -156,20 +155,20 @@ export default class QRCanvas extends QROutputAbstract{
 
 	/**
 	 * @returns {void}
-	 * @private
+	 * @protected
 	 */
-	_module($x, $y, $M_TYPE){
+	module($x, $y, $M_TYPE){
 
 		if(!this.options.drawLightModules && !this.matrix.check($x, $y)){
 			return;
 		}
 
-		this._context.fillStyle = this.getModuleValue($M_TYPE);
+		this.context.fillStyle = this.getModuleValue($M_TYPE);
 
 		if(this.options.drawCircularModules && !this.matrix.checkTypeIn($x, $y, this.options.keepAsSquare)){
-			this._context.beginPath();
+			this.context.beginPath();
 
-			this._context.arc(
+			this.context.arc(
 				($x + 0.5) * this.scale,
 				($y + 0.5) * this.scale,
 				(this.options.circleRadius * this.scale),
@@ -177,12 +176,12 @@ export default class QRCanvas extends QROutputAbstract{
 				2 * Math.PI
 			)
 
-			this._context.fill();
+			this.context.fill();
 
 			return;
 		}
 
-		this._context.fillRect($x * this.scale, $y * this.scale, this.scale, this.scale);
+		this.context.fillRect($x * this.scale, $y * this.scale, this.scale, this.scale);
 	}
 
 }

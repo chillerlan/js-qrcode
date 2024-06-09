@@ -58,7 +58,7 @@ export default class QRMarkupSVG extends QROutputAbstract{
 	}
 
 	/**
-	 * @inheritDoc
+	 * @protected
 	 */
 	createMarkup($saveToFile){
 		let $svg = this.header();
@@ -85,6 +85,7 @@ export default class QRMarkupSVG extends QROutputAbstract{
 	 * @see https://css-tricks.com/scale-svg/#article-header-id-3
 	 *
 	 * @returns {string}
+	 * @protected
 	 */
 	getViewBox(){
 		let [$width, $height] = this.getOutputDimensions();
@@ -96,6 +97,7 @@ export default class QRMarkupSVG extends QROutputAbstract{
 	 * returns the <svg> header with the given options parsed
 	 *
 	 * @returns {string}
+	 * @protected
 	 */
 	header(){
 
@@ -115,6 +117,7 @@ export default class QRMarkupSVG extends QROutputAbstract{
 	 * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Element/path
 	 *
 	 * @returns {string}
+	 * @protected
 	 */
 	paths(){
 		let $paths = this.collectModules(($x, $y, $M_TYPE) => this.module($x, $y, $M_TYPE));
@@ -173,6 +176,7 @@ export default class QRMarkupSVG extends QROutputAbstract{
 	 * @param {number|int} $M_TYPE
 	 *
 	 * @returns {string}
+	 * @protected
 	 */
 	module($x, $y, $M_TYPE){
 

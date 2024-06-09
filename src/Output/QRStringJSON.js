@@ -23,6 +23,7 @@ export default class QRStringJSON extends QROutputAbstract{
 	 * the json schema
 	 *
 	 * @type {string}
+	 * @protected
 	 */
 	schema = 'https://raw.githubusercontent.com/chillerlan/php-qrcode/main/src/Output/qrcode.schema.json';
 
