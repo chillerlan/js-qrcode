@@ -13,9 +13,36 @@ A javascript port of [chillerlan/php-qrcode](https://github.com/chillerlan/php-q
 [gh-action-badge]: https://img.shields.io/github/actions/workflow/status/chillerlan/js-qrcode/build.yml?branch=main&logo=github&logoColor=ccc
 [gh-action]: https://github.com/chillerlan/js-qrcode/actions/workflows/build.yml?query=branch%3Amain
 
+
+# Overview
+
+## Features
+
+- Creation of [Model 2 QR Codes](https://www.qrcode.com/en/codes/model12.html), [Version 1 to 40](https://www.qrcode.com/en/about/version.html)
+- [ECC Levels](https://www.qrcode.com/en/about/error_correction.html) L/M/Q/H supported
+- Mixed mode support (encoding modes can be combined within a QR symbol). Supported modes:
+	- numeric
+	- alphanumeric
+	- 8-bit binary
+- Flexible, easily extensible output modules, built-in support for the following output formats:
+	- Markup types: SVG, etc.
+	- String types: JSON, plain text, etc.
+    - Raster image types via [Canvas](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement)
+
+
 ## Documentation
 
+The API is very similar to [the PHP version of this library](https://github.com/chillerlan/php-qrcode), and you can refer to its [documentation](https://php-qrcode.readthedocs.io/) and [examples](https://github.com/chillerlan/php-qrcode/tree/main/examples) for most parts.
+
+Key differences:
+
+- no multi-mode support for Kanji and Hanzi character sets (handling/converting non-UTF8 strings in javascript is a mess), no [ECI](https://en.wikipedia.org/wiki/Extended_Channel_Interpretation) support for the same reason.
+- class constants of the PHP version are regular constants here, e.g. `QRMatrix::M_DATA` becomes `M_DATA`, `Version::AUTO` is `VERSION_AUTO` and `EccLevel:L` to `ECC_L` - see [index.js](https://github.com/chillerlan/js-qrcode/blob/main/src/index.js) for the proper names of all symbols.
+- save-to-file is not supported. You can re-implement the method `QROutputAbstract::saveToFile()` in case you need it. It's called internally, but it has no function.
+- no QR Code reader included
+
 An API documentation created with [jsdoc](https://github.com/jsdoc/jsdoc) can be found at https://chillerlan.github.io/js-qrcode/ (WIP).
+
 
 ### Quickstart
 
@@ -56,6 +83,7 @@ Have a look [in the examples folder](https://github.com/chillerlan/js-qrcode/tre
 
 #### License notice
 Parts of this code are ported to js (via php) from the [ZXing project](https://github.com/zxing/zxing) and licensed under the [Apache License, Version 2.0](./NOTICE).
+
 
 #### Trademark Notice
 
