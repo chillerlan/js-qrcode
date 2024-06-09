@@ -19,47 +19,40 @@ suite('QRStringJSONTest', function(){
 
 	let _options;
 	let _matrix;
+	let _outputInterface;
 
 	beforeEach(function(){
 		_options = new QROptions();
 		_matrix  = (new QRCode(_options)).addByteSegment('testdata').getQRMatrix();
+
+		_options.outputInterface = QRStringJSON;
+
+		_outputInterface = new QRStringJSON(_options, _matrix);
 	});
 
-	suite('QRStringJSON', function(){
-
-		let _outputInterface;
-
-		beforeEach(function(){
-			_options.outputInterface = QRStringJSON;
-		});
-
-		/**
-		 * Validate the instance of the QROutputInterface
-		 */
-		test('testInstance', function(){
-			_outputInterface = new QRStringJSON(_options, _matrix);
-
-			assert.instanceOf(_outputInterface, QROutputAbstract);
-			assert.instanceOf(_outputInterface, QROutputInterface);
-		});
+	/**
+	 * Validate the instance of the QROutputInterface
+	 */
+	test('testInstance', function(){
+		assert.instanceOf(_outputInterface, QROutputAbstract);
+		assert.instanceOf(_outputInterface, QROutputInterface);
+	});
 
 
-		test('testSetModuleValues', function(){
-			let mv = {};
+	test('testSetModuleValues', function(){
+		let mv = {};
 
-			mv[M_DATA_DARK] = '#AAA'
-			mv[M_DATA]      = '#BBB'
+		mv[M_DATA_DARK] = '#AAA'
+		mv[M_DATA]      = '#BBB'
 
-			_options.moduleValues = mv;
+		_options.moduleValues = mv;
 
-			_outputInterface = new QRStringJSON(_options, _matrix);
+		_outputInterface = new QRStringJSON(_options, _matrix);
 
-			let data = _outputInterface.dump();
+		let data = _outputInterface.dump();
 
-			assert.isTrue(data.includes('"layer":"data-dark","value":"#AAA"'));
-			assert.isTrue(data.includes('"layer":"data","value":"#BBB"'));
-		});
-
+		assert.isTrue(data.includes('"layer":"data-dark","value":"#AAA"'));
+		assert.isTrue(data.includes('"layer":"data","value":"#BBB"'));
 	});
 
 });

@@ -31,12 +31,12 @@ suite('QRDataModeTest', function(){
 	suite('QRDataModeInterfaceTest', function(){
 
 		let datamodeProvider = [
-			{$fqn: AlphaNum, desc: 'AlphaNum'},
-			{$fqn: Byte, desc: 'Byte'},
-			{$fqn: Numeric, desc: 'Numeric'},
+			[AlphaNum, 'AlphaNum'],
+			[Byte, 'Byte'],
+			[Numeric, 'Numeric'],
 		];
 
-		datamodeProvider.forEach(({$fqn, desc}) => {
+		datamodeProvider.forEach(([$fqn, desc]) => {
 
 			// sample strings that pass for the respective data mode
 			let testData = {

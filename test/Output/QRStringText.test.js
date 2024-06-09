@@ -19,48 +19,41 @@ suite('QRStringTextTest', function(){
 
 	let _options;
 	let _matrix;
+	let _outputInterface;
 
 	beforeEach(function(){
 		_options = new QROptions();
 		_matrix  = (new QRCode(_options)).addByteSegment('testdata').getQRMatrix();
+
+		_options.outputInterface = QRStringText;
+
+		_outputInterface = new QRStringText(_options, _matrix);
 	});
 
-	suite('QRStringTest', function(){
+	/**
+	 * Validate the instance of the QROutputInterface
+	 */
+	test('testInstance', function(){
+		assert.instanceOf(_outputInterface, QROutputAbstract);
+		assert.instanceOf(_outputInterface, QROutputInterface);
+	});
 
-		let _outputInterface;
+	/**
+	 * covers the module values settings
+	 */
+	test('testSetModuleValues', function(){
+		let mv = {};
 
-		beforeEach(function(){
-			_options.outputInterface = QRStringText;
-		});
+		mv[M_DATA]      = 'A';
+		mv[M_DATA_DARK] = 'B';
 
-		/**
-		 * Validate the instance of the QROutputInterface
-		 */
-		test('testInstance', function(){
-			_outputInterface = new QRStringText(_options, _matrix);
+		_options.moduleValues = mv;
+		_outputInterface      = new QRStringText(_options, _matrix);
 
-			assert.instanceOf(_outputInterface, QROutputAbstract);
-			assert.instanceOf(_outputInterface, QROutputInterface);
-		});
+		let data = _outputInterface.dump();
 
-		/**
-		 * covers the module values settings
-		 */
-		test('testSetModuleValues', function(){
-			let mv = {};
-
-			mv[M_DATA]      = 'A';
-			mv[M_DATA_DARK] = 'B';
-
-			_options.moduleValues = mv;
-			_outputInterface      = new QRStringText(_options, _matrix);
-
-			let data = _outputInterface.dump();
-
-			assert.isTrue(data.includes('A'));
-			assert.isTrue(data.includes('B'));
-		});
-
+		assert.isTrue(data.includes('A'));
+		assert.isTrue(data.includes('B'));
 	});
 
 });
