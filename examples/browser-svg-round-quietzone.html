@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title>QRCode SVG example</title>
+	<style>
+		.container{
+			width: 600px;
+			height: auto;
+		}
+
+		/*
+		 * the stylesheet will only affect the SVG that is directly embedded in the HTML body,
+		 * not the base64 one via <img>. the stylesheet takes precedence over styles defined
+		 * in the <defs> in the embedded SVG.
+		 */
+		.qrcode > .light{
+			fill: #ccc;
+		}
+
+		/*
+		 * custom layer colors for the "confetti" quiet zone
+		 */
+		.qrcode > .qr-111{fill: #e2453c;}
+		.qrcode > .qr-222{fill: #e07e39;}
+		.qrcode > .qr-333{fill: #e5d667;}
+		.qrcode > .qr-444{fill: #51b95b;}
+		.qrcode > .qr-555{fill: #1e72b7;}
+		.qrcode > .qr-666{fill: #6f5ba7;}
+
+		/*
+		 * the linear gradients have to be defined in the <defs>, but we can assign them here to the desired elements
+		 */
+		.qrcode > .dark{ fill: url(#rainbow); }
+		.qrcode > .logo{ fill: url(#blurple); }
+		.qrcode > .qr-circle{ fill: none; stroke: url(#blurple); }
+
+		/*
+		 * we can assign the stop colors here but for some reason the offset has to be defined in <defs>!?
+		 */
+		.qrcode > defs > #blurple > #blurple1{stop-color: #D70071;}
+		.qrcode > defs > #blurple > #blurple2{stop-color: #9C4E97;}
+		.qrcode > defs > #blurple > #blurple3{stop-color: #0035A9;}
+
+		.qrcode > defs > #rainbow > #rainbow1{stop-color: #e2453c;}
+		.qrcode > defs > #rainbow > #rainbow2{stop-color: #e07e39;}
+		.qrcode > defs > #rainbow > #rainbow3{stop-color: #e5d667;}
+		.qrcode > defs > #rainbow > #rainbow4{stop-color: #51b95b;}
+		.qrcode > defs > #rainbow > #rainbow5{stop-color: #1e72b7;}
+		.qrcode > defs > #rainbow > #rainbow6{stop-color: #6f5ba7;}
+
+	</style>
+</head>
+<body>
+<div class="container" id="qrcode-container-svg"></div>
+<script type="module">
+	import * as qrc from '../src/index.js';
+	import RoundQuietzoneSVGoutput from './RoundQuietzoneSVGoutput.js';
+	import RoundQuietzoneOptions from './RoundQuietzoneOptions.js';
+
+	/*
+	 * run the example
+	 */
+
+	// use the extended options class
+	let options = new RoundQuietzoneOptions({
+		// custom dot options (see extended options class)
+		additionalModules   : 5,
+		// logo from: https://github.com/simple-icons/simple-icons
+		svgLogo             : '<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>',
+		svgLogoCssClass     : 'logo',
+		svgLogoScale        : 0.2,
+		dotColors           : [111, 222, 333, 444, 555, 666],
+		// load our own output class
+		outputInterface     : RoundQuietzoneSVGoutput,
+		version             : 7,
+		eccLevel            : qrc.ECC_H,
+		// we're not adding a quiet zone, this is done internally in our own module
+		addQuietzone        : false,
+		// return an SVG DOM element
+		returnAsDomElement  : true,
+		svgUseFillAttributes: false,
+		// if set to false, the light modules won't be rendered
+		drawLightModules    : false,
+		// draw the modules as circles isntead of squares
+		drawCircularModules : true,
+		circleRadius        : 0.4,
+		// connect paths
+		connectPaths        : true,
+		excludeFromConnect  : [
+			qrc.M_LOGO,
+			qrc.M_QUIETZONE,
+		],
+		// keep modules of these types as square
+		keepAsSquare        : [
+			qrc.M_FINDER_DARK,
+			qrc.M_FINDER_DOT,
+			qrc.M_ALIGNMENT_DARK,
+		],
+		svgDefs             :
+			'<linearGradient id="blurple" x1="100%" y2="100%">' +
+			'<stop id="blurple1" offset="0"/>' +
+			'<stop id="blurple2" offset="0.5"/>' +
+			'<stop id="blurple3" offset="1.0"/>' +
+			'</linearGradient>' +
+			'<linearGradient id="rainbow" x1="100%" y2="100%">' +
+			'<stop id="rainbow1" offset="0"/>' +
+			'<stop id="rainbow2" offset="0.2"/>' +
+			'<stop id="rainbow3" offset="0.4"/>' +
+			'<stop id="rainbow4" offset="0.6"/>' +
+			'<stop id="rainbow5" offset="0.8"/>' +
+			'<stop id="rainbow5" offset="1.0"/>' +
+			'</linearGradient>' ,
+	});
+
+
+	let data          = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+	let qrcodeElement = (new qrc.QRCode(options)).render(data);
+
+	document.getElementById('qrcode-container-svg').appendChild(qrcodeElement);
+</script>
+</body>
+</html>
