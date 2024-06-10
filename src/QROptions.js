@@ -363,6 +363,9 @@ export default class QROptions{
 	 *
 	 *     let o = new MyExtendedOptions({myMagicProp: 'foo', ...});
 	 *
+	 * note; for some reason we need to add the constructor with a parent call in extended classes even without
+	 * the aforementioned workaround, otherwise the additional properties will not be recognized. wtfjs???
+	 *
 	 * @protected
 	 */
 	__workaround__ = [
