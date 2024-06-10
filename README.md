@@ -2,10 +2,13 @@
 
 A javascript port of [chillerlan/php-qrcode](https://github.com/chillerlan/php-qrcode), a QR Code library based on the [implementation](https://github.com/kazuhikoarase/qrcode-generator) by Kazuhiko Arase.
 
+[![NPM version][npm-badge]][npm]
 [![License][license-badge]][license]
 [![CodeCov][coverage-badge]][coverage]
 [![Build][gh-action-badge]][gh-action]
 
+[npm-badge]: https://img.shields.io/github/package-json/v/chillerlan/js-qrcode?logo=npm&logoColor=ccc
+[npm]: https://github.com/chillerlan/js-qrcode/pkgs/npm/qrcode
 [license-badge]: https://img.shields.io/github/license/chillerlan/js-qrcode.svg
 [license]: https://github.com/chillerlan/js-qrcode/blob/main/LICENSE
 [coverage-badge]: https://img.shields.io/codecov/c/github/chillerlan/js-qrcode?logo=codecov&logoColor=ccc
