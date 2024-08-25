@@ -55,16 +55,18 @@ export default class PHPJS{
 		if(type === 'boolean'){
 			return +$var;
 		}
-		else if(type === 'string'){
+
+		if(type === 'string'){
 			tmp = parseInt($var, $base || 10);
+
 			return (isNaN(tmp) || !isFinite(tmp)) ? 0 : tmp;
 		}
-		else if(type === 'number' && isFinite($var)){
+
+		if(type === 'number' && isFinite($var)){
 			return $var|0;
 		}
-		else{
-			return 0;
-		}
+
+		return 0;
 	}
 
 	/**
