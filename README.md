@@ -6,8 +6,10 @@ A javascript port of [chillerlan/php-qrcode](https://github.com/chillerlan/php-q
 [![License][license-badge]][license]
 [![CodeCov][coverage-badge]][coverage]
 [![Build][gh-action-badge]][gh-action]
+[![NPM downloads][npm-downloads]][npm]
 
 [npm-badge]: https://img.shields.io/npm/v/%40chillerlan%2Fqrcode?logo=npm&logoColor=ccc
+[npm-downloads]: https://img.shields.io/npm/dm/%40chillerlan%2Fqrcode?logo=npm&logoColor=ccc
 [npm]: https://www.npmjs.com/package/@chillerlan/qrcode
 [license-badge]: https://img.shields.io/github/license/chillerlan/js-qrcode.svg
 [license]: https://github.com/chillerlan/js-qrcode/blob/main/LICENSE
@@ -51,6 +53,19 @@ Key differences:
 
 An API documentation created with [jsdoc](https://github.com/jsdoc/jsdoc) can be found at https://chillerlan.github.io/js-qrcode/ (WIP).
 
+### Installation
+
+Via terminal: `npm i @chillerlan/qrcode`
+
+In `package.json`: 
+
+```json
+{
+	"dependencies": {
+		"@chillerlan/qrcode": "^1.0"
+	}
+}
+```
 
 ### Quickstart
 
