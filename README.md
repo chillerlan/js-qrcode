@@ -7,8 +7,8 @@ A javascript port of [chillerlan/php-qrcode](https://github.com/chillerlan/php-q
 [![CodeCov][coverage-badge]][coverage]
 [![Build][gh-action-badge]][gh-action]
 
-[npm-badge]: https://img.shields.io/github/package-json/v/chillerlan/js-qrcode?logo=npm&logoColor=ccc
-[npm]: https://github.com/chillerlan/js-qrcode/pkgs/npm/qrcode
+[npm-badge]: https://img.shields.io/npm/v/%40chillerlan%2Fqrcode?logo=npm&logoColor=ccc
+[npm]: https://www.npmjs.com/package/@chillerlan/qrcode
 [license-badge]: https://img.shields.io/github/license/chillerlan/js-qrcode.svg
 [license]: https://github.com/chillerlan/js-qrcode/blob/main/LICENSE
 [coverage-badge]: https://img.shields.io/codecov/c/github/chillerlan/js-qrcode?logo=codecov&logoColor=ccc
